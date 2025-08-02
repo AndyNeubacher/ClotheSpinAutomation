@@ -1,26 +1,49 @@
 import cv2
 import numpy as np
 
-def detect_clothespin(frame):
+
+def detect_clothespin(frame, key):
     """
     Erkennt die Kontur einer Wäscheklammer im gegebenen Frame und berechnet
     ihren Mittelpunkt und ihre Rotation.
     """
+
+    global val
+    try:
+        val
+    except NameError:
+        val = 255
+
+    if key == ord('+'):
+        print("key: +, val:", val)
+        val += 10
+    elif key == ord('-'):
+        print("key: -, val:", val)
+        val -= 10
+
     # 1. Graustufenkonvertierung
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    #cv2.imshow('Graustufenbild', gray)
 
     # 2. Rauschunterdrückung (Gaußscher Weichzeichner)
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+    #blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+    blurred = cv2.bilateralFilter(gray, 11, 21, 7)
+    #cv2.imshow('Gaußscher Weichzeichner', blurred)
 
     # 3. Schwellenwertbildung (Otsu's Binarisierung ist oft gut)
     # Versuchen Sie, einen Schwellenwert zu finden, der die Wäscheklammer gut isoliert.
     # Hier wird Otsu's Methode verwendet, die den Schwellenwert automatisch bestimmt.
-    _, thresh = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    _, test = cv2.threshold(blurred, val, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)   #THRESH_TRIANGLE,THRESH_OTSU 
+    _, thresh = cv2.threshold(blurred, val, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_TRIANGLE)   #THRESH_TRIANGLE,THRESH_OTSU 
+    cv2.imshow('Schwellenwertbild', thresh)
+    cv2.imshow('Testbild', test)
 
     # Optional: Morphologische Operationen, um kleine Löcher zu schließen oder Objekte zu trennen
     # kernel = np.ones((3,3),np.uint8)
-    # thresh = cv2.erode(thresh, kernel, iterations = 1)
-    # thresh = cv2.dilate(thresh, kernel, iterations = 1)
+    # erode = cv2.erode(thresh, kernel, iterations = 1)
+    # dilate = cv2.dilate(thresh, kernel, iterations = 1)
+    cv2.imshow('Erosion', cv2.erode(thresh, np.ones((3,3),np.uint8), iterations = 1))
+    cv2.imshow('Dilation', cv2.dilate(thresh, np.ones((3,3),np.uint8), iterations = 1))
 
     # 4. Konturerkennung
     # RETR_EXTERNAL holt nur die äußeren Konturen
@@ -37,13 +60,12 @@ def detect_clothespin(frame):
         # Filtern nach Mindestgröße, um kleines Rauschen zu ignorieren
         if area > 1000:  # Passen Sie diesen Wert an Ihre Wäscheklammergröße an
             # Optional: Überprüfen des Verhältnisses von Breite zu Höhe (Aspect Ratio)
-            # x, y, w, h = cv2.boundingRect(contour)
-            # aspect_ratio = float(w)/h
-            # if 0.5 < aspect_ratio < 2.0: # Beispielwerte für eine Wäscheklammer
-
-            if area > max_area:
-                max_area = area
-                clothespin_contour = contour
+            x, y, w, h = cv2.boundingRect(contour)
+            aspect_ratio = float(w)/h
+            if 0.5 < aspect_ratio < 2.0: # Beispielwerte für eine Wäscheklammer
+                if area > max_area:
+                    max_area = area
+                    clothespin_contour = contour
 
     if clothespin_contour is not None:
         # 6. Berechnung von Mittelpunkt und Rotation
@@ -68,7 +90,7 @@ def detect_clothespin(frame):
             angle = angle + 90
 
         box = cv2.boxPoints(rect)
-        box = np.int0(box)
+        box = np.int_(box)
 
         # 7. Visualisierung
         cv2.drawContours(frame, [box], 0, (0, 255, 0), 2) # Rotierte Bounding Box
@@ -93,11 +115,13 @@ def main():
             print("Fehler: Kann kein Frame empfangen (Stream-Ende?). Exiting ...")
             break
 
-        processed_frame, clothespin_contour, center, angle = detect_clothespin(frame.copy())
+        key = cv2.waitKey(1) & 0xFF
 
-        cv2.imshow('Wäscheklammer-Erkennung', processed_frame)
+        processed_frame, clothespin_contour, center, angle = detect_clothespin(frame.copy(), key)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        #cv2.imshow('Wäscheklammer-Erkennung', processed_frame)
+
+        if key == ord('q'):
             break
 
     cap.release()

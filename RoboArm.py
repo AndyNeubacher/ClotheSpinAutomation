@@ -7,42 +7,26 @@ import msvcrt
 import select
 
 class RoArmM2S:
-    """
-    A Python class to control the Waveshare RoArm-M2-S robotic arm via Ethernet (HTTP).
-    """
-
     def __init__(self, ip_address, timeout=10):
-        """
-        Initializes the RoArmM2S class.
-
-        Args:
-            ip_address (str): The IP address of the RoArm-M2-S.
-                              If the WiFi is in AP mode, it's usually "192.168.4.1".
-                              If in STA mode, check the OLED screen or your router.
-            timeout (int): The timeout for HTTP requests in seconds.
-        """
         self.ip_address = ip_address
-        self.base_url = f"http://{self.ip_address}/cmd"
+        self.base_url = f"http://{self.ip_address}/js"
         self.timeout = timeout
         print(f"RoArm-M2-S initialized with IP: {self.ip_address}")
 
 
     def _send_command(self, command_data):
-        """
-        Sends a JSON command to the RoArm-M2-S via HTTP GET request.
-
-        Args:
-            command_data (dict): A dictionary representing the JSON command.
-
-        Returns:
-            dict or None: The JSON response from the robot, or None if an error occurred.
-        """
         try:
             json_str = json.dumps(command_data)
             url = f"{self.base_url}?json={json_str}"
             response = requests.get(url, timeout=self.timeout)
             response.raise_for_status()  # Raise an exception for HTTP errors (4xx or 5xx)
-            return response.json()
+            if response.status_code != 200:
+                print(f"RoArm-M2-S: HTTP request failed with status {response.status_code}")
+                return None
+            json_answer = response.json()
+            if json_answer is None:
+                return True
+            return json_answer
         except requests.exceptions.Timeout:
             print(f"RoArm-M2-S: Request timed out after {self.timeout} seconds.")
             return None
@@ -61,33 +45,106 @@ class RoArmM2S:
             return None
 
 
-    def get_status(self):
-        """
-        Gets the current status and joint angles of the robotic arm.
-
-        Returns:
-            dict or None: A dictionary containing feedback information, or None on failure.
-                          Keys typically include 'base', 'shoulder', 'elbow', 'hand', etc.
-        """
-        command = {"T": 204}  # CMD_SERVO_RAD_FEEDBACK or similar (Waveshare doc has this)
+    def InitPosition(self):
+        command = {"T": 100}
         response = self._send_command(command)
-        if response and response.get("status") == "ok":
-            print(f"RoArm-M2-S Current Status: {response}")
-            return response
-        else:
-            print("RoArm-M2-S: Failed to get status.")
-            return None
+        return self.GetPosition()
 
 
-    def _get_position(self):
-        """
-        Gets the current position of the robotic arm.
+    def GetPosition(self):
+        command = {"T": 105}
+        return self._send_command(command)
 
-        Returns:
-            dict or None: A dictionary containing the current XYZ position, or None on failure.
-        """
-        command = {"T": 205}
+
+    def GetPositionReadable(self):
+        pos = self.GetPosition()
+        if pos is None:
+            return "Could not retrieve position."
+
+        b_rad = pos.get('b', 0)
+        s_rad = pos.get('s', 0)
+        e_rad = pos.get('e', 0)
+        t_rad = pos.get('t', 0)
+
+        b_deg = round(b_rad * 180 / 3.141592653589793, 2)
+        s_deg = round(s_rad * 180 / 3.141592653589793, 2)
+        e_deg = round(e_rad * 180 / 3.141592653589793, 2)
+        t_deg = 180 - round(t_rad * 180 / 3.141592653589793, 2)
+
+        x = pos.get('x', 0)
+        y = pos.get('y', 0)
+        z = pos.get('z', 0)
+
+        return (f"X: {x:.2f} mm, Y: {y:.2f} mm, Z: {z:.2f} mm\n"
+            f"Base: {b_deg:.2f}°, Shoulder: {s_deg:.2f}°, Elbow: {e_deg:.2f}°, Tool: {t_deg:.2f}°")
+
+
+    def TeachMode(self):
+        self.SetTorqueLock(False)
+        loop = True
+        while loop:
+            if msvcrt.kbhit():
+                key = msvcrt.getch()
+                if key in (b'\x1b', b'q', b'Q'):  # ESC or 'q'
+                    print("RoArm-M2-S: Exiting teach mode.")
+                    loop = False
+            time.sleep(0.05)
+            print(self.GetPositionReadable())
+        self.SetTorqueLock(True)
+
+
+    def SetTorqueLock(self, enable: bool):
+        cmd_value = 1 if enable else 0
+        command = {"T": 210, "cmd": cmd_value}
+        return self._send_command(command)
+
+
+    def SetDynamicForceAdaption(self, enable: bool, base: int, shoulder: int, elbow: int, hand: int):
+        on_off = 1 if enable else 0
+        command = {"T": 112, "mode":on_off, "b":base,"s":shoulder,"e":elbow,"h":hand}
+        return self._send_command(command)
+
+
+    def SetJointPID(self, joint: int, p: int = 16, i: int = 0):
+        #BASE_JOINT = 1, SHOULDER_JOINT = 2, ELBOW_JOINT = 3, EOAT_JOINT = 4
+        #p: default 16, i: default 0 (multiples of 8)
+        command = {"T": 108, "joint": joint, "p": p, "i": i}
+        return self._send_command(command)
+
+
+    def SetLed(self, enable: bool):
+        led_value = 255 if enable else 0
+        command = {"T": 114, "led": led_value}
         response = self._send_command(command)
+        return response is not None
+
+
+    def MoveToXYZ(self, x=None, y=None, z=None, tool=None, speed=500):
+        tool = (180-tool) * 3.141592653589793 / 180.0
+        command = {"T":104, "x":x, "y":y, "z":z, "t":tool, "spd":speed}
+        if x is not None:
+            command["x"] = round(x, 4)
+        if y is not None:
+            command["y"] = round(y, 4)
+        if z is not None:
+            command["z"] = round(z, 4)
+
+        return self._send_command(command)
+
+
+    def SetGripper(self, angle_deg: int):
+        #BASE_JOINT = 1, SHOULDER_JOINT = 2, ELBOW_JOINT = 3, EOAT_JOINT = 4
+        #p: default 16, i: default 0 (multiples of 8)
+        angle_rad = (180-angle_deg) * 3.141592653589793 / 180.0
+        command = {"T": 103, "axis": 4, "pos": round(angle_rad, 4), "spd": 0.25}
+        return self._send_command(command)
+
+
+
+
+
+
+
 
 
 
@@ -119,89 +176,12 @@ class RoArmM2S:
         response = self._send_command(command)
         return response is not None
 
-    def move_to_xyz(self, x=None, y=None, z=None, speed=500, mode=0):
-        """
-        Moves the end-effector to a specified 3D Cartesian coordinate using inverse kinematics.
-
-        Args:
-            x (float, optional): X coordinate in meters.
-            y (float, optional): Y coordinate in meters.
-            z (float, optional): Z coordinate in meters.
-            speed (int, optional): Movement speed in steps/second (0 for max speed).
-            mode (int, optional): 0 for linear movement, 1 for joint-space movement.
-                                  (Check Waveshare doc for specific modes if any for this command)
-        Returns:
-            bool: True if command sent successfully, False otherwise.
-        """
-        command = {"T": 103, "spd": speed, "mode": mode} # CMD_XYZT_GOAL_CTRL
-        if x is not None:
-            command["x"] = round(x, 4)
-        if y is not None:
-            command["y"] = round(y, 4)
-        if z is not None:
-            command["z"] = round(z, 4)
-
-        response = self._send_command(command)
-        return response is not None
-
-    def set_gripper(self, angle, speed=500):
-        """
-        Controls the gripper/hand joint angle.
-
-        Args:
-            angle (float): Target angle for the gripper/hand in radians.
-                           (clamp: 1.08 to 3.14, wrist: 1.08 to 5.20)
-            speed (int, optional): Movement speed in steps/second (0 for max speed).
-        Returns:
-            bool: True if command sent successfully, False otherwise.
-        """
-        # Note: The 'hand' parameter in move_to_joint_angles can also control the gripper.
-        # This is a dedicated function for clarity.
-        return self.move_to_joint_angles(hand=angle, speed=speed)
 
 
-    def set_torque_lock(self, enable: bool):
-        """
-        Enables or disables the torque lock on the robotic arm.
-        When torque lock is off, you can manually move the arm.
-
-        Args:
-            enable (bool): True to enable torque lock, False to disable.
-
-        Returns:
-            bool: True if command sent successfully, False otherwise.
-        """
-        cmd_value = 1 if enable else 0
-        command = {"T": 210, "cmd": cmd_value}
-        response = self._send_command(command)
-        return response is not None
 
 
-    def set_led(self, enable: bool):
-        """
-        Turns the LED on or off.
 
-        Args:
-            enable (bool): True to turn LED on, False to turn LED off.
 
-        Returns:
-            bool: True if command sent successfully, False otherwise.
-        """
-        led_value = 255 if enable else 0
-        command = {"T": 114, "led": led_value}
-        response = self._send_command(command)
-        return response is not None
-
-    def reset_to_initial_position(self):
-        """
-        Resets the robotic arm to its default initial position.
-
-        Returns:
-            bool: True if command sent successfully, False otherwise.
-        """
-        command = {"T": 100} # CMD_MOVE_INIT
-        response = self._send_command(command)
-        return response is not None
 
     # You can add more specific control functions based on the Waveshare JSON commands:
     # (Refer to "RoArm-M2-S JSON Command Meaning" on Waveshare Wiki)
@@ -223,34 +203,3 @@ class RoArmM2S:
         return response is not None
 
 
-    def teachMode(self):
-        self.set_torque_lock(False)  # Disable torque lock to allow manual movement
-        def _wait_for_exit():
-            try:
-                while True:
-                    if msvcrt.kbhit():
-                        key = msvcrt.getch()
-                        if key in (b'\x1b', b'q', b'Q'):  # ESC or 'q'
-                            print("RoArm-M2-S: Exiting teach mode.")
-                            break
-                    time.sleep(0.05)
-                    print(self._get_position())
-
-            except ImportError:
-                print("RoArm-M2-S: Press ESC or 'q' to quit teach mode.")
-                while True:
-                    dr, _, _ = select.select([sys.stdin], [], [], 0.05)
-                    if dr:
-                        ch = sys.stdin.read(1)
-                        if ch in ('\x1b', 'q', 'Q'):
-                            print("RoArm-M2-S: Exiting teach mode.")
-                            break
-
-        def teachMode(self):
-            print("RoArm-M2-S: Teach mode started. Press ESC or 'q' to exit.")
-            exit_event = threading.Event()
-            t = threading.Thread(target=_wait_for_exit)
-            t.start()
-            t.join()
-
-        self.set_torque_lock(True)
