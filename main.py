@@ -47,7 +47,7 @@ if __name__ == "__main__":
             break
 
         cspin.Pick(i)
-        #sleep(1)
+        #sleep(0.1)
         continue
 
         air_assist.set_output(1, 'on')

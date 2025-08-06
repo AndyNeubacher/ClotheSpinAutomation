@@ -62,7 +62,7 @@ class RoArmM2S:
         response = self._send_command(command)
         #time.sleep(1)
         #self.MoveToXYZT(100, 100, -20, 0, 0.3, 10, 3)
-        self.MoveAllJoints(base=0, shoulder=30, elbow=140, tool=180, speed=0.5, tolerance=5, timeout=3)
+        self.MoveAllJoints(base=0, shoulder=30, elbow=140, tool=180, speed=50, tolerance=5, timeout=3)
         return self.GetPosition()
 
 
@@ -165,7 +165,7 @@ class RoArmM2S:
 
 
     def SetGripper(self, angle_deg: float, speed=0.2):
-        self.MoveSingleJoint(Joint.TOOL.value, angle_deg, speed=speed, acc=10, tolerance=2, timeout=3)
+        self.MoveSingleJoint(Joint.TOOL.value, angle_deg, speed=speed, acc=5, tolerance=5, timeout=3)
 
 
 
@@ -187,7 +187,8 @@ class RoArmM2S:
         while True:
             # check for given timeout
             if time.time() - start_time > timeout:
-                print("MoveToXYZ: Timeout reached while waiting for X/Y/Z to converge")
+                print("MoveToXYZ: timeout reached while waiting for X/Y/Z position")
+                print(self.GetPositionReadable())
                 return False
 
             position_data = self.GetPosition()
@@ -200,23 +201,23 @@ class RoArmM2S:
             z_current = position_data.get('z', None)
 
             if x is not None and (x_current is None or abs(x_current - x) > tolerance):
-                print(f"X not within tolerance: current={x_current}, target={x}")
+                #print(f"X not within tolerance: current={x_current}, target={x}")
                 time.sleep(0.1)
                 continue
 
             if y is not None and (y_current is None or abs(y_current - y) > tolerance):
-                print(f"Y not within tolerance: current={y_current}, target={y}")
+                #print(f"Y not within tolerance: current={y_current}, target={y}")
                 time.sleep(0.1)
                 continue
 
             if z is not None and (z_current is None or abs(z_current - z) > tolerance):
-                print(f"Z not within tolerance: current={z_current}, target={z}")
+                #print(f"Z not within tolerance: current={z_current}, target={z}")
                 time.sleep(0.1)
                 continue
 
             break
 
-        print(f"MoveToXYZ: Reached target position X={x_current}, Y={y_current}, Z={z_current}")
+        #print(f"MoveToXYZ:   +-> Reached target position X={x_current}, Y={y_current}, Z={z_current}")
         # All coordinates are within tolerance
         return True
 
@@ -232,7 +233,8 @@ class RoArmM2S:
         while True:
             # check for given timeout
             if time.time() - start_time > timeout:
-                print("MoveToXYZ: Timeout reached while waiting for X/Y/Z to converge")
+                print("MoveToXYZ: timeout reached while waiting for joint movement")
+                print(self.GetPositionReadable())
                 return False
 
             act_angle = self.GetAngle(joint_id)
@@ -245,7 +247,7 @@ class RoArmM2S:
             
             break
 
-        print(f"MoveSingleJoint: id={joint_id} reached target angle {angle}° (current: {act_angle}°)")
+        #print(f"MoveSingleJoint:   +-> id={joint_id} reached target angle {angle}° (current: {act_angle}°)")
         return True
 
 
@@ -269,6 +271,7 @@ class RoArmM2S:
             # check for given timeout
             if time.time() - start_time > timeout:
                 print("MoveToXYZ: Timeout reached while waiting for angle-setting")
+                print(self.GetPositionReadable())
                 return False
 
             position_data = self.GetPosition()
@@ -283,27 +286,27 @@ class RoArmM2S:
 
 
             if a_base is not None and (a_base is None or abs(a_base - base) > tolerance):
-                print(f"BASE not within tolerance: current={a_base}, target={base}")
+                #print(f"BASE not within tolerance: current={a_base}, target={base}")
                 time.sleep(0.1)
                 continue
 
             if a_shoulder is not None and (a_shoulder is None or abs(a_shoulder - shoulder) > tolerance):
-                print(f"SHOULDER not within tolerance: current={a_shoulder}, target={shoulder}")
+                #print(f"SHOULDER not within tolerance: current={a_shoulder}, target={shoulder}")
                 time.sleep(0.1)
                 continue
 
             if a_elbow is not None and (a_elbow is None or abs(a_elbow - elbow) > tolerance):
-                print(f"ELBOW not within tolerance: current={a_elbow}, target={elbow}")
+                #print(f"ELBOW not within tolerance: current={a_elbow}, target={elbow}")
                 time.sleep(0.1)
                 continue
 
             if a_tool is not None and (a_tool is None or abs(a_tool - tool) > tolerance):
-                print(f"TOOL not within tolerance: current={a_tool}, target={tool}")
+                #print(f"TOOL not within tolerance: current={a_tool}, target={tool}")
                 time.sleep(0.1)
                 continue
 
             break
 
-        print(f"MoveAllJoints: reached target angles!")
+        #print(f"MoveAllJoints:   +-> reached target angles!")
         return True
 
