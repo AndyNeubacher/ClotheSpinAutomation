@@ -1,4 +1,20 @@
 import time
+from RoboArm import RoArmM2S
+from RoboArm import Joint
+import numpy as np
+
+base_pos = [-177.0, -167.5, -160.5, -154.0, -147.0,
+            -140.3, -135.3, -128.7, -121.0, -114.0, #10
+            -106.5, -100.0,  -93.0,  -86.0,  -77.7,
+             -70.6,  -63.5,  -56.4,  -49.3,  -42.2, #20
+             -35.1,  -28.1,  -21.0,  -13.9,   -6.8,
+               0.3,    7.4,   14.5,   21.6,   28.7, #30
+              35.8,   42.9,   50.0,   57.1,   64.2,
+              71.2,   78.3,   85.4,   92.5,   99.6, #40
+             106.7,  113.8,  120.9,  128.0,  135.1,
+             142.2,  149.3,  156.4,  163.5,  170.6, #50
+             177.6,  184.7]
+
 
 
 class ClotheSpin:
@@ -8,100 +24,54 @@ class ClotheSpin:
 
     def __init__(self, arm):
         self.RoboArm = arm
-        self.connected = self.InitPosition()
+        self.connected = self.RoboArm.GetPosition() is not None
+        self.last_angle_tool = None
 
 
     def IsConnected(self):
         return self.connected
 
 
-    def InitPosition(self):
+    def OpenGripper(self, angle=20):
+        print("ClothSpin: Opening gripper")
+        self.last_angle_tool = 180 - angle
+        self.RoboArm.SetGripper(self.last_angle_tool, speed=0.1)
+
+
+
+    def CloseGripper(self, angle=5):
+        print("ClothSpin: Opening gripper")
+        self.last_angle_tool = 180 - angle
+        self.RoboArm.SetGripper(self.last_angle_tool, speed=0.1)
+
+
+
+    def MoveBaseToPosition(self, index):
         if self.RoboArm is None:
             return False
 
-        print("ClothSpin: Attempting to connect and get status...")
-        status = self.RoboArm.get_status()
-        if status:
-            print("ClothSpin: Successfully connected and received status.")
-        else:
-            print("ClothSpin: Failed to connect or get status. Exiting example.")
-            return False
-
-        time.sleep(1) # Give it a moment
-
-        print("ClothSpin: Resetting arm to initial position...")
-        if self.RoboArm.reset_to_initial_position():
-            print("ClothSpin: Arm reset command sent.")
-        else:
-            print("ClothSpin: Failed to send reset command.")
-            return False
-        
-        time.sleep(3) # Wait for movement to complete
-        return True
+        print(f"ClothSpin: Moving base to position {index}...")
+        self.RoboArm.MoveSingleJoint(Joint.BASE.value, base_pos[index], speed=0.5, acc=10, tolerance=5, timeout=3)
 
 
-    def PickNew(self):
+
+    def MoveGripperToPosition(self, index):
         if self.RoboArm is None:
             return False
 
-        print("ClothSpin: Opening gripper...")
-        self.RoboArm.set_gripper(angle=45, speed=300) # Larger angle for clamp means more open
-        time.sleep(2)
-
-        print("ClothSpin: Moving arm to a new joint configuration...")
-        if self.RoboArm.move_to_xyz(x=0.2, y=0.05, z=0.1, speed=600):
-            print("ClothSpin: Joint movement command sent.")
-        else:
-            print("ClothSpin: Failed to send joint movement command.")
-        time.sleep(3)
-
-        print("ClothSpin: Close gripper...")
-        self.RoboArm.set_gripper(angle=10, speed=300)
-        time.sleep(2)
-        return True
+        print(f"ClothSpin: Moving gripper to position {index}...")
+        return self.RoboArm.MoveAllJoints(base=base_pos[index], shoulder=30, elbow=140, tool=self.last_angle_tool, speed=0.5, tolerance=5, timeout=3)
 
 
-    def MoveToBurnPosition(self):
+
+    def Pick(self, index):
         if self.RoboArm is None:
             return False
 
-        print("ClothSpin: Moving arm to work position...")
-        # Example work position angles
-        if self.RoboArm.move_to_xyz(x=0.2, y=0.05, z=0.1, speed=600):
-            print("ClothSpin: Work position command sent.")
-        else:
-            print("ClothSpin: Failed to send work position command.")
-        time.sleep(3)
-        return True
+        self.OpenGripper()
 
+        self.MoveBaseToPosition(index)
+        self.MoveGripperToPosition(index)
 
-    def FlipUpsideDown(self):
-        if self.RoboArm is None:
-            return False
+        self.CloseGripper()
 
-        print("ClothSpin: Flipping arm upside down...")
-        # Example flip position angles
-        if self.RoboArm.move_to_xyz(x=0.2, y=0.05, z=0.1, speed=600):
-            print("ClothSpin: Flip command sent.")
-        else:
-            print("ClothSpin: Failed to send flip command.")
-        time.sleep(3)
-        return True
-
-
-    def MoveToFinishedPosition(self):
-        if self.RoboArm is None:
-            return False
-
-        print("ClothSpin: Moving arm to finished position...")
-        # Example finished position angles
-        if self.RoboArm.move_to_xyz(x=0.2, y=0.05, z=0.1, speed=600):
-            print("ClothSpin: Finished position command sent.")
-        else:
-            print("ClothSpin: Failed to send finished position command.")
-        time.sleep(3)
-
-        self.RoboArm.set_gripper(angle=45, speed=300)  # Open gripper to release the clothespin
-        time.sleep(2)
-
-        return True

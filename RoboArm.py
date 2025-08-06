@@ -1,10 +1,20 @@
 import requests
 import json
 import time
-import sys
-import threading
 import msvcrt
-import select
+import math
+from enum import Enum
+
+
+
+class Joint(Enum):
+    BASE = 1
+    SHOULDER = 2
+    ELBOW = 3
+    TOOL = 4
+
+
+
 
 class RoArmM2S:
     def __init__(self, ip_address, timeout=10):
@@ -12,6 +22,8 @@ class RoArmM2S:
         self.base_url = f"http://{self.ip_address}/js"
         self.timeout = timeout
         print(f"RoArm-M2-S initialized with IP: {self.ip_address}")
+        self.InitPosition()
+
 
 
     def _send_command(self, command_data):
@@ -43,17 +55,44 @@ class RoArmM2S:
         except Exception as e:
             print(f"RoArm-M2-S: An unexpected error occurred: {e}")
             return None
-
+                
 
     def InitPosition(self):
         command = {"T": 100}
         response = self._send_command(command)
+        #time.sleep(1)
+        #self.MoveToXYZT(100, 100, -20, 0, 0.3, 10, 3)
+        self.MoveAllJoints(base=0, shoulder=30, elbow=140, tool=180, speed=0.5, tolerance=5, timeout=3)
         return self.GetPosition()
+
 
 
     def GetPosition(self):
         command = {"T": 105}
         return self._send_command(command)
+
+
+
+    def GetAngle(self, joint_id):
+        if(joint_id < 1 or joint_id > 4):
+            print(f"RoArm-M2-S: Invalid joint ID {joint_id}. Must be between 1 and 4.")
+            return None
+
+        position_data = self.GetPosition()
+        if position_data is None:
+            return None
+
+        if joint_id == Joint.BASE.value:
+            angle_rad = position_data.get('b', None)
+        elif joint_id == Joint.SHOULDER.value:
+            angle_rad = position_data.get('s', None)
+        elif joint_id == Joint.ELBOW.value:
+            angle_rad = position_data.get('e', None)
+        elif joint_id == Joint.TOOL.value:
+            angle_rad = position_data.get('t', None)
+
+        return angle_rad * 180 / math.pi
+
 
 
     def GetPositionReadable(self):
@@ -66,10 +105,10 @@ class RoArmM2S:
         e_rad = pos.get('e', 0)
         t_rad = pos.get('t', 0)
 
-        b_deg = round(b_rad * 180 / 3.141592653589793, 2)
-        s_deg = round(s_rad * 180 / 3.141592653589793, 2)
-        e_deg = round(e_rad * 180 / 3.141592653589793, 2)
-        t_deg = 180 - round(t_rad * 180 / 3.141592653589793, 2)
+        b_deg = round(b_rad * 180 / math.pi, 2)
+        s_deg = round(s_rad * 180 / math.pi, 2)
+        e_deg = round(e_rad * 180 / math.pi, 2)
+        t_deg = 180 - round(t_rad * 180 / math.pi, 2)
 
         x = pos.get('x', 0)
         y = pos.get('y', 0)
@@ -77,6 +116,7 @@ class RoArmM2S:
 
         return (f"X: {x:.2f} mm, Y: {y:.2f} mm, Z: {z:.2f} mm\n"
             f"Base: {b_deg:.2f}°, Shoulder: {s_deg:.2f}°, Elbow: {e_deg:.2f}°, Tool: {t_deg:.2f}°")
+
 
 
     def TeachMode(self):
@@ -93,16 +133,19 @@ class RoArmM2S:
         self.SetTorqueLock(True)
 
 
+
     def SetTorqueLock(self, enable: bool):
         cmd_value = 1 if enable else 0
         command = {"T": 210, "cmd": cmd_value}
         return self._send_command(command)
 
 
+
     def SetDynamicForceAdaption(self, enable: bool, base: int, shoulder: int, elbow: int, hand: int):
         on_off = 1 if enable else 0
         command = {"T": 112, "mode":on_off, "b":base,"s":shoulder,"e":elbow,"h":hand}
         return self._send_command(command)
+
 
 
     def SetJointPID(self, joint: int, p: int = 16, i: int = 0):
@@ -112,6 +155,7 @@ class RoArmM2S:
         return self._send_command(command)
 
 
+
     def SetLed(self, enable: bool):
         led_value = 255 if enable else 0
         command = {"T": 114, "led": led_value}
@@ -119,8 +163,14 @@ class RoArmM2S:
         return response is not None
 
 
-    def MoveToXYZ(self, x=None, y=None, z=None, tool=None, speed=500):
-        tool = (180-tool) * 3.141592653589793 / 180.0
+
+    def SetGripper(self, angle_deg: float, speed=0.2):
+        self.MoveSingleJoint(Joint.TOOL.value, angle_deg, speed=speed, acc=10, tolerance=2, timeout=3)
+
+
+
+    def MoveToXYZT(self, x=None, y=None, z=None, tool=None, speed=0.1, tolerance=5, timeout=10):
+        tool = tool * math.pi / 180.0
         command = {"T":104, "x":x, "y":y, "z":z, "t":tool, "spd":speed}
         if x is not None:
             command["x"] = round(x, 4)
@@ -129,77 +179,131 @@ class RoArmM2S:
         if z is not None:
             command["z"] = round(z, 4)
 
-        return self._send_command(command)
+        print(f"MoveToXYZ: Moving to X={x}, Y={y}, Z={z}, Tool={tool}, Speed={speed}")
+        if self._send_command(command) is None:
+            return False
+
+        start_time = time.time()
+        while True:
+            # check for given timeout
+            if time.time() - start_time > timeout:
+                print("MoveToXYZ: Timeout reached while waiting for X/Y/Z to converge")
+                return False
+
+            position_data = self.GetPosition()
+            if position_data is None:
+                print("Failed to get position. Retrying...")
+                return False
+
+            x_current = position_data.get('x', None)
+            y_current = position_data.get('y', None)
+            z_current = position_data.get('z', None)
+
+            if x is not None and (x_current is None or abs(x_current - x) > tolerance):
+                print(f"X not within tolerance: current={x_current}, target={x}")
+                time.sleep(0.1)
+                continue
+
+            if y is not None and (y_current is None or abs(y_current - y) > tolerance):
+                print(f"Y not within tolerance: current={y_current}, target={y}")
+                time.sleep(0.1)
+                continue
+
+            if z is not None and (z_current is None or abs(z_current - z) > tolerance):
+                print(f"Z not within tolerance: current={z_current}, target={z}")
+                time.sleep(0.1)
+                continue
+
+            break
+
+        print(f"MoveToXYZ: Reached target position X={x_current}, Y={y_current}, Z={z_current}")
+        # All coordinates are within tolerance
+        return True
 
 
-    def SetGripper(self, angle_deg: int):
-        #BASE_JOINT = 1, SHOULDER_JOINT = 2, ELBOW_JOINT = 3, EOAT_JOINT = 4
-        #p: default 16, i: default 0 (multiples of 8)
-        angle_rad = (180-angle_deg) * 3.141592653589793 / 180.0
-        command = {"T": 103, "axis": 4, "pos": round(angle_rad, 4), "spd": 0.25}
-        return self._send_command(command)
+
+    def MoveSingleJoint(self, joint_id: int, angle: float, speed=0.2, acc=10, tolerance=5, timeout=3):
+        command = {"T":121,"joint":joint_id,"angle":angle,"spd":speed,"acc":acc}
+        print(f"MoveSingleJoint: id={joint_id}, angle={angle}, speed={speed}, acc={acc}")
+        if self._send_command(command) is None:
+            return False
+        
+        start_time = time.time()
+        while True:
+            # check for given timeout
+            if time.time() - start_time > timeout:
+                print("MoveToXYZ: Timeout reached while waiting for X/Y/Z to converge")
+                return False
+
+            act_angle = self.GetAngle(joint_id)
+            if act_angle is None:
+                print("Failed to get position. Retrying...")
+                return False
+
+            if abs(act_angle - angle) > tolerance:  # Check if within 1 degree tolerance
+                continue
+            
+            break
+
+        print(f"MoveSingleJoint: id={joint_id} reached target angle {angle}° (current: {act_angle}°)")
+        return True
 
 
 
-
-
-
-
-
-
-
-
-    def move_to_joint_angles(self, base=None, shoulder=None, elbow=None, hand=None, speed=500):
-        """
-        Moves the robotic arm to specified joint angles (in radians).
-
-        Args:
-            base (float, optional): Base joint angle in radians (-3.14 to 3.14).
-            shoulder (float, optional): Shoulder joint angle in radians (-1.57 to 1.57).
-            elbow (float, optional): Elbow joint angle in radians (-1.11 to 3.14).
-            hand (float, optional): Hand/gripper joint angle in radians (clamp: 1.08 to 3.14, wrist: 1.08 to 5.20).
-            speed (int, optional): Movement speed in steps/second (0 for max speed).
-                                   One full rotation is 4096 steps.
-        Returns:
-            bool: True if command sent successfully, False otherwise.
-        """
-        command = {"T": 102, "spd": speed} # CMD_JOINTS_RAD_CTRL
+    def MoveAllJoints(self, base=None, shoulder=None, elbow=None, tool=None, speed=0.2, tolerance=5, timeout=3):
+        command = {"T":122,"b":base,"s":shoulder,"e":elbow,"h":tool,"spd":speed,"acc":10}
         if base is not None:
             command["b"] = round(base, 4)
         if shoulder is not None:
             command["s"] = round(shoulder, 4)
         if elbow is not None:
             command["e"] = round(elbow, 4)
-        if hand is not None:
-            command["h"] = round(hand, 4)
+        if tool is not None:
+            command["h"] = round(tool, 4)
 
-        response = self._send_command(command)
-        return response is not None
+        if self._send_command(command) is None:
+            return False
+        
+        start_time = time.time()
+        while True:
+            # check for given timeout
+            if time.time() - start_time > timeout:
+                print("MoveToXYZ: Timeout reached while waiting for angle-setting")
+                return False
+
+            position_data = self.GetPosition()
+            if position_data is None:
+                print("Failed to get position. Retrying...")
+                return False
+
+            a_base     = position_data.get('b', None) * 180 / math.pi
+            a_shoulder = position_data.get('s', None) * 180 / math.pi
+            a_elbow   = position_data.get('e', None) * 180 / math.pi
+            a_tool     = position_data.get('t', None) * 180 / math.pi
 
 
+            if a_base is not None and (a_base is None or abs(a_base - base) > tolerance):
+                print(f"BASE not within tolerance: current={a_base}, target={base}")
+                time.sleep(0.1)
+                continue
 
+            if a_shoulder is not None and (a_shoulder is None or abs(a_shoulder - shoulder) > tolerance):
+                print(f"SHOULDER not within tolerance: current={a_shoulder}, target={shoulder}")
+                time.sleep(0.1)
+                continue
 
+            if a_elbow is not None and (a_elbow is None or abs(a_elbow - elbow) > tolerance):
+                print(f"ELBOW not within tolerance: current={a_elbow}, target={elbow}")
+                time.sleep(0.1)
+                continue
 
+            if a_tool is not None and (a_tool is None or abs(a_tool - tool) > tolerance):
+                print(f"TOOL not within tolerance: current={a_tool}, target={tool}")
+                time.sleep(0.1)
+                continue
 
+            break
 
-
-    # You can add more specific control functions based on the Waveshare JSON commands:
-    # (Refer to "RoArm-M2-S JSON Command Meaning" on Waveshare Wiki)
-
-    # Example: Single joint control
-    def control_single_joint(self, joint_id: int, angle: float, speed: int = 500):
-        """
-        Controls a single joint to a specified angle.
-
-        Args:
-            joint_id (int): 0 for Base, 1 for Shoulder, 2 for Elbow, 3 for Hand.
-            angle (float): Target angle in radians.
-            speed (int, optional): Movement speed.
-        Returns:
-            bool: True if command sent successfully, False otherwise.
-        """
-        command = {"T": 101, "id": joint_id, "rad": round(angle, 4), "spd": speed} # CMD_SINGLE_JOINT_CTRL
-        response = self._send_command(command)
-        return response is not None
-
+        print(f"MoveAllJoints: reached target angles!")
+        return True
 
