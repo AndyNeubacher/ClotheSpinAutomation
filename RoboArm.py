@@ -62,7 +62,13 @@ class RoArmM2S:
         response = self._send_command(command)
         #time.sleep(1)
         #self.MoveToXYZT(100, 100, -20, 0, 0.3, 10, 3)
-        self.MoveAllJoints(base=0, shoulder=30, elbow=140, tool=180, speed=50, tolerance=5, timeout=3)
+        #self.SetJointPID(Joint.BASE.value, 30, 8)
+        #self.SetJointPID(Joint.SHOULDER.value, 30, 0)
+        #self.SetJointPID(Joint.ELBOW.value, 16, 16)
+        #self.SetJointPID(Joint.TOOL.value, 16, 16)
+        #self.MoveAllJoints(base=0, shoulder=30, elbow=140, tool=180, speed=50, tolerance=5, timeout=3)
+        self.SetDynamicForceAdaption(enable=True, base=500, shoulder=500, elbow=500, hand=500)
+        print(self.GetPositionReadable())
         return self.GetPosition()
 
 
@@ -114,8 +120,7 @@ class RoArmM2S:
         y = pos.get('y', 0)
         z = pos.get('z', 0)
 
-        return (f"X: {x:.2f} mm, Y: {y:.2f} mm, Z: {z:.2f} mm\n"
-            f"Base: {b_deg:.2f}°, Shoulder: {s_deg:.2f}°, Elbow: {e_deg:.2f}°, Tool: {t_deg:.2f}°")
+        return (f"X:{x:.2f}, Y:{y:.2f}, Z:{z:.2f}, b:{b_deg:.2f}, s:{s_deg:.2f}, e:{e_deg:.2f}, t:{t_deg:.2f}")
 
 
 
@@ -281,7 +286,7 @@ class RoArmM2S:
 
             a_base     = position_data.get('b', None) * 180 / math.pi
             a_shoulder = position_data.get('s', None) * 180 / math.pi
-            a_elbow   = position_data.get('e', None) * 180 / math.pi
+            a_elbow    = position_data.get('e', None) * 180 / math.pi
             a_tool     = position_data.get('t', None) * 180 / math.pi
 
 

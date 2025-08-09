@@ -30,7 +30,8 @@ if __name__ == "__main__":
         print("Failed to connect to RoArmM2S. Exiting.")
         exit()
 
-
+    #arm.TeachMode()
+    #exit()
 
 
     # Load LightBurn file
@@ -39,8 +40,11 @@ if __name__ == "__main__":
     #    exit()
 
 
-    # load file to lightburn and init robot-arm
-
+    # calibrate the zero-position robot-arm
+    cspin.CalibrateReferencePosition()
+    cspin.MoveToPreparePosition(1)
+    cspin.FindClothePickBasePosition()
+    exit()
     for i in range(51):
         if keyboard.is_pressed('esc'):
             print("ESC pressed, exiting loop.")

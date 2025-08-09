@@ -1,7 +1,14 @@
 import time
-from RoboArm import RoArmM2S
-from RoboArm import Joint
+import RoboArm
 import numpy as np
+from RoboArm import Joint
+import msvcrt
+import math
+
+base_delta_pos = [ 0.1,  7.1, 14.3, 21.0, 27.8,
+                  34.8, 40.1, 46.9, 53.6, 60.2
+]
+
 
 base_pos = [-177.0, -167.5, -160.5, -154.0, -147.0,
             -140.3, -135.3, -128.7, -121.0, -114.0, #10
@@ -37,7 +44,8 @@ class ClotheSpin:
     def __init__(self, arm):
         self.RoboArm = arm
         self.connected = self.RoboArm.GetPosition() is not None
-        self.last_angle_tool = None
+        self.last_angle_tool = 180  # closed gripper
+        self.cal_position = None
 
 
     def IsConnected(self):
@@ -57,14 +65,52 @@ class ClotheSpin:
         self.RoboArm.SetGripper(self.last_angle_tool, speed=0.2)
 
 
+    def MoveToReferencePreparePosition(self):
+        if self.RoboArm is None:
+            return False
+
+        print("ClothSpin: Moving to reference position...")
+        return self.RoboArm.MoveToXYZT(x=-300, y=-40, z=-80, tool=90, speed=10, tolerance=15, timeout=5)
+
+
+    def CalibrateReferencePosition(self):
+        if self.RoboArm is None:
+            return False
+
+        # move to prepare position
+        self.MoveToReferencePreparePosition()
+        self.RoboArm.SetDynamicForceAdaption(enable=True, base=500, shoulder=500, elbow=500, hand=500)
+        time.sleep(0.5)
+        self.RoboArm.MoveSingleJoint(joint_id=Joint.BASE.value, angle=-180, speed=50, acc=10, tolerance=5, timeout=1)
+        time.sleep(0.5)
+        self.RoboArm.MoveToXYZT(x=-320, y=-40, z=-120, tool=90, speed=10, tolerance=5, timeout=1)
+        time.sleep(0.5)
+
+        # disable force adaption, arm should settle down
+        self.RoboArm.SetLed(True)
+        self.RoboArm.SetTorqueLock(False)
+        time.sleep(0.5)
+
+        # now get calibration position
+        self.cal_position = self.RoboArm.GetPosition()
+        self.RoboArm.SetLed(False)
+        self.RoboArm.SetTorqueLock(True)
+
+        # now lift the arm to the prepare position
+        self.MoveToReferencePreparePosition()
+        print("ClothSpin: ##########  calibrate position finished ########## ")
+        print(self.RoboArm.GetPositionReadable())
+        return self.cal_position
+
 
     def MoveToPreparePosition(self, index):
         if self.RoboArm is None:
             return False
 
         print(f"ClothSpin: Moving base to position {index}...")
+        basepos = (self.cal_position['b'] * 180 / math.pi) + base_delta_pos[index] 
         #self.RoboArm.MoveSingleJoint(Joint.BASE.value, base_pos[index], speed=0.5, acc=10, tolerance=5, timeout=3)
-        return self.RoboArm.MoveAllJoints(base=base_pos[index], shoulder=30, elbow=140, tool=self.last_angle_tool, speed=50, tolerance=5, timeout=5)
+        return self.RoboArm.MoveAllJoints(base=basepos, shoulder=38, elbow=145, tool=self.last_angle_tool, speed=50, tolerance=2, timeout=5)
 
 
 
@@ -73,7 +119,7 @@ class ClotheSpin:
             return False
 
         print(f"ClothSpin: Moving gripper to position {index}...")
-        return self.RoboArm.MoveAllJoints(base=base_pos[index], shoulder=41, elbow=132, tool=self.last_angle_tool, speed=30, tolerance=10, timeout=3)
+        return self.RoboArm.MoveAllJoints(base=base_pos[index], shoulder=41, elbow=132, tool=self.last_angle_tool, speed=30, tolerance=3, timeout=3)
 
 
     def MoveToBurnPosition(self):
@@ -85,13 +131,40 @@ class ClotheSpin:
             return False
 
         # grab next item
-        self.OpenGripper()
         self.MoveToPreparePosition(index)
+        self.RoboArm.GetPositionReadable()
+        exit()
+        self.OpenGripper()
         self.MoveGripperToClotheSpin(index)
         self.CloseGripper()
 
         # lift and drop
-        self.RoboArm.MoveSingleJoint(Joint.SHOULDER.value, 25, speed=30, acc=10, tolerance=10, timeout=3)
+        self.RoboArm.MoveSingleJoint(Joint.SHOULDER.value, 25, speed=30, acc=10, tolerance=5, timeout=10)
+        time.sleep(0.5)
         self.MoveToBurnPosition()
         self.OpenGripper()
 
+
+
+    def FindClothePickBasePosition(self):
+        if self.RoboArm is None:
+            return False
+
+        self.RoboArm.SetTorqueLock(False)
+        loop = True
+        while loop:
+            if msvcrt.kbhit():
+                key = msvcrt.getch()
+                if key in (b'\x1b', b'q', b'Q'):  # ESC or 'q'
+                    print("RoArm-M2-S: Exiting teach mode.")
+                    loop = False
+            time.sleep(0.05)
+            pos = self.RoboArm.GetPosition()
+            if pos is None:
+                return None
+            
+            angle_rad = pos.get('b', None)
+            angle_deg = angle_rad * 180 / math.pi
+            print(f"Current base angle: {angle_deg:.2f} degrees")
+
+        self.RoboArm.SetTorqueLock(True)
