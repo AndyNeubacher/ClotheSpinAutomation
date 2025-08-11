@@ -37,9 +37,11 @@ class ClotheSpin:
     def _moveTo_PreparePosition(self, index):
         print(f"ClothSpin: Moving base to prepare-position {index}...")
         base_pos = self.cal_basepos_deg + base_delta_pos[index]
-        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 145, speed=50, acc=10, tolerance=2, timeout=2)
+        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 125, speed=50, acc=10, tolerance=2, timeout=2)
         self.RoboArm.MoveSingleJoint(Joint.SHOULDER.value, 38, speed=50, acc=10, tolerance=2, timeout=2)
-        self.RoboArm.MoveSingleJoint(Joint.BASE.value, base_pos, speed=50, acc=10, tolerance=2, timeout=2)
+        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 16)
+        self.RoboArm.MoveSingleJoint(Joint.BASE.value, base_pos, speed=50, acc=10, tolerance=0.2, timeout=2)
+        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 0)
 
 
     def _moveTo_GripperToClotheSpin(self, index):
@@ -124,7 +126,7 @@ class ClotheSpin:
             return False
         # move to prepare position
         self.RoboArm.MoveToXYZT(x=-300, y=-40, z=-80, tool=90, speed=10, tolerance=15, timeout=5)
-        self.RoboArm.SetDynamicForceAdaption(enable=True, base=100, shoulder=500, elbow=500, hand=500)
+        self.RoboArm.SetDynamicForceAdaption(enable=True, base=50, shoulder=500, elbow=500, hand=500)
         time.sleep(0.5)
         # press gripper against the mechanical stop
         self.RoboArm.MoveSingleJoint(joint_id=Joint.BASE.value, angle=-174, speed=50, acc=10, tolerance=5, timeout=1)
