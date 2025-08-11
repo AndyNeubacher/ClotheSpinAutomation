@@ -30,8 +30,10 @@ if __name__ == "__main__":
         print("Failed to connect to RoArmM2S. Exiting.")
         exit()
 
+    cspin.CalibrateReferencePosition()
+    cspin._test_find_base_position()
     #arm.TeachMode()
-    #exit()
+    exit()
 
 
     # Load LightBurn file
@@ -42,32 +44,32 @@ if __name__ == "__main__":
 
     # calibrate the zero-position robot-arm
     cspin.CalibrateReferencePosition()
-    cspin.MoveToPreparePosition(1)
-    cspin.FindClothePickBasePosition()
-    exit()
-    for i in range(51):
+
+    for i in range(0,10):
         if keyboard.is_pressed('esc'):
             print("ESC pressed, exiting loop.")
             break
 
-        cspin.Pick(i)
-        #sleep(0.1)
-        continue
+        if cspin.Pick(i) == False:
+            continue
+
+        #cspin.MoveToBurnPosition()
 
         air_assist.set_output(1, 'on')
+        sleep(1)
 
         # 1st side burn
-        laser.Start()
-        if (laser.WaitForBurnFinished(300) == False):
-            print("Burn failed or timed out.")
-            break
+        #laser.Start()
+        #if (laser.WaitForBurnFinished(300) == False):
+        #    print("Burn failed or timed out.")
+        #    break
 
         # 2nd side burn
-        cspin.FlipUpsideDown()
-        laser.Start()
-        if (laser.WaitForBurnFinished(300) == False):
-            print("Burn failed or timed out.")
-            break
+        #cspin.FlipUpsideDown()
+        #laser.Start()
+        #if (laser.WaitForBurnFinished(300) == False):
+        #    print("Burn failed or timed out.")
+        #    break
 
         air_assist.set_output(1, 'off')
 

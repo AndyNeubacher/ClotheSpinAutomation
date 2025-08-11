@@ -4,6 +4,9 @@ import time
 import msvcrt
 import math
 from enum import Enum
+import time
+from ping3 import ping
+
 
 
 
@@ -12,6 +15,7 @@ class Joint(Enum):
     SHOULDER = 2
     ELBOW = 3
     TOOL = 4
+
 
 
 
@@ -58,9 +62,21 @@ class RoArmM2S:
                 
 
     def InitPosition(self):
+        # echeck if the robot arm is reachable
+        #if self._wait_for_reboot_finished(self.ip_address, 1) == False:
+        #    print(f"RoArm-M2-S: Could not connect to RoArm-M2-S at {self.ip_address}.")
+        #    return None
+        
+        # reboot ESP32
+        #command = {"T": 600}
+        #response = self._send_command(command)
+        #if self._wait_for_reboot_finished(self.ip_address, 20) == False:
+        #    print(f"RoArm-M2-S: Reboot failed or timed out.")
+        #    return None
+
         command = {"T": 100}
         response = self._send_command(command)
-        #time.sleep(1)
+        time.sleep(1)
         #self.MoveToXYZT(100, 100, -20, 0, 0.3, 10, 3)
         #self.SetJointPID(Joint.BASE.value, 30, 8)
         #self.SetJointPID(Joint.SHOULDER.value, 30, 0)
@@ -315,3 +331,15 @@ class RoArmM2S:
         #print(f"MoveAllJoints:   +-> reached target angles!")
         return True
 
+
+
+    def _wait_for_reboot_finished(self, target_ip: str, timeout_seconds: int) -> bool:
+        start_time = time.time()
+        while time.time() - start_time < timeout_seconds:
+            response_time = ping(target_ip, unit='s', timeout=1)
+            if response_time is not None and response_time is not False:
+                return True
+            else:
+                time.sleep(1)
+                
+        return False
