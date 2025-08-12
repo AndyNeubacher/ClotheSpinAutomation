@@ -4,13 +4,30 @@ from LightBurn import LightBurn
 from ClotheSpin import ClotheSpin
 from Tasmota import Tasmota
 from time import sleep
+from OpenCV import OpenCV
+import msvcrt
+
+
 
 
 
 if __name__ == "__main__":
 
     # Initialize devices
+    cam = OpenCV("192.168.1.122", 3)
+    while True:
+        cam.DetectClothespin()
+        if msvcrt.kbhit():
+            key = msvcrt.getch()
+            if key in (b'\x1b', b'q', b'Q'):  # ESC or 'q'
+                break
 
+
+    cam.DetectClothespin()
+    cam.Close()
+    exit()
+
+    # power-plug for air-compressor
     air_assist = Tasmota("192.168.1.111", 3)
     air_assist.set_output(1, 'off')
 
@@ -21,7 +38,11 @@ if __name__ == "__main__":
     #    laser.Close()
     #    exit()
 
-    #laser.SelectAndLoadLightBurnFile("C:\\Users\\Administrator\\Google Drive\\Musi\\Laserprojekte")
+    # Load LightBurn file
+    #if not laser.SelectAndLoadLightBurnFile("C:\\Users\\Administrator\\Google Drive\\Musi\\Laserprojekte"):
+    #    print("Failed to load the LightBurn file. Exiting.")
+    #    exit()
+
 
     # Initialize RoArmM2S
     arm = RoArmM2S("192.168.1.121", 10)
@@ -30,22 +51,13 @@ if __name__ == "__main__":
         print("Failed to connect to RoArmM2S. Exiting.")
         exit()
 
-    #cspin.CalibrateReferencePosition()
+    # calibrate the zero-position robot-arm
+    cspin.CalibrateReferencePosition()
     #cspin._test_find_base_position()
     #arm.TeachMode()
     #exit()
 
-
-    # Load LightBurn file
-    #if not laser.SelectAndLoadLightBurnFile("C:\\Users\\Administrator\\Google Drive\\Musi\\Laserprojekte"):
-    #    print("Failed to load the LightBurn file. Exiting.")
-    #    exit()
-
-
-    # calibrate the zero-position robot-arm
-    cspin.CalibrateReferencePosition()
-
-    for i in range(0,50):
+    for i in range(0,51):
         if keyboard.is_pressed('esc'):
             print("ESC pressed, exiting loop.")
             break
