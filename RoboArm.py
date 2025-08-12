@@ -316,7 +316,7 @@ class RoArmM2S:
                 return False
 
             act_torque = self.GetTorque(joint_id)
-            #print(act_torque)
+            print(act_torque)
             if max_torque > 0:
                 if act_torque < max_torque:
                     continue

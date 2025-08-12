@@ -15,9 +15,21 @@ base_delta_pos = [   0.0,   6.8,  13.8,  20.9,  27.9,
                    241.6, 248.7, 255.9, 263.1, 270.1, #39 
                    277.4, 284.6, 291.7, 298.8,  None,
                    310.9, 318.0, 325.0, 331.7, 338.8, #49
-                   346.0
-]
+                   346.0]
 
+elbow_pos = [   132.0, 132.1, 132.2, 132.2, 132.3,
+                132.4, 132.5, 132.6, 132.6, 132.7, #9
+                132.8, 132.9, 133.0, 133.1, 133.2,
+                133.3, 133.4, 133.4, 133.5, 133.6, #19
+                133.7, 133.8, 133.9, 134.0, 134.0,
+                134.0, 134.0, 133.9, 133.8, 133.7, #29
+                133.6, 133.5, 133.4, 133.4, 133.3,
+                133.2, 133.1, 133.0, 132.9, 132.8, #39
+                132.7, 132.6, 132.6, 132.5, 132.4,
+                132.3, 132.2, 132.2, 132.1, 132.0, #49
+                132.0]
+
+gripper_pick_offset = 0.2
 
 
 
@@ -32,36 +44,6 @@ class ClotheSpin:
         self.last_angle_tool = 180  # closed gripper
         self.cal_position = None
         self.cal_basepos_deg = None
-
-
-    def _moveTo_PreparePosition(self, index):
-        print(f"ClothSpin: Moving base to prepare-position {index}...")
-        base_pos = self.cal_basepos_deg + base_delta_pos[index]
-        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 125, speed=50, acc=10, tolerance=2, timeout=2)
-        self.RoboArm.MoveSingleJoint(Joint.SHOULDER.value, 38, speed=50, acc=10, tolerance=2, timeout=2)
-        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 16)
-        self.RoboArm.MoveSingleJoint(Joint.BASE.value, base_pos, speed=50, acc=10, tolerance=0.2, timeout=2)
-        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 0)
-
-
-    def _moveTo_GripperToClotheSpin(self, index):
-        print(f"ClothSpin: Moving gripper to position {index}...")
-        base_pos = self.cal_basepos_deg + base_delta_pos[index]
-
-        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 16)
-        self.RoboArm.SetJointPID(Joint.ELBOW.value, 16, 16)
-        self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 16)
-
-        self.RoboArm.MoveSingleJoint(Joint.BASE.value, base_pos-0.5, speed=50, acc=10, tolerance=0.2, timeout=2)
-        time.sleep(0.5)
-        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 132, speed=50, acc=10, tolerance=0.2, timeout=2)
-        time.sleep(0.5)
-        self.RoboArm.MoveSingleJoint(Joint.SHOULDER.value, 42, speed=50, acc=10, tolerance=0.2, timeout=2)
-        time.sleep(0.5)
-
-        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 0)
-        self.RoboArm.SetJointPID(Joint.ELBOW.value, 16, 0)
-        self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 0)
 
 
     def _test_find_base_position(self):
@@ -111,6 +93,44 @@ class ClotheSpin:
                 act_pos = self.RoboArm.GetAngle(Joint.BASE.value)
                 print(f"ClothSpin: pos={pos}, array={base_delta_pos[pos]:.2f}, target={base_pos:.2f}, actual={act_pos:2f}")
                 #print(self.RoboArm.GetPositionReadable())   
+
+
+    def _moveTo_PreparePosition(self, index):
+        print(f"ClothSpin: Moving base to prepare-position {index}...")
+        base_pos_offset = self.cal_basepos_deg + base_delta_pos[index] + gripper_pick_offset
+        self.RoboArm.MoveAllJoints(base=base_pos_offset, shoulder=35, elbow=125, tool=self.last_angle_tool, speed=50, tolerance=2, timeout=3)
+        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 16)
+        self.RoboArm.MoveSingleJoint(Joint.BASE.value, base_pos_offset, speed=50, acc=10, tolerance=0.2, timeout=2)
+
+
+    def _moveTo_GripperToClotheSpin(self, index):
+        print(f"ClothSpin: Moving gripper to position {index}...")
+        base_pos = self.cal_basepos_deg + base_delta_pos[index] 
+
+        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 16)
+        self.RoboArm.SetJointPID(Joint.ELBOW.value, 16, 16)
+        self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 16)
+
+        # move base+elbow over clothe-spin (base with offset)
+        self.RoboArm.MoveSingleJoint(Joint.BASE.value, base_pos+gripper_pick_offset, speed=50, acc=10, tolerance=0.2, timeout=2)
+        time.sleep(0.5)
+        
+        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, elbow_pos[index], speed=20, acc=10, tolerance=0.2, timeout=2)
+        time.sleep(0.5)
+
+        self.RoboArm.SetDynamicForceAdaption(enable=True, base=500, shoulder=5, elbow=5, hand=500)
+
+        # lower elbow with very less force
+        self.RoboArm.MoveSingleJoint(Joint.SHOULDER.value, 42, speed=50, acc=10, tolerance=0.2, timeout=2)
+        time.sleep(0.5)
+
+        # now center base to correct position
+        self.RoboArm.MoveSingleJoint(Joint.BASE.value, base_pos, speed=50, acc=10, tolerance=0.2, timeout=2)
+
+        self.RoboArm.SetDynamicForceAdaption(enable=True, base=1000, shoulder=500, elbow=500, hand=500)
+        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 0)
+        self.RoboArm.SetJointPID(Joint.ELBOW.value, 16, 0)
+        self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 0)
 
 
     def IsConnected(self):
@@ -182,7 +202,7 @@ class ClotheSpin:
 
         # now lift only in Z-axis with inverse kinematics
         pos = self.RoboArm.GetPosition()
-        self.RoboArm.MoveToXYZT(pos['x'], pos['y'], pos['z'] + 50, self.last_angle_tool, speed=10, tolerance=5, timeout=1)
+        self.RoboArm.MoveToXYZT(pos['x'], pos['y'], pos['z'] + 50, self.last_angle_tool, speed=5, tolerance=5, timeout=1)
 
 
     def MoveToBurnPosition(self):

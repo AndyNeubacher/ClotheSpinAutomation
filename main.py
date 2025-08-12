@@ -30,10 +30,10 @@ if __name__ == "__main__":
         print("Failed to connect to RoArmM2S. Exiting.")
         exit()
 
-    cspin.CalibrateReferencePosition()
-    cspin._test_find_base_position()
+    #cspin.CalibrateReferencePosition()
+    #cspin._test_find_base_position()
     #arm.TeachMode()
-    exit()
+    #exit()
 
 
     # Load LightBurn file
