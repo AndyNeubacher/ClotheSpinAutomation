@@ -62,10 +62,10 @@ class RoArmM2S:
                 
 
     def InitPosition(self):
-        # echeck if the robot arm is reachable
-        #if self._wait_for_reboot_finished(self.ip_address, 1) == False:
-        #    print(f"RoArm-M2-S: Could not connect to RoArm-M2-S at {self.ip_address}.")
-        #    return None
+        # check if the robot arm is reachable
+        if self._wait_for_reboot_finished(self.ip_address, 1) == False:
+            print(f"RoArm-M2-S: Could not connect to RoArm-M2-S at {self.ip_address}.")
+            return None
         
         # reboot ESP32
         #command = {"T": 600}
@@ -74,16 +74,17 @@ class RoArmM2S:
         #    print(f"RoArm-M2-S: Reboot failed or timed out.")
         #    return None
 
+        self.SetDynamicForceAdaption(enable=True, base=500, shoulder=500, elbow=500, hand=500)
+
+        # reset old PID settings
+        command = {"T": 109}
+        response = self._send_command(command)
+
+        # init arm-position
         command = {"T": 100}
         response = self._send_command(command)
-        time.sleep(1)
+        
         #self.MoveToXYZT(100, 100, -20, 0, 0.3, 10, 3)
-        #self.SetJointPID(Joint.BASE.value, 30, 8)
-        #self.SetJointPID(Joint.SHOULDER.value, 30, 0)
-        #self.SetJointPID(Joint.ELBOW.value, 16, 16)
-        #self.SetJointPID(Joint.TOOL.value, 16, 16)
-        #self.MoveAllJoints(base=0, shoulder=30, elbow=140, tool=180, speed=50, tolerance=5, timeout=3)
-        self.SetDynamicForceAdaption(enable=True, base=500, shoulder=500, elbow=500, hand=500)
         print(self.GetPositionReadable())
         return self.GetPosition()
 
@@ -117,6 +118,28 @@ class RoArmM2S:
 
 
 
+    def GetTorque(self, joint_id):
+        if(joint_id < 1 or joint_id > 4):
+            print(f"RoArm-M2-S: Invalid joint ID {joint_id}. Must be between 1 and 4.")
+            return None
+
+        position_data = self.GetPosition()
+        if position_data is None:
+            return None
+
+        if joint_id == Joint.BASE.value:
+            torque = position_data.get('torB', None)
+        elif joint_id == Joint.SHOULDER.value:
+            torque = position_data.get('torS', None)
+        elif joint_id == Joint.ELBOW.value:
+            torque = position_data.get('torE', None)
+        elif joint_id == Joint.TOOL.value:
+            torque = position_data.get('torH', None)
+
+        return torque
+
+
+
     def GetPositionReadable(self):
         pos = self.GetPosition()
         if pos is None:
@@ -136,7 +159,12 @@ class RoArmM2S:
         y = pos.get('y', 0)
         z = pos.get('z', 0)
 
-        return (f"X:{x:.2f}, Y:{y:.2f}, Z:{z:.2f}, b:{b_deg:.2f}, s:{s_deg:.2f}, e:{e_deg:.2f}, t:{t_deg:.2f}")
+        t_b = pos.get('torB', 0)
+        t_s = pos.get('torS', 0)
+        t_e = pos.get('torE', 0)
+        t_t = pos.get('torH', 0)
+
+        return (f"X:{x:.2f}, Y:{y:.2f}, Z:{z:.2f}, b:{b_deg:.2f}, s:{s_deg:.2f}, e:{e_deg:.2f}, t:{t_deg:.2f}, torque:{t_b:.0f}/{t_s:.0f}/{t_e:.0f}/{t_t:.0f}")
 
 
 
@@ -246,12 +274,13 @@ class RoArmM2S:
 
     def MoveSingleJoint(self, joint_id: int, angle: float, speed=0.2, acc=10, tolerance=5, timeout=3):
         command = {"T":121,"joint":joint_id,"angle":angle,"spd":speed,"acc":acc}
-        print(f"MoveSingleJoint: id={joint_id}, angle={angle}, speed={speed}, acc={acc}")
+        #print(f"MoveSingleJoint: id={joint_id}, angle={angle}, speed={speed}, acc={acc}")
         if self._send_command(command) is None:
             return False
         
         start_time = time.time()
         while True:
+            #pos = self.GetPosition()
             # check for given timeout
             if time.time() - start_time > timeout:
                 print("MoveToXYZ: timeout reached while waiting for joint movement")
@@ -271,6 +300,32 @@ class RoArmM2S:
         #print(f"MoveSingleJoint:   +-> id={joint_id} reached target angle {angle}° (current: {act_angle}°)")
         return True
 
+
+    def MoveSingleJointTorqueLimited(self, joint_id: int, angle: float, speed=0.2, acc=10, max_torque=5, timeout=3):
+        command = {"T":121,"joint":joint_id,"angle":angle,"spd":speed,"acc":acc}
+        print(f"MoveSingleJoint: id={joint_id}, angle={angle}, speed={speed}, acc={acc}")
+        if self._send_command(command) is None:
+            return False
+        
+        start_time = time.time()
+        while True:
+            # check for given timeout
+            if time.time() - start_time > timeout:
+                print("MoveToXYZ: timeout reached while waiting for joint movement")
+                print(self.GetPositionReadable())
+                return False
+
+            act_torque = self.GetTorque(joint_id)
+            #print(act_torque)
+            if max_torque > 0:
+                if act_torque < max_torque:
+                    continue
+            else:
+                if act_torque > max_torque:
+                    continue
+            break
+
+        return True
 
 
     def MoveAllJoints(self, base=None, shoulder=None, elbow=None, tool=None, speed=0.2, tolerance=5, timeout=3):

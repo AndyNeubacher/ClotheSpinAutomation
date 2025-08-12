@@ -30,10 +30,10 @@ if __name__ == "__main__":
         print("Failed to connect to RoArmM2S. Exiting.")
         exit()
 
-    #cspin.CalibrateReferencePosition()
-    #cspin._test_find_base_position()
+    cspin.CalibrateReferencePosition()
+    cspin._test_find_base_position()
     #arm.TeachMode()
-    #exit()
+    exit()
 
 
     # Load LightBurn file
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     # calibrate the zero-position robot-arm
     cspin.CalibrateReferencePosition()
 
-    for i in range(0,51):
+    for i in range(0,50):
         if keyboard.is_pressed('esc'):
             print("ESC pressed, exiting loop.")
             break
