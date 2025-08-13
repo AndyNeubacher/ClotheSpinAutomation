@@ -86,11 +86,11 @@ class OpenCV:
 
 
         # draw the hull-courve
-        #drawing = np.zeros((canny_output.shape[0], canny_output.shape[1], 3), dtype=np.uint8)
-        #for i in range(len(hull_contours)):
-        #    color = (rng.randint(0,256), rng.randint(0,256), rng.randint(0,256))
-        #    cv2.drawContours(drawing, hull_contours, i, color, 1, cv2.LINE_8, hierarchy, 0)
-        #cv2.imshow('hull', drawing)
+        drawing = np.zeros((canny_output.shape[0], canny_output.shape[1], 3), dtype=np.uint8)
+        for i in range(len(hull_contours)):
+            color = (rng.randint(0,256), rng.randint(0,256), rng.randint(0,256))
+            cv2.drawContours(drawing, hull_contours, i, color, 1, cv2.LINE_8, hierarchy, 0)
+        cv2.imshow('hull', drawing)
         
         # draw area-filtered contours
         #drawing = np.zeros((canny_output.shape[0], canny_output.shape[1], 3), dtype=np.uint8)
@@ -114,7 +114,7 @@ class OpenCV:
                 # Optional: Überprüfen des Verhältnisses von Breite zu Höhe (Aspect Ratio)
                 x, y, w, h = cv2.boundingRect(contour)
                 aspect_ratio = float(w)/h
-                if 0.7 < aspect_ratio < 1.2:
+                if 0.5 < aspect_ratio < 2:
                     clothspin_contour_found = contour
                     break
 
@@ -185,6 +185,8 @@ class OpenCV:
             cv2.imshow('cropped', clip_frame)       # show frame with bounding-box
         else:
             cv2.imshow('cropped', cropped_frame)    # show cropped frame without detection
+
+        cv2.waitKey(1)
 
         return res
 

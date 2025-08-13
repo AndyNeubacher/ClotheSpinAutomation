@@ -15,17 +15,9 @@ if __name__ == "__main__":
 
     # Initialize devices
     cam = OpenCV("192.168.1.122", 3)
-    while True:
-        cam.DetectClothespin()
-        if msvcrt.kbhit():
-            key = msvcrt.getch()
-            if key in (b'\x1b', b'q', b'Q'):  # ESC or 'q'
-                break
-
-
-    cam.DetectClothespin()
-    cam.Close()
-    exit()
+    if not cam.connected:
+        print("Failed to connect to WiFi camera. Exiting.")
+        exit()
 
     # power-plug for air-compressor
     air_assist = Tasmota("192.168.1.111", 3)
@@ -65,7 +57,24 @@ if __name__ == "__main__":
         if cspin.Pick(i) == False:
             continue
 
-        #cspin.MoveToBurnPosition()
+        cspin.MoveToOpticalInspection()
+
+        # optical detection of the spin (max. 10 attempts)
+        for i in range(10):
+            frame = cam.DetectClothespin()
+            if frame is not None:
+                break
+
+        # lift out of the blackbox
+        cspin.LiftArm(100)
+
+        # haven't found a clothespin -> move to waste-basket
+        if frame is None:
+            cspin.MoveToWastePosition()
+            continue
+
+
+        cspin.MoveToBurnPosition()
 
         air_assist.set_output(1, 'on')
         #sleep(1)
