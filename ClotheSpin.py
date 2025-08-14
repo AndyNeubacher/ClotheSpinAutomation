@@ -115,6 +115,18 @@ class ClotheSpin:
         self.RoboArm.SetGripper(self.last_angle_tool, speed=0.2)
 
 
+    def SetLed(self, enable: bool):
+        self.RoboArm.SetLed(enable)
+
+
+    def LedBlink(self, cnt=1, interval=0.2):
+            for i in range(cnt):
+                self.SetLed(True)
+                time.sleep(interval)
+                self.SetLed(False)
+                time.sleep(interval)
+
+
     def CalibrateReferencePosition(self):
         if self.RoboArm is None:
             return False
@@ -211,22 +223,39 @@ class ClotheSpin:
         if self.RoboArm is None:
             return False
 
-        self.RoboArm.MoveToXYZT(230, -170, 50, self.last_angle_tool, 50, 20, 5)
+        self.RoboArm.MoveToXYZT(210, -195, 50, self.last_angle_tool, 50, 20, 5)
         time.sleep(0.5)
-        self.RoboArm.MoveToXYZT(245, -245, -105, self.last_angle_tool, 50, 20, 2)
+        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 16)
+        self.RoboArm.SetJointPID(Joint.ELBOW.value, 16, 16)
+        self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 16)
+        self.RoboArm.MoveToXYZT(250, -238, -100, self.last_angle_tool, 1, 20, 5)
+        time.sleep(0.5)
+        self.OpenGripper()
+        time.sleep(0.5)
+        #self.RoboArm.MoveToXYZT(247, -230, -105, self.last_angle_tool, 1, 20, 5)
+        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 103, speed=10, acc=10, tolerance=1, timeout=2)
+        self.RoboArm.SetTorqueLock(False)
 
 
 
     def MoveToBurnPosition(self):
         if self.RoboArm is None:
             return False
-        self.RoboArm.MoveToXYZT(-35, -360, 0, self.last_angle_tool, 50, 10, 10)
-        self.OpenGripper()
+        #self.RoboArm.MoveToXYZT(100, -100, 445, self.last_angle_tool, 50, 5, 10)
+        #"b":-0.765456413,"s":0.670349604,"e":-0.771592336
+        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 16)
+        self.RoboArm.SetJointPID(Joint.ELBOW.value, 16, 16)
+        self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 16)
+        self.RoboArm.MoveSingleJoint(Joint.BASE.value, -44, speed=50, acc=10, tolerance=0.2, timeout=2)
+        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, -44, speed=50, acc=10, tolerance=0.2, timeout=2)
+        self.RoboArm.MoveSingleJoint(Joint.SHOULDER.value, 40, speed=50, acc=10, tolerance=0.2, timeout=2)
         time.sleep(0.5)
 
 
     def MoveToFinishedPosition(self):
-        self.MoveToBurnPosition()
+        if self.RoboArm is None:
+            return False
+        self.RoboArm.MoveToXYZT(-35, -360, 0, self.last_angle_tool, 50, 10, 10)
 
 
     def MoveToWastePosition(self):
@@ -240,9 +269,15 @@ class ClotheSpin:
         time.sleep(0.5)
 
 
-    def LiftArm(self, z_pos):
+    def LiftFromOpticalInspection(self):
         if self.RoboArm is None:
             return False
 
+        self.RoboArm.SetDynamicForceAdaption(enable=False, base=0, shoulder=0, elbow=0, hand=0)
+        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 16)
+        self.RoboArm.SetJointPID(Joint.ELBOW.value, 16, 16)
+        self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 16)
+        self.RoboArm.SetTorqueLock(True)
+        self.CloseGripper()
         pos = self.RoboArm.GetPosition()
-        self.RoboArm.MoveToXYZT(pos['x'], pos['y'], z_pos, self.last_angle_tool, speed=0.1, tolerance=20, timeout=3)
+        self.RoboArm.MoveToXYZT(pos['x'], pos['y'], 100, self.last_angle_tool, speed=0.1, tolerance=20, timeout=3)

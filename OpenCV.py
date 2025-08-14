@@ -3,6 +3,9 @@ import numpy as np
 from ping3 import ping
 import random as rng
 import math
+import time
+import threading
+
 
 
 class OpenCV:
@@ -31,6 +34,48 @@ class OpenCV:
         end_col = int(width * width_perc_end / 100)
 
         return frame[start_row:end_row, start_col:end_col]
+
+
+    def _find_photobox(self, frame):
+        return 35, 70, 40, 90
+
+        height, width = frame.shape[:2]
+        frame_area = height * width
+
+        grey = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        blurred = cv2.bilateralFilter(grey, 11, 21, 7)
+        _, thresh = cv2.threshold(blurred, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_TRIANGLE)
+        #cv2.imshow('thresh', thresh)
+
+        canny_output = cv2.Canny(thresh, 10, 100)
+        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        drawing = np.zeros((canny_output.shape[0], canny_output.shape[1], 3), dtype=np.uint8)
+        for i in range(len(filtered_contours)):
+            color = (rng.randint(0,256), rng.randint(0,256), rng.randint(0,256))
+            cv2.drawContours(drawing, filtered_contours, i, color, 1, cv2.LINE_8, hierarchy, 0)
+        cv2.imshow('contours', drawing)
+
+        filtered_contours = [cnt for cnt in contours if (cv2.contourArea(cnt) > frame_area*0.3) and (cv2.contourArea(cnt) < frame_area*0.8)]
+        if len(filtered_contours) == 0:
+            return None
+        
+        for contour in contours:
+            # Calculate the area of the contour
+            contour_area = cv2.contourArea(contour)
+
+            # Calculate the area of the convex hull
+            hull = cv2.convexHull(contour)
+            hull_area = cv2.contourArea(hull)
+
+            # Avoid division by zero
+            if hull_area > (frame_area * 0.4):
+                solidity = float(contour_area) / hull_area
+                x, y, w, h = cv2.boundingRect(contour)
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                cv2.imshow('Found Black Box', frame)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
 
 
 
@@ -154,7 +199,8 @@ class OpenCV:
                 return None
             
             if self.cap is None:
-                self.cap = cv2.VideoCapture(self.rtsp_sub_url)
+                # open the video-stream
+                self.cap = cv2.VideoCapture(self.rtsp_main_url)
 
             if not self.cap.isOpened():
                 print("Error: Cannot open RTSP stream")
@@ -164,31 +210,39 @@ class OpenCV:
             if ret is None or frame is None:
                 return None
 
+            # close right after we got a valid frame
+            self.cap.release()
+            self.cap = None
+
+
+
         # crop to interesting region only
-        cropped_frame = self._crop_frame_per(frame, 30, 70, 40, 90)
-
-        # detect object
-        res = self._detectSpin(cropped_frame)
+        res = self._find_photobox(frame)
         if res is not None:
-            clip_frame, rect, (cX, cY), angle = res
+            w_s, w_e, h_s, h_e = res
+            cropped_frame = self._crop_frame_per(frame, w_s, w_e, h_s, h_e)#30, 70, 40, 90)
 
-            # 7. Visualisierung
-            box = cv2.boxPoints(rect)
-            box = np.int_(box)
-            cv2.drawContours(clip_frame, [box], 0, (0, 255, 0), 2)
-            cv2.circle(clip_frame, (cX, cY), 7, (255, 0, 0), -1)
-            cv2.putText(clip_frame, f"center: ({cX}, {cY})", (cX + 10, cY + 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-            cv2.putText(clip_frame, f"angle: {angle:.2f} Grad", (cX + 10, cY + 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+            # detect object
+            res = self._detectSpin(cropped_frame)
+            if res is not None:
+                clip_frame, rect, (cX, cY), angle = res
 
-            cv2.imshow('cropped', clip_frame)       # show frame with bounding-box
-        else:
-            cv2.imshow('cropped', cropped_frame)    # show cropped frame without detection
+                # 7. Visualisierung
+                #box = cv2.boxPoints(rect)
+                #box = np.int_(box)
+                #cv2.drawContours(clip_frame, [box], 0, (0, 255, 0), 2)
+                #cv2.circle(clip_frame, (cX, cY), 7, (255, 0, 0), -1)
+                #cv2.putText(clip_frame, f"center: ({cX}, {cY})", (cX + 10, cY + 10),
+                #            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                #cv2.putText(clip_frame, f"angle: {angle:.2f} Grad", (cX + 10, cY + 30),
+                #            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
-        cv2.waitKey(1)
+                #cv2.imshow('cropped', clip_frame)       # show frame with bounding-box
+                return res
+            #else:
+                #cv2.imshow('cropped', cropped_frame)    # show cropped frame without detection
 
-        return res
+        return None
 
 
 
@@ -196,6 +250,33 @@ class OpenCV:
         if self.cap is not None:
             self.cap.release()
         cv2.destroyAllWindows()
+        self.cap = None
+
+
+
+
+
+
+
+class LaserCam:
+    def __init__(self, ip_address, timeout=3):
+        self.running = False
+        self.cam = OpenCV("192.168.1.122", 3)
+
+
+    def Start(self):
+        self.running = True
+        while True:
+            if self.cam.connected:
+                self.cam.DetectClothespin()
+                time.sleep(0.1)
+                if self.running == False:
+                    self.Close()
+
+
+    def Close(self):
+        self.running = False
+        self.cam.Close()
 
 
 
@@ -219,3 +300,25 @@ if __name__ == "__main__":
 
     cam.Close()
     exit()
+
+
+
+
+
+    laser_cam = LaserCam("192.168.1.122", 3)
+    cam_thread = threading.Thread(target=laser_cam.Start)
+    cam_thread.start()
+
+
+    #test_pic = cv2.imread('C:/workspace/SNsolutions/ClotheSpinAutomation/test_pic.png')
+    #cam.DetectClothespin(test_pic)
+
+    while True:
+        #cam.DetectClothespin()
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord('q'):
+            break
+
+    laser_cam.Close()
+    cam_thread.join()
+    

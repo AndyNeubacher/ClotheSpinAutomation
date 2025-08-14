@@ -6,7 +6,7 @@ from Tasmota import Tasmota
 from time import sleep
 from OpenCV import OpenCV
 import msvcrt
-
+import threading
 
 
 
@@ -14,6 +14,10 @@ import msvcrt
 if __name__ == "__main__":
 
     # Initialize devices
+    #cam = LaserCam("192.168.1.122", 3)
+    #cam_thread = threading.Thread(target=cam.Start)
+    #cam_thread.start()
+    
     cam = OpenCV("192.168.1.122", 3)
     if not cam.connected:
         print("Failed to connect to WiFi camera. Exiting.")
@@ -60,13 +64,15 @@ if __name__ == "__main__":
         cspin.MoveToOpticalInspection()
 
         # optical detection of the spin (max. 10 attempts)
-        for i in range(10):
+        for i in range(5):
             frame = cam.DetectClothespin()
             if frame is not None:
+                cspin.LedBlink(1, 0.5)
                 break
 
+
         # lift out of the blackbox
-        cspin.LiftArm(100)
+        cspin.LiftFromOpticalInspection()
 
         # haven't found a clothespin -> move to waste-basket
         if frame is None:
@@ -74,10 +80,12 @@ if __name__ == "__main__":
             continue
 
 
-        cspin.MoveToBurnPosition()
+        cspin.MoveToBurnPosition()  #570mm höhe
 
         air_assist.set_output(1, 'on')
-        #sleep(1)
+        cspin.SetLed(True)
+        sleep(1)
+        cspin.SetLed(False)
 
         # 1st side burn
         #laser.Start()
@@ -99,4 +107,5 @@ if __name__ == "__main__":
 
     # Cleanup
     air_assist.set_output(1, 'off')
+    cam.Close()
     #laser.Close()
