@@ -131,14 +131,15 @@ class ClotheSpin:
         if self.RoboArm is None:
             return False
         # move to prepare position
-        self.RoboArm.MoveToXYZT(x=-50, y=-260, z=50, tool=90, speed=5, tolerance=50, timeout=3)
-        self.RoboArm.MoveToXYZT(x=-300, y=-40, z=-80, tool=90, speed=5, tolerance=10, timeout=3)
+        self.RoboArm.MoveToXYZT(x=-50, y=-260, z=50, tool=127, speed=5, tolerance=50, timeout=3)
+        self.RoboArm.MoveToXYZT(x=-300, y=-40, z=-50, tool=127, speed=5, tolerance=2, timeout=3)
+        self.RoboArm.MoveToXYZT(x=-300, y=-40, z=-80, tool=127, speed=5, tolerance=2, timeout=3)
         self.RoboArm.SetDynamicForceAdaption(enable=True, base=100, shoulder=500, elbow=500, hand=500)
         # press gripper against the mechanical stop
         self.RoboArm.MoveSingleJointTorqueLimited(joint_id=Joint.BASE.value, angle=-180, speed=5, acc=5, max_torque=-50, timeout=1)
         time.sleep(0.5)
         # move arm to reference-end position
-        self.RoboArm.MoveToXYZT(x=-320, y=-40, z=-120, tool=90, speed=10, tolerance=5, timeout=1)
+        self.RoboArm.MoveToXYZT(x=-320, y=-40, z=-120, tool=127, speed=10, tolerance=5, timeout=1)
         time.sleep(0.5)
 
         # disable force adaption, arm should settle down
@@ -156,7 +157,7 @@ class ClotheSpin:
 
         # now lift the arm to the prepare position
         print("ClothSpin: CALIBRATED-REFERENCE: " + self.RoboArm.GetPositionReadable())
-        self.RoboArm.MoveAllJoints(base=self.cal_basepos_deg, shoulder=30, elbow=120, tool=90, speed=50, tolerance=5, timeout=1)
+        self.RoboArm.MoveAllJoints(base=self.cal_basepos_deg, shoulder=30, elbow=120, tool=127, speed=50, tolerance=5, timeout=1)
         self.OpenGripper()
         return self.cal_position
 
@@ -179,7 +180,7 @@ class ClotheSpin:
         # now lift only in Z-axis with inverse kinematics
         pos = self.RoboArm.GetPosition()
         self.RoboArm.MoveToXYZT(pos['x'], pos['y'], pos['z'] + 50, self.last_angle_tool, speed=0.1, tolerance=10, timeout=1)
-        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 125, speed=50, acc=10, tolerance=5, timeout=1)
+        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 155, speed=50, acc=10, tolerance=5, timeout=1)
 
 
     def MoveToPreparePosition(self, index):
@@ -223,16 +224,17 @@ class ClotheSpin:
         if self.RoboArm is None:
             return False
 
+        self.RoboArm.MoveSingleJoint(Joint.BASE.value, -60, speed=50, acc=10, tolerance=5, timeout=3)
         self.RoboArm.MoveToXYZT(210, -195, 50, self.last_angle_tool, 50, 20, 5)
         time.sleep(0.5)
         self.RoboArm.SetJointPID(Joint.BASE.value, 16, 16)
         self.RoboArm.SetJointPID(Joint.ELBOW.value, 16, 16)
         self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 16)
-        self.RoboArm.MoveToXYZT(250, -238, -100, self.last_angle_tool, 1, 20, 5)
+        #self.RoboArm.MoveToXYZT(250, -238, -100, self.last_angle_tool, 1, 20, 5)
+        self.RoboArm.MoveToXYZT(235, -245, -100, self.last_angle_tool, 1, 20, 5)
         time.sleep(0.5)
         self.OpenGripper()
         time.sleep(0.5)
-        #self.RoboArm.MoveToXYZT(247, -230, -105, self.last_angle_tool, 1, 20, 5)
         self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 103, speed=10, acc=10, tolerance=1, timeout=2)
         self.RoboArm.SetTorqueLock(False)
 
@@ -241,21 +243,31 @@ class ClotheSpin:
     def MoveToBurnPosition(self):
         if self.RoboArm is None:
             return False
-        #self.RoboArm.MoveToXYZT(100, -100, 445, self.last_angle_tool, 50, 5, 10)
-        #"b":-0.765456413,"s":0.670349604,"e":-0.771592336
-        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 16)
-        self.RoboArm.SetJointPID(Joint.ELBOW.value, 16, 16)
-        self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 16)
-        self.RoboArm.MoveSingleJoint(Joint.BASE.value, -44, speed=50, acc=10, tolerance=0.2, timeout=2)
-        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, -44, speed=50, acc=10, tolerance=0.2, timeout=2)
-        self.RoboArm.MoveSingleJoint(Joint.SHOULDER.value, 40, speed=50, acc=10, tolerance=0.2, timeout=2)
+        
+        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 0)
+        self.RoboArm.SetJointPID(Joint.ELBOW.value, 16, 0)
+        self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 0)
+
+        #self.RoboArm.SetDynamicForceAdaption(enable=True, base=1000, shoulder=1000, elbow=1000, hand=1000)
+        self.RoboArm.SetDynamicForceAdaption(enable=False, base=1000, shoulder=1000, elbow=1000, hand=1000)
+
+        self.RoboArm.MoveSingleJoint(Joint.BASE.value, -42, speed=50, acc=10, tolerance=1, timeout=3) #42.5
+        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 150, speed=50, acc=10, tolerance=1, timeout=3)
+        self.RoboArm.MoveSingleJoint(Joint.SHOULDER.value, -46, speed=50, acc=10, tolerance=1, timeout=3)
+        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 41, speed=50, acc=10, tolerance=1, timeout=3)   #42
         time.sleep(0.5)
+
 
 
     def MoveToFinishedPosition(self):
         if self.RoboArm is None:
             return False
+        
+        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 150, speed=50, acc=10, tolerance=1, timeout=3)
         self.RoboArm.MoveToXYZT(-35, -360, 0, self.last_angle_tool, 50, 10, 10)
+        self.OpenGripper()
+        time.sleep(0.5)
+
 
 
     def MoveToWastePosition(self):

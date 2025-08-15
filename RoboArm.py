@@ -74,6 +74,7 @@ class RoArmM2S:
         #    print(f"RoArm-M2-S: Reboot failed or timed out.")
         #    return None
 
+        self.MoveSingleJoint(Joint.ELBOW.value, 150, speed=50, acc=10, tolerance=10, timeout=3)
         self.SetDynamicForceAdaption(enable=True, base=500, shoulder=500, elbow=500, hand=500)
 
         # reset old PID settings

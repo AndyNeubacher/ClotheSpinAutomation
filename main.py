@@ -24,7 +24,7 @@ if __name__ == "__main__":
         exit()
 
     # power-plug for air-compressor
-    air_assist = Tasmota("192.168.1.111", 3)
+    air_assist = Tasmota("192.168.1.111", 1)
     air_assist.set_output(1, 'off')
 
     # Start LightBurn
@@ -100,6 +100,7 @@ if __name__ == "__main__":
         #    print("Burn failed or timed out.")
         #    break
 
+        sleep(1)
         air_assist.set_output(1, 'off')
 
         cspin.MoveToFinishedPosition()
