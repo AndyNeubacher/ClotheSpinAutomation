@@ -1,13 +1,11 @@
 import keyboard
 from RoboArm import RoArmM2S
+from RoboArm import LogLevel
 from LightBurn import LightBurn
 from ClotheSpin import ClotheSpin
 from Tasmota import Tasmota
 from time import sleep
 from OpenCV import OpenCV
-import msvcrt
-import threading
-
 
 
 
@@ -41,7 +39,7 @@ if __name__ == "__main__":
 
 
     # Initialize RoArmM2S
-    arm = RoArmM2S("192.168.1.121", 10)
+    arm = RoArmM2S("192.168.1.121", LogLevel.DEBUG, 5)
     cspin = ClotheSpin(arm)
     if not cspin.connected:
         print("Failed to connect to RoArmM2S. Exiting.")
