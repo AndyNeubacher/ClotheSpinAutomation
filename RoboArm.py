@@ -3,8 +3,11 @@ import json
 import time
 import msvcrt
 import math
-from enum import Enum
 import time
+from enum import Enum
+from Tools import LogLevel
+from Tools import Color
+from Tools import Logging
 from ping3 import ping
 
 
@@ -16,46 +19,19 @@ class Joint(Enum):
     ELBOW = 3
     TOOL = 4
 
-class LogLevel(Enum):
-    NONE = 0
-    ERROR = 1
-    INFO = 2
-    DEBUG = 3
-
-class Color(Enum):
-    RED = 31
-    GREEN = 32
-    YELLOW = 33
-    BLUE = 34
-    MAGENTA = 35
-    CYAN = 36
-    WHITE = 37
-
-
-
-# The decorator function to handle "enter" and "exit" logic
-def log_context(func):
-    def wrapper(*args, **kwargs):
-        self_instance = args[0]
-        self_instance.log_nesting += 3
-        # Call the original function
-        result = func(*args, **kwargs)
-        self_instance.log_nesting -= 3
-        return result
-    return wrapper
-
 
 
 
 
 class RoArmM2S:
-    def __init__(self, ip_address, loglevel=LogLevel.NONE, timeout=3):
+    def __init__(self, ip_address, logging=None, loglevel=LogLevel.NONE, timeout=3):
         self.ip_address = ip_address
         self.base_url = f"http://{self.ip_address}/js"
         self.timeout = timeout
+        self.log = logging
         self.loglevel = loglevel
         self.connected = False
-        self.log_nesting = 0
+
         ret = self.InitPosition()
         if ret is None:
             self._log("Initialization failed.", LogLevel.ERROR)
@@ -63,27 +39,12 @@ class RoArmM2S:
             self._log(f"initialized with IP: {self.ip_address}", LogLevel.INFO)
 
 
-    def _set_color(self, text, color_code):
-        return f"\033[{color_code}m{text}\033[0m"
+    def _log(self, message, msg_level=None, color=None):
+        if self.log is not None:
+            self.log.Print("RoArm-M2-S", message, msg_level, self.loglevel, color)
 
 
-    def _log(self, message, level=None, color=None):
-        if level is None:
-            level = self.loglevel
-
-        nest = ' ' * self.log_nesting
-
-        if self.loglevel.value >= level.value:
-            if level == LogLevel.ERROR:
-                print(self._set_color(f"RoArm-M2-S ERROR: {nest}{message}", color if color is not None else Color.RED.value))
-            elif level == LogLevel.INFO:
-                print(self._set_color(f"RoArm-M2-S INFO : {nest}{message}", color if color is not None else Color.WHITE.value))
-            elif level == LogLevel.DEBUG:
-                print(self._set_color(f"RoArm-M2-S DEBUG: {nest}{message}", color if color is not None else Color.YELLOW.value))
-            else:
-                print(self._set_color(f"RoArm-M2-S UNKNOWN: {nest}{message}", color if color is not None else Color.MAGENTA.value))
-
-    @log_context
+    @Logging()
     def _send_command(self, command_data):
         try:
             self.connected = False
@@ -120,7 +81,7 @@ class RoArmM2S:
             return None
                 
 
-    @log_context
+    @Logging()
     def InitPosition(self):
         self._log("InitPosition: Initializing robot arm.", LogLevel.INFO)
         # check if the robot arm is reachable
@@ -164,16 +125,15 @@ class RoArmM2S:
 
 
 
-    @log_context
+    @Logging()
     def GetPosition(self):
         self._log("GetPosition: Retrieving current position.", LogLevel.DEBUG)
         command = {"T": 105}
-        ret = self._send_command(command)
-        return ret
+        return self._send_command(command)
 
 
 
-    @log_context
+    @Logging()
     def GetAngle(self, joint_id):
         if(joint_id < 1 or joint_id > 4):
             self._log(f"Invalid joint ID {joint_id}. Must be between 1 and 4.", LogLevel.ERROR)
@@ -193,11 +153,11 @@ class RoArmM2S:
             angle_rad = position_data.get('t', None)
 
         res = angle_rad * 180 / math.pi
-        self._log(f"GetAngle: joint_id={joint_id}, angle={res}°", LogLevel.DEBUG)
+        self._log(f"GetAngle: joint_id={joint_id}, angle={round(res,2)}°", LogLevel.DEBUG)
         return res
 
 
-    @log_context
+    @Logging()
     def GetTorque(self, joint_id):
         if(joint_id < 1 or joint_id > 4):
             self._log(f"RoArm-M2-S: Invalid joint ID {joint_id}. Must be between 1 and 4.", LogLevel.ERROR)
@@ -222,7 +182,7 @@ class RoArmM2S:
 
 
 
-    @log_context
+    @Logging()
     def GetPositionReadable(self):
         pos = self.GetPosition()
         if pos is None:
@@ -253,7 +213,7 @@ class RoArmM2S:
 
 
 
-    @log_context
+    @Logging()
     def TeachMode(self):
         self.SetTorqueLock(False)
         loop = True
@@ -269,7 +229,7 @@ class RoArmM2S:
 
 
 
-    @log_context
+    @Logging()
     def SetTorqueLock(self, enable: bool):
         self._log(f"SetTorqueLock: {'Enabling' if enable else 'Disabling'} torque lock.", LogLevel.INFO)
         cmd_value = 1 if enable else 0
@@ -278,7 +238,7 @@ class RoArmM2S:
         return ret
 
 
-    @log_context
+    @Logging()
     def SetDynamicForceAdaption(self, enable: bool, base: int, shoulder: int, elbow: int, hand: int):
         self._log(f"SetDynamicForceAdaption: {'Enabling' if enable else 'Disabling'} with base={base}, shoulder={shoulder}, elbow={elbow}, hand={hand}", LogLevel.INFO)
         on_off = 1 if enable else 0
@@ -287,7 +247,7 @@ class RoArmM2S:
         return ret
 
 
-    @log_context
+    @Logging()
     def SetJointPID(self, joint: int, p: int = 16, i: int = 0):
         #BASE_JOINT = 1, SHOULDER_JOINT = 2, ELBOW_JOINT = 3, EOAT_JOINT = 4
         #p: default 16, i: default 0 (multiples of 8)
@@ -297,7 +257,7 @@ class RoArmM2S:
         return ret
 
 
-    @log_context
+    @Logging()
     def SetLed(self, enable: bool):
         self._log(f"SetLed: {'Turning ON' if enable else 'Turning OFF'} LED.", LogLevel.INFO)
         led_value = 255 if enable else 0
@@ -307,14 +267,14 @@ class RoArmM2S:
 
 
 
-    @log_context
+    @Logging()
     def SetGripper(self, angle_deg: float, speed=5):
         self._log(f"SetGripper: Moving gripper to {angle_deg}° at speed {speed}.", LogLevel.INFO)
         self.MoveSingleJoint(Joint.TOOL.value, angle_deg, speed=speed, acc=5, tolerance=5, timeout=3)
 
 
 
-    @log_context
+    @Logging()
     def MoveToXYZT(self, x=None, y=None, z=None, tool=None, speed=5, tolerance=5, timeout=10):
         tool = tool * math.pi / 180.0
         cmd = {"T":104}
@@ -346,9 +306,9 @@ class RoArmM2S:
                 self._log("Failed to get position. Retrying...", LogLevel.ERROR)
                 return False
 
-            x_current = position_data.get('x', None)
-            y_current = position_data.get('y', None)
-            z_current = position_data.get('z', None)
+            x_current = round(position_data.get('x', None), 2)
+            y_current = round(position_data.get('y', None), 2)
+            z_current = round(position_data.get('z', None), 2)
 
             if x is not None and (x_current is None or abs(x_current - x) > tolerance):
                 self._log(f"X not within tolerance: current={x_current}, target={x}", LogLevel.DEBUG)
@@ -372,7 +332,7 @@ class RoArmM2S:
 
 
 
-    @log_context
+    @Logging()
     def MoveSingleJoint(self, joint_id: int, angle: float, speed=5, acc=10, tolerance=5, timeout=3):
         self._log(f"MoveSingleJoint: id={joint_id}, angle={angle}, speed={speed}, acc={acc}", LogLevel.INFO)
         command = {"T":121,"joint":joint_id,"angle":angle,"spd":speed,"acc":acc}
@@ -384,13 +344,13 @@ class RoArmM2S:
             #pos = self.GetPosition()
             # check for given timeout
             if time.time() - start_time > timeout:
-                print("MoveSingleJoint: timeout reached while waiting for joint movement")
-                print(self.GetPositionReadable())
+                self._log("MoveSingleJoint: timeout reached while waiting for joint movement", LogLevel.ERROR)
+                self._log(self.GetPositionReadable(), LogLevel.ERROR)
                 return False
 
-            act_angle = self.GetAngle(joint_id)
+            act_angle = round(self.GetAngle(joint_id), 2)
             if act_angle is None:
-                print("Failed to get position. Retrying...")
+                self._log("Failed to get position. Retrying...", LogLevel.ERROR)
                 return False
 
             if abs(act_angle - angle) > tolerance:  # Check if within 1 degree tolerance
@@ -398,14 +358,14 @@ class RoArmM2S:
             
             break
 
-        #print(f"MoveSingleJoint:   +-> id={joint_id} reached target angle {angle}° (current: {act_angle}°)")
+        self._log(f"MoveSingleJoint:   --> id={joint_id} reached target angle {angle}° (current: {act_angle}°)", LogLevel.INFO)
         return True
 
 
-    @log_context
+    @Logging()
     def MoveSingleJointTorqueLimited(self, joint_id: int, angle: float, speed=5, acc=10, max_torque=5, timeout=3):
         command = {"T":121,"joint":joint_id,"angle":angle,"spd":speed,"acc":acc}
-        print(f"MoveSingleJointTorqueLimited: id={joint_id}, angle={angle}, speed={speed}, acc={acc}")
+        self._log(f"MoveSingleJointTorqueLimited: id={joint_id}, angle={angle}, speed={speed}, acc={acc}", LogLevel.INFO)
         if self._send_command(command) is None:
             return False
         
@@ -413,12 +373,11 @@ class RoArmM2S:
         while True:
             # check for given timeout
             if time.time() - start_time > timeout:
-                print("MoveSingleJointTorqueLimited: timeout reached while waiting for joint movement")
-                print(self.GetPositionReadable())
+                self._log("MoveSingleJointTorqueLimited: timeout reached while waiting for joint movement", LogLevel.ERROR)
+                self._log(self.GetPositionReadable(), LogLevel.ERROR)
                 return False
 
             act_torque = self.GetTorque(joint_id)
-            print(act_torque)
             if max_torque > 0:
                 if act_torque < max_torque:
                     continue
@@ -427,11 +386,13 @@ class RoArmM2S:
                     continue
             break
 
+        self._log(f"MoveSingleJointTorqueLimited:   --> id={joint_id} reached target torque {act_torque}", LogLevel.INFO)
         return True
 
 
-    @log_context
+    @Logging()
     def MoveAllJoints(self, base=None, shoulder=None, elbow=None, tool=None, speed=5, tolerance=5, timeout=3):
+        self._log(f"MoveAllJoints: base={base}, shoulder={shoulder}, elbow={elbow}, tool={tool}, speed={speed}", LogLevel.INFO)
         command = {"T":122,"b":base,"s":shoulder,"e":elbow,"h":tool,"spd":speed,"acc":10}
         if base is not None:
             command["b"] = round(base, 4)
@@ -449,56 +410,59 @@ class RoArmM2S:
         while True:
             # check for given timeout
             if time.time() - start_time > timeout:
-                print("MoveAllJoints: Timeout reached while waiting for angle-setting")
-                print(self.GetPositionReadable())
+                self._log("MoveAllJoints: Timeout reached while waiting for angle-setting", LogLevel.ERROR)
+                self._log(self.GetPositionReadable(), LogLevel.ERROR)
                 return False
 
             position_data = self.GetPosition()
             if position_data is None:
-                print("Failed to get position. Retrying...")
+                self._log("Failed to get position. Retrying...", LogLevel.ERROR)
                 return False
 
-            a_base     = position_data.get('b', None) * 180 / math.pi
-            a_shoulder = position_data.get('s', None) * 180 / math.pi
-            a_elbow    = position_data.get('e', None) * 180 / math.pi
-            a_tool     = position_data.get('t', None) * 180 / math.pi
+            a_base     = round(position_data.get('b', None) * 180 / math.pi, 2)
+            a_shoulder = round(position_data.get('s', None) * 180 / math.pi, 2)
+            a_elbow    = round(position_data.get('e', None) * 180 / math.pi, 2)
+            a_tool     = round(position_data.get('t', None) * 180 / math.pi, 2)
 
 
             if a_base is not None and (a_base is None or abs(a_base - base) > tolerance):
-                #print(f"BASE not within tolerance: current={a_base}, target={base}")
+                self._log(f"BASE not within tolerance: current={a_base}, target={base}", LogLevel.DEBUG)
                 time.sleep(0.1)
                 continue
 
             if a_shoulder is not None and (a_shoulder is None or abs(a_shoulder - shoulder) > tolerance):
-                #print(f"SHOULDER not within tolerance: current={a_shoulder}, target={shoulder}")
+                self._log(f"SHOULDER not within tolerance: current={a_shoulder}, target={shoulder}", LogLevel.DEBUG)
                 time.sleep(0.1)
                 continue
 
             if a_elbow is not None and (a_elbow is None or abs(a_elbow - elbow) > tolerance):
-                #print(f"ELBOW not within tolerance: current={a_elbow}, target={elbow}")
+                self._log(f"ELBOW not within tolerance: current={a_elbow}, target={elbow}", LogLevel.DEBUG)
                 time.sleep(0.1)
                 continue
 
             if a_tool is not None and (a_tool is None or abs(a_tool - tool) > tolerance):
-                #print(f"TOOL not within tolerance: current={a_tool}, target={tool}")
+                self._log(f"TOOL not within tolerance: current={a_tool}, target={tool}", LogLevel.DEBUG)
                 time.sleep(0.1)
                 continue
 
             break
 
-        #print(f"MoveAllJoints:   +-> reached target angles!")
+        self._log(f"MoveAllJoints:   --> reached target angles!", LogLevel.INFO)
         return True
 
 
 
-    @log_context
+    @Logging()
     def _wait_for_reboot_finished(self, target_ip: str, timeout_seconds: int) -> bool:
+        self._log(f"Waiting for RoArm-M2-S at {target_ip} to become reachable...", LogLevel.INFO)
         start_time = time.time()
         while time.time() - start_time < timeout_seconds:
             response_time = ping(target_ip, unit='s', timeout=1)
             if response_time is not None and response_time is not False:
+                self._log(f"RoArm-M2-S at {target_ip} is reachable (ping time: {response_time:.2f} s).", LogLevel.INFO)
                 return True
             else:
                 time.sleep(1)
-                
+
+        self._log(f"Timeout reached: RoArm-M2-S at {target_ip} is not reachable after {timeout_seconds} seconds.", LogLevel.ERROR)
         return False

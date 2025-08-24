@@ -6,10 +6,16 @@ from ClotheSpin import ClotheSpin
 from Tasmota import Tasmota
 from time import sleep
 from OpenCV import OpenCV
+from Tools import Logging
+
+
+
 
 
 
 if __name__ == "__main__":
+
+    log = Logging()
 
     # Initialize devices
     #cam = LaserCam("192.168.1.122", 3)
@@ -39,8 +45,8 @@ if __name__ == "__main__":
 
 
     # Initialize RoArmM2S
-    arm = RoArmM2S("192.168.1.121", LogLevel.DEBUG, 5)
-    cspin = ClotheSpin(arm)
+    arm = RoArmM2S("192.168.1.121", log, LogLevel.INFO, 5)
+    cspin = ClotheSpin(arm, log, LogLevel.DEBUG)
     if not cspin.connected:
         print("Failed to connect to RoArmM2S. Exiting.")
         exit()
