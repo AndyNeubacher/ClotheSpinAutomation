@@ -1,4 +1,5 @@
 from enum import Enum
+from datetime import datetime
 
 
 class LogLevel(Enum):
@@ -56,14 +57,17 @@ class Logging:
 
         nest = ' ' * g_intent
 
+        now = datetime.now()
+        ts = now.strftime("%H:%M:%S") + ":" + f"{int(now.microsecond/1000):03d}"
+
         if class_level.value >= msg_level.value:
             if msg_level == LogLevel.ERROR:
-                print(self.SetColor(f"{device} ERROR: {nest}{message}", color if color is not None else Color.RED.value))
+                print(self.SetColor(f"{ts} {device} ERROR: {nest}{message}", color if color is not None else Color.RED.value))
             elif msg_level == LogLevel.INFO:
-                print(self.SetColor(f"{device} INFO : {nest}{message}", color if color is not None else Color.WHITE.value))
+                print(self.SetColor(f"{ts} {device} INFO : {nest}{message}", color if color is not None else Color.WHITE.value))
             elif msg_level == LogLevel.DEBUG:
-                print(self.SetColor(f"{device} DEBUG: {nest}{message}", color if color is not None else Color.YELLOW.value))
+                print(self.SetColor(f"{ts} {device} DEBUG: {nest}{message}", color if color is not None else Color.YELLOW.value))
             else:
-                print(self.SetColor(f"{device} UNKNOWN: {nest}{message}", color if color is not None else Color.MAGENTA.value))
+                print(self.SetColor(f"{ts} {device} UNKNOWN: {nest}{message}", color if color is not None else Color.MAGENTA.value))
 
 

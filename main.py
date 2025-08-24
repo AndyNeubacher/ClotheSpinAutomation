@@ -28,17 +28,17 @@ if __name__ == "__main__":
     air_assist.set_output(1, 'off')
 
     # Start LightBurn
-    #laser = LightBurn("C:\\Program Files\\LightBurn\\LightBurn.exe", "localhost", 3)
-    #if not laser.connected:
-    #    print("Failed to connect to LightBurn. Exiting.")
-    #    laser.Close()
-    #    exit()
+    laser = LightBurn("C:\\Program Files\\LightBurn\\LightBurn.exe", "localhost", log, LogLevel.INFO,  1)
+    if not laser.connected:
+        print("Failed to connect to LightBurn. Exiting.")
+        laser.Close()
+        exit()
 
     # Load LightBurn file
-    #if not laser.SelectAndLoadLightBurnFile("C:\\Users\\Administrator\\Google Drive\\Musi\\Laserprojekte"):
-    #    print("Failed to load the LightBurn file. Exiting.")
-    #    exit()
-
+    #if not laser.SelectAndLoadLightBurnFile("C:\\Users\Administrator\\Google Drive\\Musi\\Laserprojekte\\RoArm", "Bierfluenza.lbrn2"):
+    if not laser.SelectAndLoadLightBurnFile("C:\\Users\Administrator\\Google Drive\\Musi\\Laserprojekte\\RoArm"):
+        print("Failed to load the LightBurn file. Exiting.")
+        exit()
 
     # Initialize RoArmM2S
     arm = RoArmM2S("192.168.1.121", log, LogLevel.INFO, 5)
@@ -49,9 +49,7 @@ if __name__ == "__main__":
 
     # calibrate the zero-position robot-arm
     cspin.CalibrateReferencePosition()
-    #cspin._test_find_base_position()
-    #arm.TeachMode()
-    #exit()
+
 
     for i in range(0,51):
         if keyboard.is_pressed('esc'):
@@ -80,18 +78,15 @@ if __name__ == "__main__":
             continue
 
 
-        cspin.MoveToBurnPosition()  #570mm höhe
+        cspin.MoveToBurnPosition()
 
         air_assist.set_output(1, 'on')
-        cspin.SetLed(True)
-        sleep(1)
-        cspin.SetLed(False)
 
         # 1st side burn
-        #laser.Start()
-        #if (laser.WaitForBurnFinished(300) == False):
-        #    print("Burn failed or timed out.")
-        #    break
+        laser.Start()
+        if (laser.WaitForBurnFinished(10, 300) == False):
+            print("Burn failed or timed out.")
+            break
 
         # 2nd side burn
         #cspin.FlipUpsideDown()
@@ -100,7 +95,6 @@ if __name__ == "__main__":
         #    print("Burn failed or timed out.")
         #    break
 
-        sleep(1)
         air_assist.set_output(1, 'off')
 
         cspin.MoveToFinishedPosition()
@@ -109,4 +103,4 @@ if __name__ == "__main__":
     # Cleanup
     air_assist.set_output(1, 'off')
     cam.Close()
-    #laser.Close()
+    laser.Close()

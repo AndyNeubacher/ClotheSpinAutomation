@@ -312,7 +312,8 @@ class ClotheSpin:
         
         self._log("Move to finished position", LogLevel.INFO)
         self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 150, speed=50, acc=10, tolerance=5, timeout=3)
-        self.RoboArm.MoveSingleJoint(Joint.BASE.value, -150, speed=50, acc=10, tolerance=5, timeout=3)
+        self.RoboArm.MoveSingleJoint(Joint.SHOULDER.value, 0, speed=50, acc=10, tolerance=5, timeout=3)
+        self.RoboArm.MoveSingleJoint(Joint.BASE.value, -85, speed=50, acc=10, tolerance=5, timeout=3)
         self.RoboArm.MoveToXYZT(-35, -360, 0, self.last_angle_tool, 50, 10, 10)
         self.OpenGripper()
         time.sleep(0.5)
