@@ -5,26 +5,38 @@ import random as rng
 import math
 import time
 import threading
+from enum import Enum
+from Tools import LogLevel
+from Tools import Color
+from Tools import Logging
 
 
 
 class OpenCV:
-    def __init__(self, ip_address, timeout=3):
+    def __init__(self, ip_address, logging=None, loglevel=LogLevel.NONE, timeout=3):
         self.ip_address = ip_address
         self.rtsp_main_url = f"rtsp://thingino:thingino@{self.ip_address}:554/ch0"
         self.rtsp_sub_url = f"rtsp://thingino:thingino@{self.ip_address}/ch1"
         self.timeout = timeout
         self.cap = None
+        self.log = logging
+        self.loglevel = loglevel
 
         response_time = ping(ip_address, unit='s', timeout=1)
         if response_time is not None and response_time is not False:
             self.connected = True
-            print(f"OpenCV initialized with IP: {self.ip_address}")
+            self._log(f"OpenCV initialized with IP: {self.ip_address}", LogLevel.INFO)
         else:
             self.connected = False
-            print(f"OpenCV could not ping: {self.ip_address}")
+            self._log(f"OpenCV could not ping: {self.ip_address}", LogLevel.ERROR)
 
 
+    def _log(self, message, msg_level=None, color=None):
+        if self.log is not None:
+            self.log.Print("OpenCV", message, msg_level, self.loglevel, Color.MAGENTA.value)
+
+
+    @Logging()
     def _crop_frame_per(self, frame, width_perc_start, width_perc_end, height_perc_start, height_perc_end):
         height, width, _ = frame.shape
 
@@ -33,9 +45,11 @@ class OpenCV:
         start_col = int(width * width_perc_start / 100)
         end_col = int(width * width_perc_end / 100)
 
+        self._log(f"_crop_frame_per: width:{width} height:{height} start_row:{start_row} end_row:{end_row} start_col:{start_col} end_col:{end_col}", LogLevel.DEBUG)
         return frame[start_row:end_row, start_col:end_col]
 
 
+    @Logging()
     def _find_photobox(self, frame):
         return 35, 70, 40, 90
 
@@ -79,6 +93,7 @@ class OpenCV:
 
 
 
+    @Logging()
     def _detectSpin(self, c_frame):
         # 1. Graustufenkonvertierung
         grey = cv2.cvtColor(c_frame, cv2.COLOR_BGR2GRAY)
@@ -120,6 +135,7 @@ class OpenCV:
         max_area_per = frame_area * 0.30    # ignore shapes bigger than 30%
         filtered_contours = [cnt for cnt in closed_contours if (cv2.contourArea(cnt) > min_area_per) and (cv2.contourArea(cnt) < max_area_per)]
         if len(filtered_contours) == 0:
+            self._log("No contours found", LogLevel.ERROR)
             return None
 
         # make the hull of all contours
@@ -164,6 +180,7 @@ class OpenCV:
                     break
 
         if clothspin_contour_found is None:
+            self._log("No clothespin contour found", LogLevel.ERROR)
             return None
 
         
@@ -188,10 +205,12 @@ class OpenCV:
         if width < height:
             angle = angle + 90
 
+        self._log(f"Clothespin found at ({cX}, {cY}) with angle {angle:.2f} degrees", LogLevel.INFO)
         return c_frame, rect, (cX, cY) if clothspin_contour_found is not None else None, angle if clothspin_contour_found is not None else None
 
 
 
+    @Logging()
     def DetectClothespin(self, frame=None):
         # if no frame is provided, try to grab from the webcam
         if frame is None:
@@ -200,14 +219,16 @@ class OpenCV:
             
             if self.cap is None:
                 # open the video-stream
+                self._log(f"Opening RTSP stream: {self.rtsp_main_url}", LogLevel.INFO)
                 self.cap = cv2.VideoCapture(self.rtsp_main_url)
 
             if not self.cap.isOpened():
-                print("Error: Cannot open RTSP stream")
+                self._log("Error: Cannot open RTSP stream", LogLevel.ERROR)
                 return None
 
             ret, frame = self.cap.read()
             if ret is None or frame is None:
+                self._log("Error: Cannot read frame from RTSP stream", LogLevel.ERROR)
                 return None
 
             # close right after we got a valid frame
@@ -239,14 +260,17 @@ class OpenCV:
 
                 #cv2.imshow('cropped', clip_frame)       # show frame with bounding-box
                 return res
-            #else:
+            else:
+                self._log("No clothespin detected in cropped frame", LogLevel.ERROR)
                 #cv2.imshow('cropped', cropped_frame)    # show cropped frame without detection
 
         return None
 
 
 
+    @Logging()
     def Close(self):
+        self._log("Closing OpenCV", LogLevel.INFO)
         if self.cap is not None:
             self.cap.release()
         cv2.destroyAllWindows()

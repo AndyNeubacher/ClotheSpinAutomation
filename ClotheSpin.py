@@ -300,7 +300,7 @@ class ClotheSpin:
         self.RoboArm.MoveSingleJoint(Joint.BASE.value, -42, speed=50, acc=10, tolerance=1, timeout=3) #42.5
         self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 150, speed=50, acc=10, tolerance=5, timeout=3)
         self.RoboArm.MoveSingleJoint(Joint.SHOULDER.value, -45, speed=50, acc=10, tolerance=1, timeout=3)
-        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 44, speed=50, acc=10, tolerance=1, timeout=3)   #42
+        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 43, speed=50, acc=10, tolerance=1, timeout=5)   #44
         time.sleep(0.5)
 
 

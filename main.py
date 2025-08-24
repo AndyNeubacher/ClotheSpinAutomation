@@ -18,11 +18,7 @@ if __name__ == "__main__":
     log = Logging()
 
     # Initialize devices
-    #cam = LaserCam("192.168.1.122", 3)
-    #cam_thread = threading.Thread(target=cam.Start)
-    #cam_thread.start()
-    
-    cam = OpenCV("192.168.1.122", 3)
+    cam = OpenCV("192.168.1.122", log, LogLevel.INFO, 3)
     if not cam.connected:
         print("Failed to connect to WiFi camera. Exiting.")
         exit()
