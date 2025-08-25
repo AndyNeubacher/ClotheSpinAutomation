@@ -15,7 +15,7 @@ from Tools import Logging
 
 if __name__ == "__main__":
 
-    log = Logging()
+    log = Logging(logfile_name='clothspin_log.txt')
 
     # Initialize devices
     cam = OpenCV("192.168.1.122", log, LogLevel.INFO, 3)
@@ -24,7 +24,7 @@ if __name__ == "__main__":
         exit()
 
     # power-plug for air-compressor
-    air_assist = Tasmota("192.168.1.111", 1)
+    air_assist = Tasmota("192.168.1.111", log, LogLevel.INFO, 1)
     air_assist.set_output(1, 'off')
 
     # Start LightBurn

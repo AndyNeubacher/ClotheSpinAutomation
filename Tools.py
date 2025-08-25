@@ -1,3 +1,4 @@
+import logging
 from enum import Enum
 from datetime import datetime
 
@@ -22,7 +23,12 @@ g_intent = None
 
 
 class Logging:
-    def __init__(self, loglevel=LogLevel.INFO):
+    def __init__(self, logfile_name='logfile.txt', loglevel=LogLevel.INFO):
+        if logging.getLogger().hasHandlers():
+            logging.getLogger().handlers.clear()
+
+        logging.basicConfig(filename=logfile_name, level=logging.ERROR)
+        logging.error("----- New Log Session -----")
         self.loglevel = loglevel
         global g_intent
         if g_intent is None:
@@ -63,11 +69,15 @@ class Logging:
         if class_level.value >= msg_level.value:
             if msg_level == LogLevel.ERROR:
                 print(self.SetColor(f"{ts} {device} ERROR: {nest}{message}", color if color is not None else Color.RED.value))
+                logging.error(f"{ts} {device} ERROR: {nest}{message}")
             elif msg_level == LogLevel.INFO:
                 print(self.SetColor(f"{ts} {device} INFO : {nest}{message}", color if color is not None else Color.WHITE.value))
+                logging.info(f"{ts} {device} INFO : {nest}{message}")
             elif msg_level == LogLevel.DEBUG:
                 print(self.SetColor(f"{ts} {device} DEBUG: {nest}{message}", color if color is not None else Color.YELLOW.value))
+                logging.debug(f"{ts} {device} DEBUG: {nest}{message}")
             else:
                 print(self.SetColor(f"{ts} {device} UNKNOWN: {nest}{message}", color if color is not None else Color.MAGENTA.value))
+                logging.warning(f"{ts} {device} UNKNOWN: {nest}{message}")
 
 
