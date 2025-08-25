@@ -62,7 +62,7 @@ class Tasmota:
 
 
     @Logging()
-    def set_output(self, number, state):
+    def SetOutput(self, number, state):
         if not self.connected:
             self._log("Tasmota: Device not connected", LogLevel.ERROR)
             return "Tasmota: Device not connected"

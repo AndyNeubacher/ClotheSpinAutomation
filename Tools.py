@@ -1,4 +1,3 @@
-import logging
 from enum import Enum
 from datetime import datetime
 
@@ -23,16 +22,13 @@ g_intent = None
 
 
 class Logging:
-    def __init__(self, logfile_name='logfile.txt', loglevel=LogLevel.INFO):
-        if logging.getLogger().hasHandlers():
-            logging.getLogger().handlers.clear()
-
-        logging.basicConfig(filename=logfile_name, level=logging.ERROR)
-        logging.error("----- New Log Session -----")
+    def __init__(self, logfile_name=None, loglevel=LogLevel.INFO):
         self.loglevel = loglevel
         global g_intent
         if g_intent is None:
             g_intent = 0
+        if logfile_name is not None:
+            self.fd = open(logfile_name, 'w+')
 
 
     def __call__(self, func):
@@ -69,15 +65,25 @@ class Logging:
         if class_level.value >= msg_level.value:
             if msg_level == LogLevel.ERROR:
                 print(self.SetColor(f"{ts} {device} ERROR: {nest}{message}", color if color is not None else Color.RED.value))
-                logging.error(f"{ts} {device} ERROR: {nest}{message}")
+                if self.fd is not None:
+                    self.fd.write(f"{ts} {device} ERROR: {nest}{message}\n")
+
             elif msg_level == LogLevel.INFO:
                 print(self.SetColor(f"{ts} {device} INFO : {nest}{message}", color if color is not None else Color.WHITE.value))
-                logging.info(f"{ts} {device} INFO : {nest}{message}")
+                if self.fd is not None:
+                    self.fd.write(f"{ts} {device} INFO : {nest}{message}\n")
+
             elif msg_level == LogLevel.DEBUG:
                 print(self.SetColor(f"{ts} {device} DEBUG: {nest}{message}", color if color is not None else Color.YELLOW.value))
-                logging.debug(f"{ts} {device} DEBUG: {nest}{message}")
+                if self.fd is not None:
+                    self.fd.write(f"{ts} {device} DEBUG: {nest}{message}\n")
+
             else:
                 print(self.SetColor(f"{ts} {device} UNKNOWN: {nest}{message}", color if color is not None else Color.MAGENTA.value))
-                logging.warning(f"{ts} {device} UNKNOWN: {nest}{message}")
+                if self.fd is not None:
+                    self.fd.write(f"{ts} {device} UNKNOWN: {nest}{message}\n")
 
 
+    def Close(self):
+        if self.fd is not None:
+            self.fd.close()

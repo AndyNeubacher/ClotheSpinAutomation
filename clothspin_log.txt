@@ -1,0 +1,2 @@
+20:56:01:406 OpenCV ERROR: OpenCV could not ping: 192.168.1.122
+20:56:01:407 OpenCV INFO:    Closing OpenCV
