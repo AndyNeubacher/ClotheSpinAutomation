@@ -5,3 +5,4 @@ __pycache__/
 .vscode/
 *.log
 *.png
+clothspin_log.txt
