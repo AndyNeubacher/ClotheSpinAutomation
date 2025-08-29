@@ -166,8 +166,9 @@ class ClotheSpin:
 
         self.RoboArm.SetDynamicForceAdaption(enable=True, base=300, shoulder=500, elbow=500, hand=500)
         # press gripper against the mechanical stop
-        self.RoboArm.MoveSingleJointTorqueLimited(joint_id=Joint.BASE.value, angle=-180, speed=5, acc=5, max_torque=-50, timeout=1)
         time.sleep(0.5)
+        self.RoboArm.MoveSingleJointTorqueLimited(joint_id=Joint.BASE.value, angle=-180, speed=5, acc=5, max_torque=-50, timeout=1)
+        time.sleep(1)
         # move arm to reference-end position
         self.RoboArm.MoveToXYZT(x=-320, y=-40, z=-120, tool=127, speed=10, tolerance=5, timeout=1.5)
         #time.sleep(0.5)
@@ -206,13 +207,17 @@ class ClotheSpin:
         self.MoveToPreparePosition(index)
         self.OpenGripper()
         self.MoveToGripperToClotheSpin(index)
+
+        self.RoboArm.SetDynamicForceAdaption(enable=True, base=10, shoulder=10, elbow=10, hand=500)
         self.CloseGripper()
         time.sleep(0.5)
-        self.RoboArm.SetDynamicForceAdaption(enable=True, base=500, shoulder=500, elbow=500, hand=500)
 
         # now lift only in Z-axis with inverse kinematics
         pos = self.RoboArm.GetPosition()
-        self.RoboArm.MoveToXYZT(pos['x'], pos['y'], pos['z'] + 50, self.last_angle_tool, speed=0.1, tolerance=10, timeout=1)
+
+        self.RoboArm.SetDynamicForceAdaption(enable=True, base=500, shoulder=500, elbow=500, hand=500)
+        self.RoboArm.MoveToXYZT(pos['x'], pos['y'], pos['z'] + 20, self.last_angle_tool, speed=5, tolerance=5, timeout=2)
+        self.RoboArm.MoveToXYZT(pos['x'], pos['y'], pos['z'] + 50, self.last_angle_tool, speed=30, tolerance=5, timeout=1)
         self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 155, speed=50, acc=10, tolerance=5, timeout=1)
 
 
@@ -247,18 +252,27 @@ class ClotheSpin:
         self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, elbow_pos[index], speed=20, acc=10, tolerance=0.2, timeout=2)
         time.sleep(0.5)
 
-        self.RoboArm.SetDynamicForceAdaption(enable=True, base=500, shoulder=5, elbow=5, hand=500)
+        self.RoboArm.SetDynamicForceAdaption(enable=True, base=500, shoulder=5, elbow=100, hand=500)
 
-        # lower elbow with very less force
+        # lower shoulder with very less force
         self.RoboArm.MoveSingleJoint(Joint.SHOULDER.value, 42, speed=50, acc=10, tolerance=0.2, timeout=2)
         time.sleep(0.5)
 
         # now center base to correct position (without offset ... 0.2 -> just a little bit more to the other side!)
         self.RoboArm.MoveSingleJoint(Joint.BASE.value, base_pos-0.5, speed=50, acc=10, tolerance=0.2, timeout=2)
+        time.sleep(0.5)
+
+        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 137, speed=50, acc=10, tolerance=1, timeout=1)
+        time.sleep(0.5)
+
+        self.RoboArm.SetTorqueLock(False)
+        time.sleep(1)
 
         self.RoboArm.SetJointPID(Joint.BASE.value, 16, 0)
         self.RoboArm.SetJointPID(Joint.ELBOW.value, 16, 0)
         self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 0)
+        self.RoboArm.SetTorqueLock(True)
+
 
 
     @Logging()
@@ -268,7 +282,8 @@ class ClotheSpin:
 
         self._log("Move to optical inspection position", LogLevel.INFO)
 
-        self.RoboArm.MoveSingleJoint(Joint.BASE.value, -50, speed=50, acc=10, tolerance=5, timeout=3)
+        self.RoboArm.MoveToXYZT(125, -120, -75, self.last_angle_tool, 50, 20, 5)
+        #self.RoboArm.MoveSingleJoint(Joint.BASE.value, -50, speed=50, acc=10, tolerance=5, timeout=3)
         self.RoboArm.MoveToXYZT(210, -195, 50, self.last_angle_tool, 50, 20, 5)
         time.sleep(0.5)
         self.RoboArm.SetJointPID(Joint.BASE.value, 16, 16)
@@ -276,9 +291,9 @@ class ClotheSpin:
         self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 16)
         #self.RoboArm.MoveToXYZT(250, -238, -100, self.last_angle_tool, 1, 20, 5)
         self.RoboArm.MoveToXYZT(230, -235, -95, self.last_angle_tool, 1, 20, 5)
-        time.sleep(0.5)
-        self.OpenGripper()
-        time.sleep(0.5)
+        #time.sleep(0.5)
+        #self.OpenGripper()
+        #time.sleep(0.5)
         self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 106, speed=10, acc=10, tolerance=1, timeout=2)
         self.RoboArm.SetTorqueLock(False)
 
@@ -342,10 +357,11 @@ class ClotheSpin:
             return False
 
         self._log("Lift from optical inspection", LogLevel.INFO)
-        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 16)
-        self.RoboArm.SetJointPID(Joint.ELBOW.value, 16, 16)
-        self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 16)
+        self.RoboArm.SetJointPID(Joint.BASE.value, 16, 0)
+        self.RoboArm.SetJointPID(Joint.ELBOW.value, 16, 0)
+        self.RoboArm.SetJointPID(Joint.SHOULDER.value, 16, 0)
         self.RoboArm.SetTorqueLock(True)
         self.CloseGripper()
         pos = self.RoboArm.GetPosition()
-        self.RoboArm.MoveToXYZT(pos['x'], pos['y'], 100, self.last_angle_tool, speed=0.1, tolerance=20, timeout=3)
+        self.RoboArm.SetDynamicForceAdaption(enable=True, base=500, shoulder=500, elbow=500, hand=500)
+        self.RoboArm.MoveToXYZT(pos['x'], pos['y'], 100, self.last_angle_tool, speed=10, tolerance=20, timeout=3)

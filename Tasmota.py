@@ -10,13 +10,13 @@ from Tools import Logging
 
 class Tasmota:
     def __init__(self, ipv4, logging=None, loglevel=LogLevel.NONE, timeout=3):
+        self.log = logging
+        self.loglevel = loglevel
         self.ipv4 = ipv4
         self.url = f'http://{self.ipv4}/'
         self.stream_open = False
         self.timeout = timeout
         self.connected = self.check_connection()
-        self.log = logging
-        self.loglevel = loglevel
 
 
     def _log(self, message, msg_level=None, color=None):

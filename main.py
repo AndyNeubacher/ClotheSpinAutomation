@@ -20,7 +20,7 @@ if __name__ == "__main__":
         log = Logging(logfile_name='clothspin_log.txt')
 
         # Initialize devices
-        cam = OpenCV("192.168.1.122", log, LogLevel.INFO, 3)
+        cam = OpenCV("192.168.1.122", log, LogLevel.DEBUG, 3)
         if not cam.connected:
             raise Exception("Camera connection failed")
 
@@ -29,14 +29,14 @@ if __name__ == "__main__":
         air.SetOutput(1, 'off')
 
         # Start LightBurn
-        laser = LightBurn("C:\\Program Files\\LightBurn\\LightBurn.exe", "localhost", log, LogLevel.INFO,  1)
-        if not laser.connected:
-            raise Exception("LightBurn connection failed")
+        #laser = LightBurn("C:\\Program Files\\LightBurn\\LightBurn.exe", "localhost", log, LogLevel.INFO,  1)
+        #if not laser.connected:
+        #    raise Exception("LightBurn connection failed")
 
         # Load LightBurn file
         #if not laser.SelectAndLoadLightBurnFile("C:\\Users\Administrator\\Google Drive\\Musi\\Laserprojekte\\RoArm", "Bierfluenza.lbrn2"):
-        if not laser.SelectAndLoadLightBurnFile("C:\\Users\Administrator\\Google Drive\\Musi\\Laserprojekte\\RoArm"):
-            raise Exception("Failed to load LightBurn file")
+        #if not laser.SelectAndLoadLightBurnFile("C:\\Users\Administrator\\Google Drive\\Musi\\Laserprojekte\\RoArm"):
+        #    raise Exception("Failed to load LightBurn file")
 
         # Initialize RoArmM2S
         arm = RoArmM2S("192.168.1.121", log, LogLevel.INFO, 5)
@@ -58,8 +58,8 @@ if __name__ == "__main__":
             cspin.MoveToOpticalInspection()
 
             # optical detection of the spin (max. 10 attempts)
-            for i in range(5):
-                frame = cam.DetectClothespin()
+            for x in range(5):
+                frame = cam.DetectClothespin(clip_idx=i)
                 if frame is not None:
                     cspin.LedBlink(1, 0.5)
                     break
@@ -77,9 +77,9 @@ if __name__ == "__main__":
             air.SetOutput(1, 'on')
 
             # 1st side burn
-            laser.Start()
-            if (laser.WaitForBurnFinished(10, 300) == False):
-                raise Exception("Burn failed or timed out")
+            #laser.Start()
+            #if (laser.WaitForBurnFinished(10, 300) == False):
+            #    raise Exception("Burn failed or timed out")
 
             # 2nd side burn
             #cspin.FlipUpsideDown()

@@ -211,7 +211,7 @@ class OpenCV:
 
 
     @Logging()
-    def DetectClothespin(self, frame=None):
+    def DetectClothespin(self, clip_idx=0, frame=None):
         # if no frame is provided, try to grab from the webcam
         if frame is None:
             if self.connected == False:
@@ -249,20 +249,24 @@ class OpenCV:
                 clip_frame, rect, (cX, cY), angle = res
 
                 # 7. Visualisierung
-                #box = cv2.boxPoints(rect)
-                #box = np.int_(box)
-                #cv2.drawContours(clip_frame, [box], 0, (0, 255, 0), 2)
-                #cv2.circle(clip_frame, (cX, cY), 7, (255, 0, 0), -1)
-                #cv2.putText(clip_frame, f"center: ({cX}, {cY})", (cX + 10, cY + 10),
-                #            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-                #cv2.putText(clip_frame, f"angle: {angle:.2f} Grad", (cX + 10, cY + 30),
-                #            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                box = cv2.boxPoints(rect)
+                box = np.int_(box)
+                cv2.drawContours(clip_frame, [box], 0, (0, 255, 0), 2)
+                cv2.circle(clip_frame, (cX, cY), 7, (255, 0, 0), -1)
+                cv2.putText(clip_frame, f"center: ({cX}, {cY})", (cX + 10, cY + 10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                cv2.putText(clip_frame, f"angle: {angle:.2f} Grad", (cX + 10, cY + 30),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
                 #cv2.imshow('cropped', clip_frame)       # show frame with bounding-box
+                if self.loglevel == LogLevel.DEBUG:
+                    cv2.imwrite(f'found{clip_idx}.png', cropped_frame)
                 return res
             else:
                 self._log("No clothespin detected in cropped frame", LogLevel.ERROR)
                 #cv2.imshow('cropped', cropped_frame)    # show cropped frame without detection
+                if self.loglevel == LogLevel.DEBUG:
+                    cv2.imwrite(f'not_found{clip_idx}.png', cropped_frame)
 
         return None
 
