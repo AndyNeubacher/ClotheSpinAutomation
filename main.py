@@ -20,7 +20,7 @@ if __name__ == "__main__":
         log = Logging(logfile_name='clothspin_log.txt')
 
         # Initialize devices
-        cam = OpenCV("192.168.1.122", log, LogLevel.DEBUG, 3)
+        cam = OpenCV("192.168.1.122", log, LogLevel.INFO, 3)
         if not cam.connected:
             raise Exception("Camera connection failed")
 
@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
         # Initialize RoArmM2S
         arm = RoArmM2S("192.168.1.121", log, LogLevel.INFO, 5)
-        cspin = ClotheSpin(arm, log, LogLevel.DEBUG)
+        cspin = ClotheSpin(arm, log, LogLevel.INFO)
         if not cspin.connected:
             raise Exception("ClotheSpin connection failed")
 

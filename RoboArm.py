@@ -153,7 +153,7 @@ class RoArmM2S:
             angle_rad = position_data.get('t', None)
 
         res = angle_rad * 180 / math.pi
-        self._log(f"GetAngle: joint_id={joint_id}, angle={round(res,2)}°", LogLevel.DEBUG)
+        self._log(f"GetAngle: {Joint(joint_id).name}, angle={round(res,2)}°", LogLevel.DEBUG)
         return res
 
 
@@ -177,7 +177,7 @@ class RoArmM2S:
         elif joint_id == Joint.TOOL.value:
             torque = position_data.get('torH', None)
 
-        self._log(f"GetTorque: joint_id={joint_id}, torque={torque}", LogLevel.DEBUG)
+        self._log(f"GetTorque: {Joint(joint_id).name}, torque={torque}", LogLevel.DEBUG)
         return torque
 
 
@@ -251,7 +251,7 @@ class RoArmM2S:
     def SetJointPID(self, joint: int, p: int = 16, i: int = 0):
         #BASE_JOINT = 1, SHOULDER_JOINT = 2, ELBOW_JOINT = 3, EOAT_JOINT = 4
         #p: default 16, i: default 0 (multiples of 8)
-        self._log(f"SetJointPID: joint={joint}, p={p}, i={i}", LogLevel.INFO)
+        self._log(f"SetJointPID: {Joint(joint).name}, p={p}, i={i}", LogLevel.INFO)
         command = {"T": 108, "joint": joint, "p": p, "i": i}
         ret = self._send_command(command)
         return ret
@@ -327,14 +327,14 @@ class RoArmM2S:
 
             break
 
-        self._log(f"MoveToXYZT:   +-> Reached target position X={x_current}, Y={y_current}, Z={z_current}", LogLevel.INFO)
+        self._log(f"MoveToXYZT:   --> Reached target position X={x_current}, Y={y_current}, Z={z_current}", LogLevel.INFO)
         return True
 
 
 
     @Logging()
     def MoveSingleJoint(self, joint_id: int, angle: float, speed=5, acc=10, tolerance=5, timeout=3):
-        self._log(f"MoveSingleJoint: id={joint_id}, angle={angle}, speed={speed}, acc={acc}", LogLevel.INFO)
+        self._log(f"MoveSingleJoint: {Joint(joint_id).name}, angle={angle}, speed={speed}, acc={acc}", LogLevel.INFO)
         command = {"T":121,"joint":joint_id,"angle":angle,"spd":speed,"acc":acc}
         if self._send_command(command) is None:
             return False
@@ -353,19 +353,19 @@ class RoArmM2S:
                 self._log("Failed to get position. Retrying...", LogLevel.ERROR)
                 return False
 
-            if abs(act_angle - angle) > tolerance:  # Check if within 1 degree tolerance
+            if abs(act_angle - angle) > tolerance:
                 continue
             
             break
 
-        self._log(f"MoveSingleJoint:   --> id={joint_id} reached target angle {angle}° (current: {act_angle}°)", LogLevel.INFO)
+        self._log(f"MoveSingleJoint:   --> reached target angle {angle}° (current: {act_angle}°)", LogLevel.INFO)
         return True
 
 
     @Logging()
     def MoveSingleJointTorqueLimited(self, joint_id: int, angle: float, speed=5, acc=10, max_torque=5, timeout=3):
         command = {"T":121,"joint":joint_id,"angle":angle,"spd":speed,"acc":acc}
-        self._log(f"MoveSingleJointTorqueLimited: id={joint_id}, angle={angle}, speed={speed}, acc={acc}", LogLevel.INFO)
+        self._log(f"MoveSingleJointTorqueLimited: {Joint(joint_id).name}, angle={angle}, speed={speed}, acc={acc}", LogLevel.INFO)
         if self._send_command(command) is None:
             return False
         
@@ -386,7 +386,7 @@ class RoArmM2S:
                     continue
             break
 
-        self._log(f"MoveSingleJointTorqueLimited:   --> id={joint_id} reached target torque {act_torque}", LogLevel.INFO)
+        self._log(f"MoveSingleJointTorqueLimited:   --> reached target torque {act_torque}", LogLevel.INFO)
         return True
 
 
@@ -426,22 +426,22 @@ class RoArmM2S:
 
 
             if a_base is not None and (a_base is None or abs(a_base - base) > tolerance):
-                self._log(f"BASE not within tolerance: current={a_base}, target={base}", LogLevel.DEBUG)
+                self._log(f"BASE not yet within tolerance: current={a_base}, target={base}", LogLevel.DEBUG)
                 time.sleep(0.1)
                 continue
 
             if a_shoulder is not None and (a_shoulder is None or abs(a_shoulder - shoulder) > tolerance):
-                self._log(f"SHOULDER not within tolerance: current={a_shoulder}, target={shoulder}", LogLevel.DEBUG)
+                self._log(f"SHOULDER not yet within tolerance: current={a_shoulder}, target={shoulder}", LogLevel.DEBUG)
                 time.sleep(0.1)
                 continue
 
             if a_elbow is not None and (a_elbow is None or abs(a_elbow - elbow) > tolerance):
-                self._log(f"ELBOW not within tolerance: current={a_elbow}, target={elbow}", LogLevel.DEBUG)
+                self._log(f"ELBOW not yet within tolerance: current={a_elbow}, target={elbow}", LogLevel.DEBUG)
                 time.sleep(0.1)
                 continue
 
             if a_tool is not None and (a_tool is None or abs(a_tool - tool) > tolerance):
-                self._log(f"TOOL not within tolerance: current={a_tool}, target={tool}", LogLevel.DEBUG)
+                self._log(f"TOOL not yet within tolerance: current={a_tool}, target={tool}", LogLevel.DEBUG)
                 time.sleep(0.1)
                 continue
 
