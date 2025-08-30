@@ -1,453 +1,360 @@
-16:25:16:462 OpenCV INFO : OpenCV initialized with IP: 192.168.1.122
-16:25:17:471 Tasmota ERROR:       Tasmota: Device not connected
-16:25:17:472 Tasmota ERROR:    Tasmota: Device not connected
-16:25:17:472 Tasmota ERROR:    Tasmota: Device not connected
-16:25:17:472 RoArm-M2-S INFO :    InitPosition: Initializing robot arm.
-16:25:17:473 RoArm-M2-S INFO :       Waiting for RoArm-M2-S at 192.168.1.121 to become reachable...
-16:25:17:581 RoArm-M2-S INFO :       RoArm-M2-S at 192.168.1.121 is reachable (ping time: 0.11 s).
-16:25:17:582 RoArm-M2-S INFO :       SetLed: Turning ON LED.
-16:25:17:642 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
-16:25:17:668 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:25:17:699 RoArm-M2-S INFO :       MoveSingleJoint: SHOULDER, angle=10, speed=20, acc=5
-16:25:19:329 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 10° (current: 19.34°)
-16:25:19:329 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=20, acc=5
-16:25:21:200 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 140.63°)
-16:25:24:853 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=100, acc=10
-16:25:25:595 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 142.47°)
-16:25:25:596 RoArm-M2-S INFO :       SetLed: Turning OFF LED.
-16:25:25:661 RoArm-M2-S INFO :    X:184.96, Y:-0.85, Z:-0.85, b:-0.26, s:1.32, e:146.43, t:0.44, torque:28/76/-132/-28
-16:25:25:696 RoArm-M2-S INFO : initialized with IP: 192.168.1.121
-16:25:25:732 ClothSpin INFO : ClothSpin bind to RoArm: True
-16:25:25:733 ClothSpin INFO :    ClothSpin: CALIBRATE-REFERENCE-POSITION
-16:25:25:733 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:25:25:774 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-50, Y=-260, Z=50, T=2.2166, Speed=50
-16:25:27:845 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-26.87, Y=-260.49, Z=47.4
-16:25:27:846 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-260, Y=-80, Z=-50, T=2.2166, Speed=5
-16:25:29:290 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-256.14, Y=-83.75, Z=-52.35
-16:25:29:291 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-288, Y=-43, Z=-95, T=2.2166, Speed=5
-16:25:29:794 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-284.73, Y=-45.37, Z=-97.16
-16:25:29:794 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=300, shoulder=500, elbow=500, hand=500
-16:25:30:332 RoArm-M2-S INFO :       MoveSingleJointTorqueLimited: BASE, angle=-180, speed=5, acc=5
-16:25:30:591 RoArm-M2-S INFO :       MoveSingleJointTorqueLimited:   --> reached target torque -60
-16:25:31:592 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-320, Y=-40, Z=-120, T=2.2166, Speed=10
-16:25:33:274 RoArm-M2-S ERROR:       MoveToXYZT: timeout reached while waiting for X/Y/Z/T position
-16:25:33:381 RoArm-M2-S ERROR:       X:-303.34, Y:-32.70, Z:-124.57, b:-173.85, s:48.60, e:108.81, t:52.73, torque:60/-40/220/24
-16:25:33:381 RoArm-M2-S INFO :       SetLed: Turning ON LED.
-16:25:33:401 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
-16:25:34:502 RoArm-M2-S INFO :       SetLed: Turning OFF LED.
-16:25:34:523 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:25:34:549 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
-16:25:34:610 ClothSpin INFO :    CALIBRATED-REFERENCE: X:-299.57, Y:-32.29, Z:-125.73, b:-173.85, s:48.52, e:109.69, t:52.73, torque:0/0/0/0
-16:25:34:611 RoArm-M2-S INFO :       MoveAllJoints: base=-173.84765622491602, shoulder=30, elbow=120, tool=127, speed=50
-16:25:35:127 RoArm-M2-S INFO :       MoveAllJoints:   --> reached target angles!
-16:25:35:128 ClothSpin INFO :       Opening gripper
-16:25:35:128 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
-16:25:35:128 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
-16:25:35:689 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 160.84°)
-16:25:35:927 ClothSpin INFO :    Pick index 0
-16:25:35:928 ClothSpin INFO :       Moving base to prepare-position 0
-16:25:35:928 RoArm-M2-S INFO :          MoveAllJoints: base=-173.64765622491603, shoulder=35, elbow=125, tool=165, speed=50
-16:25:36:258 RoArm-M2-S INFO :          MoveAllJoints:   --> reached target angles!
-16:25:36:258 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
-16:25:36:279 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-173.64765622491603, speed=50, acc=10
-16:25:36:667 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -173.64765622491603° (current: -173.67°)
-16:25:36:668 ClothSpin INFO :       Opening gripper
-16:25:36:668 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
-16:25:36:669 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
-16:25:36:747 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 164.71°)
-16:25:36:748 ClothSpin INFO :       MoveToGripperToClotheSpin, position 0
-16:25:36:748 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
-16:25:36:769 RoArm-M2-S INFO :          SetJointPID: ELBOW, p=16, i=16
-16:25:36:792 RoArm-M2-S INFO :          SetJointPID: SHOULDER, p=16, i=16
-16:25:36:809 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-173.64765622491603, speed=50, acc=10
-16:25:36:949 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -173.64765622491603° (current: -173.76°)
-16:25:36:949 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=136.0, speed=20, acc=10
-16:25:37:639 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 136.0° (current: 135.97°)
-16:25:37:639 RoArm-M2-S INFO :          SetDynamicForceAdaption: Enabling with base=500, shoulder=5, elbow=100, hand=500
-16:25:37:670 RoArm-M2-S INFO :          MoveSingleJoint: SHOULDER, angle=42, speed=50, acc=10
-16:25:38:541 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 42° (current: 41.84°)
-16:25:38:541 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-174.84765622491602, speed=50, acc=10
-16:25:40:603 RoArm-M2-S ERROR:          MoveSingleJoint: timeout reached while waiting for joint movement
-16:25:40:639 RoArm-M2-S ERROR:          X:-190.22, Y:-17.85, Z:-123.51, b:-174.64, s:41.84, e:135.97, t:15.29, torque:-50/18/49/-24
-16:25:40:639 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=137, speed=50, acc=10
-16:25:40:859 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 137° (current: 136.05°)
-16:25:41:359 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
-16:25:42:465 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=10, shoulder=10, elbow=10, hand=500
-16:25:42:596 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
-16:25:42:626 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
-16:25:42:658 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
-16:25:42:679 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
-16:25:42:697 ClothSpin INFO :       Opening gripper
-16:25:42:697 RoArm-M2-S INFO :          SetGripper: Moving gripper to 179° at speed 0.2.
-16:25:42:697 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=179, speed=0.2, acc=5
-16:25:43:047 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 179° (current: 175.17°)
-16:25:43:628 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:25:43:662 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-185.3722, Y=-13.9598, Z=-103.6651, T=3.1241, Speed=1
-16:25:44:035 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-182.65, Y=-16.01, Z=-111.84
-16:25:44:036 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-185.3722, Y=-13.9598, Z=-53.6651, T=3.1241, Speed=50
-16:25:44:548 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-181.66, Y=-14.8, Z=-62.13
-16:25:44:549 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=140, Y=-140, Z=0, T=3.1241, Speed=200
-16:25:47:306 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=135.42, Y=-142.24, Z=-7.1
-16:25:47:307 ClothSpin INFO :    Move to optical inspection position
-16:25:47:307 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=16
-16:25:47:328 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=16
-16:25:47:354 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=16
-16:25:47:378 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=230, Y=-235, Z=-96, T=3.1241, Speed=10
-16:25:48:739 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=230.89, Y=-235.18, Z=-94.21
-16:25:48:739 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=106, speed=10, acc=10
-16:25:48:990 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 106° (current: 105.29°)
-16:25:48:990 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
-16:25:49:020 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
-16:25:51:495 OpenCV INFO :       Clothespin found at (238, 265) with angle 21.87 degrees
-16:25:51:495 ClothSpin INFO :    LED blink 1 times with 0.5s interval
-16:25:51:495 ClothSpin INFO :       Set LED: ON
-16:25:51:496 RoArm-M2-S INFO :          SetLed: Turning ON LED.
-16:25:52:095 ClothSpin INFO :       Set LED: OFF
-16:25:52:095 RoArm-M2-S INFO :          SetLed: Turning OFF LED.
-16:25:52:725 ClothSpin INFO :    Lift from optical inspection
-16:25:52:725 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
-16:25:52:830 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
-16:25:52:851 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
-16:25:52:882 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
-16:25:52:902 ClothSpin INFO :       Opening gripper
-16:25:52:903 RoArm-M2-S INFO :          SetGripper: Moving gripper to 179° at speed 0.2.
-16:25:52:903 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=179, speed=0.2, acc=5
-16:25:52:964 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 179° (current: 174.9°)
-16:25:53:000 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:25:53:041 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=224.7114, Y=-228.8864, Z=100, T=3.1241, Speed=50
-16:25:53:961 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=230.22, Y=-230.93, Z=85.53
-16:25:53:962 ClothSpin INFO :    Move to burn position
-16:25:53:962 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
-16:25:53:992 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
-16:25:54:009 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
-16:25:54:041 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:25:54:072 RoArm-M2-S INFO :       MoveSingleJoint: BASE, angle=-42, speed=50, acc=10
-16:25:54:290 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -42° (current: -42.89°)
-16:25:54:291 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=50, acc=10
-16:25:55:227 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 145.55°)
-16:25:55:227 RoArm-M2-S INFO :       MoveSingleJoint: SHOULDER, angle=-45, speed=50, acc=10
-16:25:56:450 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -45° (current: -42.45°)
-16:25:56:450 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=43, speed=50, acc=10
-16:26:01:510 RoArm-M2-S ERROR:       MoveSingleJoint: timeout reached while waiting for joint movement
-16:26:01:556 RoArm-M2-S ERROR:       X:-104.71, Y:95.78, Z:470.82, b:-42.45, s:-44.21, e:44.56, t:4.04, torque:36/52/84/-152
-16:26:02:058 Tasmota ERROR:    Tasmota: Device not connected
-16:26:02:058 Tasmota ERROR:    Tasmota: Device not connected
-16:26:02:059 ClothSpin INFO :    Move to finished position
-16:26:02:059 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=50, acc=10
-16:26:04:330 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 146.34°)
-16:26:04:330 RoArm-M2-S INFO :       MoveSingleJoint: SHOULDER, angle=0, speed=50, acc=10
-16:26:06:040 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 0° (current: -0.18°)
-16:26:06:041 RoArm-M2-S INFO :       MoveSingleJoint: BASE, angle=-85, speed=50, acc=10
-16:26:08:114 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -85° (current: -81.56°)
-16:26:08:114 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-35, Y=-360, Z=0, T=3.1241, Speed=50
-16:26:09:432 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-35.65, Y=-356.4, Z=-5.7
-16:26:09:433 ClothSpin INFO :       Opening gripper
-16:26:09:433 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
-16:26:09:434 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
-16:26:09:754 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 169.8°)
-16:26:10:257 ClothSpin INFO :    Pick index 1
-16:26:10:258 ClothSpin INFO :       Moving base to prepare-position 1
-16:26:10:258 RoArm-M2-S INFO :          MoveAllJoints: base=-166.84765622491602, shoulder=35, elbow=125, tool=165, speed=50
-16:26:11:986 RoArm-M2-S INFO :          MoveAllJoints:   --> reached target angles!
-16:26:11:987 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
-16:26:12:019 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-166.84765622491602, speed=50, acc=10
-16:26:12:274 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -166.84765622491602° (current: -166.99°)
-16:26:12:275 ClothSpin INFO :       Opening gripper
-16:26:12:275 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
-16:26:12:276 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
-16:26:12:346 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 165.5°)
-16:26:12:346 ClothSpin INFO :       MoveToGripperToClotheSpin, position 1
-16:26:12:347 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
-16:26:12:386 RoArm-M2-S INFO :          SetJointPID: ELBOW, p=16, i=16
-16:26:12:414 RoArm-M2-S INFO :          SetJointPID: SHOULDER, p=16, i=16
-16:26:12:441 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-166.84765622491602, speed=50, acc=10
-16:26:12:788 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -166.84765622491602° (current: -166.9°)
-16:26:12:788 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=136.1, speed=20, acc=10
-16:26:13:531 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 136.1° (current: 136.14°)
-16:26:13:531 RoArm-M2-S INFO :          SetDynamicForceAdaption: Enabling with base=500, shoulder=5, elbow=100, hand=500
-16:26:13:578 RoArm-M2-S INFO :          MoveSingleJoint: SHOULDER, angle=42, speed=50, acc=10
-16:26:14:862 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 42° (current: 41.84°)
-16:26:14:863 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-168.047656224916, speed=50, acc=10
-16:26:15:587 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -168.047656224916° (current: -167.87°)
-16:26:15:588 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=137, speed=50, acc=10
-16:26:15:655 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 137° (current: 136.05°)
-16:26:16:156 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
-16:26:17:281 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=10, shoulder=10, elbow=10, hand=500
-16:26:17:411 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
-16:26:17:447 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
-16:26:17:475 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
-16:26:17:502 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
-16:26:17:529 ClothSpin INFO :       Opening gripper
-16:26:17:530 RoArm-M2-S INFO :          SetGripper: Moving gripper to 179° at speed 0.2.
-16:26:17:531 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=179, speed=0.2, acc=5
-16:26:17:850 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 179° (current: 174.64°)
-16:26:18:435 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:26:18:468 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-181.8964, Y=-36.4716, Z=-104.2348, T=3.1241, Speed=1
-16:26:18:844 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-178.85, Y=-36.72, Z=-112.42
-16:26:18:845 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-181.8964, Y=-36.4716, Z=-54.2348, T=3.1241, Speed=50
-16:26:19:367 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-177.71, Y=-36.2, Z=-63.63
-16:26:19:368 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=140, Y=-140, Z=0, T=3.1241, Speed=200
-16:26:21:928 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=131.46, Y=-145.94, Z=-6.49
-16:26:21:928 ClothSpin INFO :    Move to optical inspection position
-16:26:21:928 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=16
-16:26:21:968 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=16
-16:26:22:001 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=16
-16:26:22:027 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=230, Y=-235, Z=-96, T=3.1241, Speed=10
-16:26:24:178 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=231.63, Y=-235.93, Z=-94.86
-16:26:24:179 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=106, speed=10, acc=10
-16:26:24:405 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 106° (current: 105.21°)
-16:26:24:406 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
-16:26:24:431 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
-16:26:26:860 OpenCV INFO :       Clothespin found at (330, 284) with angle 33.07 degrees
-16:26:26:861 ClothSpin INFO :    LED blink 1 times with 0.5s interval
-16:26:26:861 ClothSpin INFO :       Set LED: ON
-16:26:26:862 RoArm-M2-S INFO :          SetLed: Turning ON LED.
-16:26:27:419 ClothSpin INFO :       Set LED: OFF
-16:26:27:419 RoArm-M2-S INFO :          SetLed: Turning OFF LED.
-16:26:28:042 ClothSpin INFO :    Lift from optical inspection
-16:26:28:042 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
-16:26:28:148 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
-16:26:28:177 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
-16:26:28:214 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
-16:26:28:241 ClothSpin INFO :       Opening gripper
-16:26:28:242 RoArm-M2-S INFO :          SetGripper: Moving gripper to 179° at speed 0.2.
-16:26:28:242 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=179, speed=0.2, acc=5
-16:26:28:327 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 179° (current: 175.25°)
-16:26:28:366 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:26:28:403 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=222.6977, Y=-230.3429, Z=100, T=3.1241, Speed=50
-16:26:29:301 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=227.06, Y=-234.86, Z=80.78
-16:26:29:301 ClothSpin INFO :    Move to burn position
-16:26:29:302 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
-16:26:29:341 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
-16:26:29:385 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
-16:26:29:424 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:26:29:456 RoArm-M2-S INFO :       MoveSingleJoint: BASE, angle=-42, speed=50, acc=10
-16:26:29:695 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -42° (current: -42.98°)
-16:26:29:696 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=50, acc=10
-16:26:30:654 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 146.6°)
-16:26:30:655 RoArm-M2-S INFO :       MoveSingleJoint: SHOULDER, angle=-45, speed=50, acc=10
-16:26:31:887 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -45° (current: -42.45°)
-16:26:31:888 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=43, speed=50, acc=10
-16:26:36:928 RoArm-M2-S ERROR:       MoveSingleJoint: timeout reached while waiting for joint movement
-16:26:36:983 RoArm-M2-S ERROR:       X:-105.07, Y:95.82, Z:470.60, b:-42.36, s:-44.30, e:44.65, t:3.87, torque:32/48/88/-144
-16:26:37:485 Tasmota ERROR:    Tasmota: Device not connected
-16:26:37:485 Tasmota ERROR:    Tasmota: Device not connected
-16:26:37:486 ClothSpin INFO :    Move to finished position
-16:26:37:486 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=50, acc=10
-16:26:39:741 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 145.72°)
-16:26:39:742 RoArm-M2-S INFO :       MoveSingleJoint: SHOULDER, angle=0, speed=50, acc=10
-16:26:40:693 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 0° (current: -4.83°)
-16:26:40:694 RoArm-M2-S INFO :       MoveSingleJoint: BASE, angle=-85, speed=50, acc=10
-16:26:41:651 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -85° (current: -81.12°)
-16:26:41:651 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-35, Y=-360, Z=0, T=3.1241, Speed=50
-16:26:43:020 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-31.33, Y=-357.39, Z=-5.07
-16:26:43:020 ClothSpin INFO :       Opening gripper
-16:26:43:021 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
-16:26:43:021 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
-16:26:43:365 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 168.75°)
-16:26:43:868 ClothSpin INFO :    Pick index 2
-16:26:43:868 ClothSpin INFO :       Moving base to prepare-position 2
-16:26:43:869 RoArm-M2-S INFO :          MoveAllJoints: base=-159.84765622491602, shoulder=35, elbow=125, tool=165, speed=50
-16:26:45:378 RoArm-M2-S INFO :          MoveAllJoints:   --> reached target angles!
-16:26:45:379 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
-16:26:45:414 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-159.84765622491602, speed=50, acc=10
-16:26:45:532 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -159.84765622491602° (current: -159.79°)
-16:26:45:532 ClothSpin INFO :       Opening gripper
-16:26:45:533 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
-16:26:45:533 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
-16:26:45:619 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 165.41°)
-16:26:45:619 ClothSpin INFO :       MoveToGripperToClotheSpin, position 2
-16:26:45:620 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
-16:26:45:652 RoArm-M2-S INFO :          SetJointPID: ELBOW, p=16, i=16
-16:26:45:679 RoArm-M2-S INFO :          SetJointPID: SHOULDER, p=16, i=16
-16:26:45:720 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-159.84765622491602, speed=50, acc=10
-16:26:45:796 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -159.84765622491602° (current: -159.87°)
-16:26:45:796 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=136.2, speed=20, acc=10
-16:26:46:476 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 136.2° (current: 136.05°)
-16:26:46:476 RoArm-M2-S INFO :          SetDynamicForceAdaption: Enabling with base=500, shoulder=5, elbow=100, hand=500
-16:26:46:512 RoArm-M2-S INFO :          MoveSingleJoint: SHOULDER, angle=42, speed=50, acc=10
-16:26:47:785 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 42° (current: 41.92°)
-16:26:47:785 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-161.047656224916, speed=50, acc=10
-16:26:49:040 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -161.047656224916° (current: -160.93°)
-16:26:49:041 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=137, speed=50, acc=10
-16:26:49:111 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 137° (current: 136.23°)
-16:26:49:613 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
-16:26:50:768 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=10, shoulder=10, elbow=10, hand=500
-16:26:50:896 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
-16:26:50:928 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
-16:26:50:950 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
-16:26:50:987 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
-16:26:51:013 ClothSpin INFO :       Opening gripper
-16:26:51:013 RoArm-M2-S INFO :          SetGripper: Moving gripper to 179° at speed 0.2.
-16:26:51:013 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=179, speed=0.2, acc=5
-16:26:51:322 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 179° (current: 174.29°)
-16:26:51:921 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:26:51:966 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-177.6051, Y=-55.0682, Z=-104.2272, T=3.1241, Speed=1
-16:26:52:341 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-174.36, Y=-57.01, Z=-112.38
-16:26:52:341 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-177.6051, Y=-55.0682, Z=-54.2272, T=3.1241, Speed=50
-16:26:53:069 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-177.02, Y=-56.98, Z=-60.13
-16:26:53:069 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=140, Y=-140, Z=0, T=3.1241, Speed=200
-16:26:55:621 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=137.17, Y=-140.58, Z=-6.49
-16:26:55:622 ClothSpin INFO :    Move to optical inspection position
-16:26:55:622 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=16
-16:26:55:662 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=16
-16:26:55:704 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=16
-16:26:55:739 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=230, Y=-235, Z=-96, T=3.1241, Speed=10
-16:26:57:256 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=231.37, Y=-236.39, Z=-94.35
-16:26:57:257 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=106, speed=10, acc=10
-16:26:57:481 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 106° (current: 105.29°)
-16:26:57:481 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
-16:26:57:525 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
-16:26:59:981 OpenCV ERROR:       No contours found
-16:26:59:982 OpenCV ERROR:    No clothespin detected in cropped frame
-16:26:59:984 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
-16:27:02:480 OpenCV INFO :       Clothespin found at (153, 286) with angle 27.51 degrees
-16:27:02:481 ClothSpin INFO :    LED blink 1 times with 0.5s interval
-16:27:02:482 ClothSpin INFO :       Set LED: ON
-16:27:02:482 RoArm-M2-S INFO :          SetLed: Turning ON LED.
-16:27:03:053 ClothSpin INFO :       Set LED: OFF
-16:27:03:053 RoArm-M2-S INFO :          SetLed: Turning OFF LED.
-16:27:03:679 ClothSpin INFO :    Lift from optical inspection
-16:27:03:679 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
-16:27:03:796 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
-16:27:03:838 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
-16:27:03:873 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
-16:27:03:895 ClothSpin INFO :       Opening gripper
-16:27:03:895 RoArm-M2-S INFO :          SetGripper: Moving gripper to 179° at speed 0.2.
-16:27:03:895 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=179, speed=0.2, acc=5
-16:27:03:982 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 179° (current: 178.59°)
-16:27:04:033 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:27:04:074 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=224.5037, Y=-229.3776, Z=100, T=3.1241, Speed=50
-16:27:05:038 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=229.9, Y=-230.61, Z=88.4
-16:27:05:038 ClothSpin INFO :    Move to burn position
-16:27:05:039 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
-16:27:05:065 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
-16:27:05:106 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
-16:27:05:145 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:27:05:178 RoArm-M2-S INFO :       MoveSingleJoint: BASE, angle=-42, speed=50, acc=10
-16:27:05:402 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -42° (current: -42.98°)
-16:27:05:403 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=50, acc=10
-16:27:06:359 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 146.43°)
-16:27:06:360 RoArm-M2-S INFO :       MoveSingleJoint: SHOULDER, angle=-45, speed=50, acc=10
-16:27:08:609 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -45° (current: -44.03°)
-16:27:08:610 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=43, speed=50, acc=10
-16:27:15:077 RoArm-M2-S ERROR:       MoveSingleJoint: timeout reached while waiting for joint movement
-16:27:15:123 RoArm-M2-S ERROR:       X:-105.39, Y:96.11, Z:470.60, b:-42.36, s:-44.30, e:44.56, t:1.32, torque:32/48/84/-28
-16:27:15:623 Tasmota ERROR:    Tasmota: Device not connected
-16:27:15:623 Tasmota ERROR:    Tasmota: Device not connected
-16:27:15:624 ClothSpin INFO :    Move to finished position
-16:27:15:624 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=50, acc=10
-16:27:17:956 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 146.16°)
-16:27:17:957 RoArm-M2-S INFO :       MoveSingleJoint: SHOULDER, angle=0, speed=50, acc=10
-16:27:18:949 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 0° (current: -2.72°)
-16:27:18:950 RoArm-M2-S INFO :       MoveSingleJoint: BASE, angle=-85, speed=50, acc=10
-16:27:19:920 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -85° (current: -81.56°)
-16:27:19:921 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-35, Y=-360, Z=0, T=3.1241, Speed=50
-16:27:21:217 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-31.3, Y=-357.1, Z=-5.38
-16:27:21:217 ClothSpin INFO :       Opening gripper
-16:27:21:218 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
-16:27:21:218 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
-16:27:21:571 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 167.87°)
-16:27:22:073 ClothSpin INFO :    Pick index 3
-16:27:22:073 ClothSpin INFO :       Moving base to prepare-position 3
-16:27:22:074 RoArm-M2-S INFO :          MoveAllJoints: base=-152.74765622491603, shoulder=35, elbow=125, tool=165, speed=50
-16:27:23:666 RoArm-M2-S INFO :          MoveAllJoints:   --> reached target angles!
-16:27:23:667 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
-16:27:23:707 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-152.74765622491603, speed=50, acc=10
-16:27:24:172 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -152.74765622491603° (current: -152.93°)
-16:27:24:173 ClothSpin INFO :       Opening gripper
-16:27:24:174 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
-16:27:24:174 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
-16:27:24:239 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 165.5°)
-16:27:24:240 ClothSpin INFO :       MoveToGripperToClotheSpin, position 3
-16:27:24:240 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
-16:27:24:278 RoArm-M2-S INFO :          SetJointPID: ELBOW, p=16, i=16
-16:27:24:300 RoArm-M2-S INFO :          SetJointPID: SHOULDER, p=16, i=16
-16:27:24:330 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-152.74765622491603, speed=50, acc=10
-16:27:24:421 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -152.74765622491603° (current: -152.67°)
-16:27:24:422 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=136.2, speed=20, acc=10
-16:27:25:140 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 136.2° (current: 136.23°)
-16:27:25:141 RoArm-M2-S INFO :          SetDynamicForceAdaption: Enabling with base=500, shoulder=5, elbow=100, hand=500
-16:27:25:181 RoArm-M2-S INFO :          MoveSingleJoint: SHOULDER, angle=42, speed=50, acc=10
-16:27:26:426 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 42° (current: 41.92°)
-16:27:26:426 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-153.94765622491602, speed=50, acc=10
-16:27:27:481 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -153.94765622491602° (current: -153.9°)
-16:27:27:482 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=137, speed=50, acc=10
-16:27:27:559 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 137° (current: 136.05°)
-16:27:28:061 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
-16:27:29:165 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=10, shoulder=10, elbow=10, hand=500
-16:27:29:289 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
-16:27:29:327 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
-16:27:29:352 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
-16:27:29:381 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
-16:27:29:415 ClothSpin INFO :       Opening gripper
-16:27:29:415 RoArm-M2-S INFO :          SetGripper: Moving gripper to 179° at speed 0.2.
-16:27:29:415 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=179, speed=0.2, acc=5
-16:27:29:742 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 179° (current: 174.9°)
-16:27:30:331 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:27:30:367 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-169.957, Y=-77.5308, Z=-104.2101, T=3.1241, Speed=1
-16:27:30:741 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-166.07, Y=-77.92, Z=-112.38
-16:27:30:742 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-169.957, Y=-77.5308, Z=-54.2101, T=3.1241, Speed=50
-16:27:31:236 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-165.5, Y=-76.73, Z=-63.88
-16:27:31:236 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=140, Y=-140, Z=0, T=3.1241, Speed=200
-16:27:33:601 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=136.15, Y=-142.56, Z=-6.65
-16:27:33:602 ClothSpin INFO :    Move to optical inspection position
-16:27:33:602 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=16
-16:27:33:638 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=16
-16:27:33:678 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=16
-16:27:33:706 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=230, Y=-235, Z=-96, T=3.1241, Speed=10
-16:27:36:770 RoArm-M2-S ERROR:       MoveToXYZT: timeout reached while waiting for X/Y/Z/T position
-16:27:36:874 RoArm-M2-S ERROR:       X:232.09, Y:-235.68, Z:-94.35, b:-45.44, s:44.82, e:104.59, t:1.32, torque:-27/28/55/-28
-16:27:36:875 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=106, speed=10, acc=10
-16:27:37:097 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 106° (current: 105.21°)
-16:27:37:097 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
-16:27:37:131 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
-16:27:39:597 OpenCV ERROR:       No clothespin contour found
-16:27:39:597 OpenCV ERROR:    No clothespin detected in cropped frame
-16:27:39:600 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
-16:27:42:072 OpenCV ERROR:       No contours found
-16:27:42:072 OpenCV ERROR:    No clothespin detected in cropped frame
-16:27:42:074 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
-16:27:44:554 OpenCV ERROR:       No contours found
-16:27:44:554 OpenCV ERROR:    No clothespin detected in cropped frame
-16:27:44:556 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
-16:27:47:060 OpenCV ERROR:       No contours found
-16:27:47:061 OpenCV ERROR:    No clothespin detected in cropped frame
-16:27:47:063 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
-16:27:49:545 OpenCV ERROR:       No contours found
-16:27:49:545 OpenCV ERROR:    No clothespin detected in cropped frame
-16:27:49:546 ClothSpin INFO :    Lift from optical inspection
-16:27:49:546 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
-16:27:49:661 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
-16:27:49:698 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
-16:27:49:727 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
-16:27:49:762 ClothSpin INFO :       Opening gripper
-16:27:49:762 RoArm-M2-S INFO :          SetGripper: Moving gripper to 179° at speed 0.2.
-16:27:49:763 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=179, speed=0.2, acc=5
-16:27:49:873 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 179° (current: 178.95°)
-16:27:49:909 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
-16:27:49:945 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=224.8553, Y=-229.033, Z=100, T=3.1241, Speed=50
-16:27:50:915 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=229.36, Y=-230.06, Z=87.78
-16:27:50:916 ClothSpin INFO :    Move to waste position
-16:27:50:916 RoArm-M2-S INFO :       MoveSingleJoint: SHOULDER, angle=10, speed=20, acc=5
-16:27:50:994 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 10° (current: 12.3°)
-16:27:50:994 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=20, acc=5
-16:27:52:822 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 140.89°)
-16:27:52:822 RoArm-M2-S INFO :       MoveSingleJoint: BASE, angle=-150, speed=20, acc=5
-16:27:54:907 RoArm-M2-S ERROR:       MoveSingleJoint: timeout reached while waiting for joint movement
-16:27:54:958 RoArm-M2-S ERROR:       X:15.00, Y:-165.25, Z:-40.42, b:-84.81, s:11.87, e:149.85, t:1.14, torque:-128/100/-20/-20
-16:27:55:007 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=11.1911, Y=-165.5535, Z=50, T=3.1241, Speed=0.1
-16:27:56:890 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=11.82, Y=-163.69, Z=43.15
-16:27:56:891 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-260, Y=-250, Z=50, T=3.1241, Speed=50
-16:27:57:980 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-230.06, Y=-257.78, Z=27.71
-16:27:57:981 ClothSpin INFO :       Opening gripper
-16:27:57:981 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
-16:27:57:982 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
-16:27:58:325 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 168.57°)
-16:27:58:828 ClothSpin INFO :    Pick index 4
-16:27:58:829 ClothSpin INFO :       Moving base to prepare-position 4
-16:27:58:830 RoArm-M2-S INFO :          MoveAllJoints: base=-145.74765622491603, shoulder=35, elbow=125, tool=165, speed=50
-16:27:59:618 RoArm-M2-S INFO :          MoveAllJoints:   --> reached target angles!
-16:27:59:618 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
-16:27:59:650 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-145.74765622491603, speed=50, acc=10
-16:27:59:785 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -145.74765622491603° (current: -145.9°)
+08:20:28:570 OpenCV INFO : OpenCV initialized with IP: 192.168.1.122
+08:20:28:809 Tasmota INFO :    Tasmota: Connected to device 'NOUS A1T'
+08:20:28:926 Tasmota INFO :    Tasmota: Set output 1 to off, response: b'{"POWER":"OFF"}'
+08:20:28:927 LightBurn INFO :    Start application
+08:20:31:937 LightBurn INFO :    Socket opened successfully for localhost, in=19841, out=19840
+08:20:32:082 LightBurn INFO :    Received response from ('127.0.0.1', 19840): OK
+08:20:32:082 LightBurn INFO :    Connection established!
+08:20:32:083 RoArm-M2-S INFO :    InitPosition: Initializing robot arm.
+08:20:32:083 RoArm-M2-S INFO :       Waiting for RoArm-M2-S at 192.168.1.121 to become reachable...
+08:20:32:163 RoArm-M2-S INFO :       RoArm-M2-S at 192.168.1.121 is reachable (ping time: 0.08 s).
+08:20:32:163 RoArm-M2-S INFO :       SetLed: Turning ON LED.
+08:20:32:235 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
+08:20:32:270 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
+08:20:32:301 RoArm-M2-S INFO :       MoveSingleJoint: SHOULDER, angle=10, speed=50, acc=5
+08:20:32:398 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 10° (current: 2.55°)
+08:20:32:398 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=50, acc=5
+08:20:33:613 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 142.03°)
+08:20:37:113 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=50, acc=10
+08:20:38:282 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 140.63°)
+08:20:38:282 RoArm-M2-S INFO :       SetLed: Turning OFF LED.
+08:20:38:356 RoArm-M2-S INFO :    X:193.94, Y:0.60, Z:4.76, b:0.18, s:1.41, e:144.23, t:0.62, torque:0/80/-172/-36
+08:20:38:399 RoArm-M2-S INFO : initialized with IP: 192.168.1.121
+08:20:38:452 ClothSpin INFO : ClothSpin bind to RoArm: True
+08:20:38:452 ClothSpin INFO :    ClothSpin: CALIBRATE-REFERENCE-POSITION
+08:20:38:452 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
+08:20:38:495 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-50, Y=-260, Z=50, T=2.2166, Speed=50
+08:20:39:841 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-15.3, Y=-262.21, Z=46.84
+08:20:39:841 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-260, Y=-80, Z=-50, T=2.2166, Speed=5
+08:20:40:965 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-254.33, Y=-87.93, Z=-52.55
+08:20:40:965 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-288, Y=-43, Z=-95, T=2.2166, Speed=5
+08:20:41:489 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-285.07, Y=-45.42, Z=-95.11
+08:20:41:489 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=300, shoulder=500, elbow=500, hand=500
+08:20:42:026 RoArm-M2-S INFO :       MoveSingleJointTorqueLimited: BASE, angle=-180, speed=5, acc=5
+08:20:42:173 RoArm-M2-S INFO :       MoveSingleJointTorqueLimited:   --> reached target torque -56
+08:20:43:174 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-320, Y=-40, Z=-120, T=2.2166, Speed=10
+08:20:44:865 RoArm-M2-S ERROR:       MoveToXYZT: timeout reached while waiting for X/Y/Z/T position
+08:20:44:968 RoArm-M2-S ERROR:       X:-302.56, Y:-32.61, Z:-125.67, b:-173.85, s:48.78, e:108.90, t:52.65, torque:60/-32/224/28
+08:20:44:968 RoArm-M2-S INFO :       SetLed: Turning ON LED.
+08:20:44:999 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
+08:20:46:096 RoArm-M2-S INFO :       SetLed: Turning OFF LED.
+08:20:46:134 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
+08:20:46:171 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
+08:20:46:242 ClothSpin INFO :    CALIBRATED-REFERENCE: X:-299.43, Y:-31.81, Z:-126.19, b:-173.94, s:48.60, e:109.69, t:52.65, torque:0/0/0/0
+08:20:46:243 RoArm-M2-S INFO :       MoveAllJoints: base=-173.93554686206926, shoulder=30, elbow=120, tool=127, speed=50
+08:20:46:906 RoArm-M2-S INFO :       MoveAllJoints:   --> reached target angles!
+08:20:46:907 ClothSpin INFO :       Opening gripper
+08:20:46:907 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
+08:20:46:907 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
+08:20:47:548 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 162.86°)
+08:20:47:776 ClothSpin INFO :    Pick index 0
+08:20:47:776 ClothSpin INFO :       Moving base to prepare-position 0
+08:20:47:776 RoArm-M2-S INFO :          MoveAllJoints: base=-173.73554686206927, shoulder=35, elbow=125, tool=165, speed=50
+08:20:48:153 RoArm-M2-S INFO :          MoveAllJoints:   --> reached target angles!
+08:20:48:154 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
+08:20:48:194 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-173.73554686206927, speed=50, acc=10
+08:20:48:264 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -173.73554686206927° (current: -173.67°)
+08:20:48:264 ClothSpin INFO :       Opening gripper
+08:20:48:264 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
+08:20:48:264 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
+08:20:48:327 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 164.53°)
+08:20:48:327 ClothSpin INFO :       MoveToGripperToClotheSpin, position 0
+08:20:48:328 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
+08:20:48:358 RoArm-M2-S INFO :          SetJointPID: ELBOW, p=16, i=16
+08:20:48:380 RoArm-M2-S INFO :          SetJointPID: SHOULDER, p=16, i=16
+08:20:48:403 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-173.73554686206927, speed=50, acc=10
+08:20:48:968 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -173.73554686206927° (current: -173.67°)
+08:20:48:968 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=136.0, speed=20, acc=10
+08:20:49:947 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 136.0° (current: 135.88°)
+08:20:49:948 RoArm-M2-S INFO :          SetDynamicForceAdaption: Enabling with base=500, shoulder=5, elbow=100, hand=500
+08:20:49:986 RoArm-M2-S INFO :          MoveSingleJoint: SHOULDER, angle=42, speed=50, acc=10
+08:20:51:238 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 42° (current: 41.84°)
+08:20:51:238 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-174.93554686206926, speed=50, acc=10
+08:20:53:314 RoArm-M2-S ERROR:          MoveSingleJoint: timeout reached while waiting for joint movement
+08:20:53:364 RoArm-M2-S ERROR:          X:-189.39, Y:-17.48, Z:-123.55, b:-174.73, s:41.84, e:136.14, t:15.38, torque:-47/19/31/-28
+08:20:53:364 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=137, speed=50, acc=10
+08:20:53:456 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 137° (current: 136.14°)
+08:20:53:958 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
+08:20:55:066 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=10, shoulder=10, elbow=10, hand=500
+08:20:55:202 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
+08:20:55:248 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
+08:20:55:281 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
+08:20:55:313 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
+08:20:55:345 ClothSpin INFO :       Opening gripper
+08:20:55:345 RoArm-M2-S INFO :          SetGripper: Moving gripper to 179° at speed 0.2.
+08:20:55:346 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=179, speed=0.2, acc=5
+08:20:55:683 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 179° (current: 174.11°)
+08:20:56:327 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
+08:20:56:372 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-185.8631, Y=-13.1369, Z=-103.6562, T=3.1241, Speed=1
+08:20:56:746 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-183.2, Y=-14.64, Z=-111.82
+08:20:56:747 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-185.8631, Y=-13.1369, Z=-53.6562, T=3.1241, Speed=50
+08:20:57:258 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-181.67, Y=-15.08, Z=-63.14
+08:20:57:258 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=140, Y=-140, Z=0, T=3.1241, Speed=200
+08:21:01:457 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=138.44, Y=-139.3, Z=-7.1
+08:21:01:458 ClothSpin INFO :    Move to optical inspection position
+08:21:01:458 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=16
+08:21:01:497 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=16
+08:21:01:530 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=16
+08:21:01:560 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=230, Y=-235, Z=-96, T=3.1241, Speed=10
+08:21:03:193 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=231.0, Y=-236.74, Z=-94.35
+08:21:03:193 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=106, speed=10, acc=10
+08:21:03:421 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 106° (current: 105.29°)
+08:21:03:422 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
+08:21:03:444 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:21:05:892 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:21:06:647 OpenCV ERROR:       No contours found
+08:21:06:648 OpenCV ERROR:    No clothespin detected in cropped frame
+08:21:06:649 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:21:09:096 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:21:09:650 OpenCV ERROR:       No contours found
+08:21:09:651 OpenCV ERROR:    No clothespin detected in cropped frame
+08:21:09:652 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:21:12:079 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:21:12:660 OpenCV ERROR:       No contours found
+08:21:12:661 OpenCV ERROR:    No clothespin detected in cropped frame
+08:21:12:663 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:21:15:111 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:21:15:707 OpenCV ERROR:       No contours found
+08:21:15:708 OpenCV ERROR:    No clothespin detected in cropped frame
+08:21:15:710 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:21:18:156 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:21:18:759 OpenCV ERROR:       No contours found
+08:21:18:760 OpenCV ERROR:    No clothespin detected in cropped frame
+08:21:18:762 ClothSpin INFO :    Lift from optical inspection
+08:21:18:763 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
+08:21:18:837 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
+08:21:18:880 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
+08:21:18:906 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
+08:21:18:932 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=50, shoulder=50, elbow=50, hand=500
+08:21:18:958 ClothSpin INFO :       Opening gripper
+08:21:18:958 RoArm-M2-S INFO :          SetGripper: Moving gripper to 179° at speed 0.2.
+08:21:18:959 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=179, speed=0.2, acc=5
+08:21:19:035 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 179° (current: 174.46°)
+08:21:19:680 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
+08:21:19:715 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=227.7944, Y=-226.4009, Z=100, T=3.1241, Speed=50
+08:21:20:794 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=231.67, Y=-228.14, Z=89.03
+08:21:20:795 ClothSpin INFO :    Move to burn position
+08:21:20:795 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
+08:21:20:829 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
+08:21:20:869 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
+08:21:20:903 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
+08:21:20:944 RoArm-M2-S INFO :       MoveSingleJoint: BASE, angle=-42, speed=50, acc=10
+08:21:21:197 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -42° (current: -42.19°)
+08:21:21:198 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=50, acc=10
+08:21:22:179 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 146.87°)
+08:21:22:179 RoArm-M2-S INFO :       MoveSingleJoint: SHOULDER, angle=-45, speed=50, acc=10
+08:21:23:422 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -45° (current: -42.45°)
+08:21:23:423 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=43, speed=50, acc=10
+08:21:28:502 RoArm-M2-S ERROR:       MoveSingleJoint: timeout reached while waiting for joint movement
+08:21:28:554 RoArm-M2-S ERROR:       X:-104.35, Y:94.87, Z:471.48, b:-42.28, s:-43.95, e:44.30, t:3.69, torque:28/64/72/-136
+08:21:29:177 Tasmota INFO :    Tasmota: Set output 1 to on, response: b'{"POWER":"ON"}'
+08:21:29:178 LightBurn INFO :    Starting burn...
+08:21:29:180 LightBurn INFO :    Waiting for burn to finish...
+08:21:41:371 LightBurn INFO :    Burn finished!
+08:21:41:506 Tasmota INFO :    Tasmota: Set output 1 to off, response: b'{"POWER":"OFF"}'
+08:21:41:507 ClothSpin INFO :    Move to finished position
+08:21:41:507 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=50, acc=10
+08:21:43:751 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 145.37°)
+08:21:43:752 RoArm-M2-S INFO :       MoveSingleJoint: SHOULDER, angle=0, speed=50, acc=10
+08:21:44:742 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 0° (current: -3.6°)
+08:21:44:742 RoArm-M2-S INFO :       MoveSingleJoint: BASE, angle=-85, speed=50, acc=10
+08:21:45:677 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -85° (current: -80.33°)
+08:21:45:678 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-35, Y=-360, Z=0, T=3.1241, Speed=50
+08:21:47:009 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-35.16, Y=-357.03, Z=-5.07
+08:21:47:010 ClothSpin INFO :       Opening gripper
+08:21:47:010 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
+08:21:47:011 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
+08:21:47:318 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 169.8°)
+08:21:47:821 ClothSpin INFO :    Pick index 1
+08:21:47:821 ClothSpin INFO :       Moving base to prepare-position 1
+08:21:47:822 RoArm-M2-S INFO :          MoveAllJoints: base=-166.93554686206926, shoulder=35, elbow=125, tool=165, speed=50
+08:21:49:572 RoArm-M2-S INFO :          MoveAllJoints:   --> reached target angles!
+08:21:49:572 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
+08:21:49:597 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-166.93554686206926, speed=50, acc=10
+08:21:49:726 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -166.93554686206926° (current: -166.99°)
+08:21:49:726 ClothSpin INFO :       Opening gripper
+08:21:49:727 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
+08:21:49:727 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
+08:21:49:795 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 165.32°)
+08:21:49:796 ClothSpin INFO :       MoveToGripperToClotheSpin, position 1
+08:21:49:796 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
+08:21:49:826 RoArm-M2-S INFO :          SetJointPID: ELBOW, p=16, i=16
+08:21:49:864 RoArm-M2-S INFO :          SetJointPID: SHOULDER, p=16, i=16
+08:21:49:899 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-166.93554686206926, speed=50, acc=10
+08:21:50:285 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -166.93554686206926° (current: -166.82°)
+08:21:50:285 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=136.1, speed=20, acc=10
+08:21:51:002 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 136.1° (current: 135.97°)
+08:21:51:002 RoArm-M2-S INFO :          SetDynamicForceAdaption: Enabling with base=500, shoulder=5, elbow=100, hand=500
+08:21:51:042 RoArm-M2-S INFO :          MoveSingleJoint: SHOULDER, angle=42, speed=50, acc=10
+08:21:52:070 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 42° (current: 41.84°)
+08:21:52:070 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-168.13554686206925, speed=50, acc=10
+08:21:52:926 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -168.13554686206925° (current: -167.96°)
+08:21:52:927 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=137, speed=50, acc=10
+08:21:53:003 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 137° (current: 136.23°)
+08:21:53:505 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
+08:21:54:664 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=10, shoulder=10, elbow=10, hand=500
+08:21:54:790 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
+08:21:54:821 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
+08:21:54:851 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
+08:21:54:880 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
+08:21:54:904 ClothSpin INFO :       Opening gripper
+08:21:54:905 RoArm-M2-S INFO :          SetGripper: Moving gripper to 179° at speed 0.2.
+08:21:54:905 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=179, speed=0.2, acc=5
+08:21:55:222 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 179° (current: 174.2°)
+08:21:55:819 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
+08:21:55:850 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-182.3251, Y=-36.2667, Z=-103.6651, T=3.1241, Speed=1
+08:21:56:237 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-178.65, Y=-36.39, Z=-112.16
+08:21:56:238 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-182.3251, Y=-36.2667, Z=-53.6651, T=3.1241, Speed=50
+08:21:56:740 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-179.12, Y=-35.06, Z=-63.6
+08:21:56:741 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=140, Y=-140, Z=0, T=3.1241, Speed=200
+08:21:59:414 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=136.94, Y=-140.78, Z=-7.1
+08:21:59:415 ClothSpin INFO :    Move to optical inspection position
+08:21:59:415 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=16
+08:21:59:447 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=16
+08:21:59:479 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=16
+08:21:59:502 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=230, Y=-235, Z=-96, T=3.1241, Speed=10
+08:22:00:836 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=231.15, Y=-234.73, Z=-94.72
+08:22:00:836 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=106, speed=10, acc=10
+08:22:01:066 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 106° (current: 105.12°)
+08:22:01:067 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
+08:22:01:106 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:22:03:515 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:22:04:135 OpenCV ERROR:       No contours found
+08:22:04:136 OpenCV ERROR:    No clothespin detected in cropped frame
+08:22:04:137 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:22:06:553 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:22:07:145 OpenCV ERROR:       No contours found
+08:22:07:146 OpenCV ERROR:    No clothespin detected in cropped frame
+08:22:07:148 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:22:09:594 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:22:10:192 OpenCV ERROR:       No contours found
+08:22:10:192 OpenCV ERROR:    No clothespin detected in cropped frame
+08:22:10:195 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:22:12:696 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:22:13:519 OpenCV ERROR:       No clothespin contour found
+08:22:13:519 OpenCV ERROR:    No clothespin detected in cropped frame
+08:22:13:521 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:22:15:915 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:22:16:518 OpenCV ERROR:       No contours found
+08:22:16:518 OpenCV ERROR:    No clothespin detected in cropped frame
+08:22:16:521 ClothSpin INFO :    Lift from optical inspection
+08:22:16:521 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
+08:22:16:615 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
+08:22:16:655 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
+08:22:16:702 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
+08:22:16:739 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=50, shoulder=50, elbow=50, hand=500
+08:22:16:801 ClothSpin INFO :       Opening gripper
+08:22:16:801 RoArm-M2-S INFO :          SetGripper: Moving gripper to 179° at speed 0.2.
+08:22:16:802 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=179, speed=0.2, acc=5
+08:22:16:911 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 179° (current: 174.46°)
+08:22:17:541 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
+08:22:17:593 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=224.4029, Y=-229.9793, Z=100, T=3.1241, Speed=50
+08:22:20:590 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=227.79, Y=-232.02, Z=89.03
+08:22:20:591 ClothSpin INFO :    Move to burn position
+08:22:20:591 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
+08:22:24:469 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
+08:22:27:432 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
+08:22:27:477 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
+08:22:27:514 RoArm-M2-S INFO :       MoveSingleJoint: BASE, angle=-42, speed=50, acc=10
+08:22:27:770 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -42° (current: -42.71°)
+08:22:27:771 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=50, acc=10
+08:22:28:811 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 148.45°)
+08:22:28:812 RoArm-M2-S INFO :       MoveSingleJoint: SHOULDER, angle=-45, speed=50, acc=10
+08:22:31:965 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -45° (current: -43.77°)
+08:22:31:966 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=43, speed=50, acc=10
+08:22:37:012 RoArm-M2-S ERROR:       MoveSingleJoint: timeout reached while waiting for joint movement
+08:22:37:065 RoArm-M2-S ERROR:       X:-104.64, Y:95.42, Z:471.04, b:-42.36, s:-44.12, e:44.47, t:3.69, torque:32/56/80/-136
+08:22:37:681 Tasmota INFO :    Tasmota: Set output 1 to on, response: b'{"POWER":"ON"}'
+08:22:37:682 LightBurn INFO :    Starting burn...
+08:22:37:684 LightBurn INFO :    Waiting for burn to finish...
+08:24:51:087 LightBurn INFO :    Burn finished!
+08:24:51:200 Tasmota INFO :    Tasmota: Set output 1 to off, response: b'{"POWER":"OFF"}'
+08:24:51:201 ClothSpin INFO :    Move to finished position
+08:24:51:201 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=150, speed=50, acc=10
+08:24:53:519 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 150° (current: 146.34°)
+08:24:53:520 RoArm-M2-S INFO :       MoveSingleJoint: SHOULDER, angle=0, speed=50, acc=10
+08:24:54:572 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 0° (current: -1.58°)
+08:24:54:573 RoArm-M2-S INFO :       MoveSingleJoint: BASE, angle=-85, speed=50, acc=10
+08:24:55:651 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle -85° (current: -82.71°)
+08:24:55:652 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-35, Y=-360, Z=0, T=3.1241, Speed=50
+08:24:56:972 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-34.04, Y=-356.85, Z=-4.83
+08:24:56:972 ClothSpin INFO :       Opening gripper
+08:24:56:973 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
+08:24:56:973 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
+08:24:57:325 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 167.78°)
+08:24:57:827 ClothSpin INFO :    Pick index 2
+08:24:57:828 ClothSpin INFO :       Moving base to prepare-position 2
+08:24:57:828 RoArm-M2-S INFO :          MoveAllJoints: base=-159.93554686206926, shoulder=35, elbow=125, tool=165, speed=50
+08:24:59:427 RoArm-M2-S INFO :          MoveAllJoints:   --> reached target angles!
+08:24:59:427 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
+08:24:59:450 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-159.93554686206926, speed=50, acc=10
+08:24:59:519 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -159.93554686206926° (current: -159.96°)
+08:24:59:519 ClothSpin INFO :       Opening gripper
+08:24:59:520 RoArm-M2-S INFO :          SetGripper: Moving gripper to 165° at speed 0.2.
+08:24:59:520 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=165, speed=0.2, acc=5
+08:24:59:601 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 165° (current: 165.32°)
+08:24:59:601 ClothSpin INFO :       MoveToGripperToClotheSpin, position 2
+08:24:59:602 RoArm-M2-S INFO :          SetJointPID: BASE, p=16, i=16
+08:24:59:643 RoArm-M2-S INFO :          SetJointPID: ELBOW, p=16, i=16
+08:24:59:675 RoArm-M2-S INFO :          SetJointPID: SHOULDER, p=16, i=16
+08:24:59:708 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-159.93554686206926, speed=50, acc=10
+08:25:00:024 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -159.93554686206926° (current: -159.79°)
+08:25:00:025 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=136.2, speed=20, acc=10
+08:25:00:731 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 136.2° (current: 136.14°)
+08:25:00:731 RoArm-M2-S INFO :          SetDynamicForceAdaption: Enabling with base=500, shoulder=5, elbow=100, hand=500
+08:25:00:766 RoArm-M2-S INFO :          MoveSingleJoint: SHOULDER, angle=42, speed=50, acc=10
+08:25:01:730 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 42° (current: 41.84°)
+08:25:01:731 RoArm-M2-S INFO :          MoveSingleJoint: BASE, angle=-161.13554686206925, speed=50, acc=10
+08:25:02:414 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle -161.13554686206925° (current: -161.02°)
+08:25:02:414 RoArm-M2-S INFO :          MoveSingleJoint: ELBOW, angle=137, speed=50, acc=10
+08:25:02:501 RoArm-M2-S INFO :          MoveSingleJoint:   --> reached target angle 137° (current: 136.32°)
+08:25:03:001 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
+08:25:04:095 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=10, shoulder=10, elbow=10, hand=500
+08:25:04:241 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
+08:25:04:272 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
+08:25:04:305 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0
+08:25:04:352 RoArm-M2-S INFO :       SetTorqueLock: Enabling torque lock.
+08:25:04:383 ClothSpin INFO :       Opening gripper
+08:25:04:384 RoArm-M2-S INFO :          SetGripper: Moving gripper to 179° at speed 0.2.
+08:25:04:384 RoArm-M2-S INFO :             MoveSingleJoint: TOOL, angle=179, speed=0.2, acc=5
+08:25:04:927 RoArm-M2-S INFO :             MoveSingleJoint:   --> reached target angle 179° (current: 175.96°)
+08:25:05:575 RoArm-M2-S INFO :       SetDynamicForceAdaption: Enabling with base=500, shoulder=500, elbow=500, hand=500
+08:25:05:620 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-176.8326, Y=-58.7186, Z=-103.6562, T=3.1241, Speed=1
+08:25:05:999 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-173.52, Y=-57.91, Z=-111.86
+08:25:05:999 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=-176.8326, Y=-58.7186, Z=-53.6562, T=3.1241, Speed=50
+08:25:06:707 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=-176.69, Y=-59.58, Z=-59.73
+08:25:06:707 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=140, Y=-140, Z=0, T=3.1241, Speed=200
+08:25:09:278 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=137.16, Y=-140.56, Z=-7.1
+08:25:09:278 ClothSpin INFO :    Move to optical inspection position
+08:25:09:279 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=16
+08:25:09:458 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=16
+08:25:10:084 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=16
+08:25:11:812 RoArm-M2-S INFO :       MoveToXYZT: Moving to X=230, Y=-235, Z=-96, T=3.1241, Speed=10
+08:25:13:569 RoArm-M2-S INFO :       MoveToXYZT:   --> Reached target position X=231.11, Y=-236.12, Z=-94.57
+08:25:13:569 RoArm-M2-S INFO :       MoveSingleJoint: ELBOW, angle=106, speed=10, acc=10
+08:25:13:720 RoArm-M2-S INFO :       MoveSingleJoint:   --> reached target angle 106° (current: 105.12°)
+08:25:13:721 RoArm-M2-S INFO :       SetTorqueLock: Disabling torque lock.
+08:25:13:754 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:25:16:143 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:25:16:738 OpenCV ERROR:       No contours found
+08:25:16:738 OpenCV ERROR:    No clothespin detected in cropped frame
+08:25:16:741 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:25:19:217 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:25:19:827 OpenCV ERROR:       No contours found
+08:25:19:827 OpenCV ERROR:    No clothespin detected in cropped frame
+08:25:19:830 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:25:22:229 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:25:22:836 OpenCV ERROR:       No contours found
+08:25:22:837 OpenCV ERROR:    No clothespin detected in cropped frame
+08:25:22:839 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:25:25:300 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:25:25:902 OpenCV ERROR:       No contours found
+08:25:25:902 OpenCV ERROR:    No clothespin detected in cropped frame
+08:25:25:904 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+08:25:28:312 OpenCV DEBUG:       _crop_frame_per: width:1920 height:1080 start_row:432 end_row:972 start_col:672 end_col:1344
+08:25:28:903 OpenCV ERROR:       No contours found
+08:25:28:903 OpenCV ERROR:    No clothespin detected in cropped frame
+08:25:28:904 ClothSpin INFO :    Lift from optical inspection
+08:25:28:904 RoArm-M2-S INFO :       SetJointPID: BASE, p=16, i=0
+08:25:29:014 RoArm-M2-S INFO :       SetJointPID: ELBOW, p=16, i=0
+08:25:29:050 RoArm-M2-S INFO :       SetJointPID: SHOULDER, p=16, i=0

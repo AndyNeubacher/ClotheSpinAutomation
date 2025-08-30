@@ -108,15 +108,15 @@ class RoArmM2S:
         self.SetDynamicForceAdaption(enable=True, base=500, shoulder=500, elbow=500, hand=500)
 
         # move arm in to avoid collision
-        self.MoveSingleJoint(Joint.SHOULDER.value, angle=10, speed=20, acc=5, tolerance=10, timeout=2)
-        self.MoveSingleJoint(Joint.ELBOW.value, angle=150, speed=20, acc=5, tolerance=10, timeout=2)
+        self.MoveSingleJoint(Joint.SHOULDER.value, angle=10, speed=50, acc=5, tolerance=10, timeout=2)
+        self.MoveSingleJoint(Joint.ELBOW.value, angle=150, speed=50, acc=5, tolerance=10, timeout=2)
 
         # init arm-position
         command = {"T": 100}
         response = self._send_command(command)
         
         # move arm in to avoid collision
-        self.MoveSingleJoint(Joint.ELBOW.value, 150, speed=100, acc=10, tolerance=10, timeout=3)
+        self.MoveSingleJoint(Joint.ELBOW.value, 150, speed=50, acc=10, tolerance=10, timeout=3)
 
         self.SetLed(False)
 
@@ -249,7 +249,6 @@ class RoArmM2S:
 
     @Logging()
     def SetJointPID(self, joint: int, p: int = 16, i: int = 0):
-        #BASE_JOINT = 1, SHOULDER_JOINT = 2, ELBOW_JOINT = 3, EOAT_JOINT = 4
         #p: default 16, i: default 0 (multiples of 8)
         self._log(f"SetJointPID: {Joint(joint).name}, p={p}, i={i}", LogLevel.INFO)
         command = {"T": 108, "joint": joint, "p": p, "i": i}

@@ -29,9 +29,9 @@ if __name__ == "__main__":
         air.SetOutput(1, 'off')
 
         # Start LightBurn
-        #laser = LightBurn("C:\\Program Files\\LightBurn\\LightBurn.exe", "localhost", log, LogLevel.INFO,  1)
-        #if not laser.connected:
-        #    raise Exception("LightBurn connection failed")
+        laser = LightBurn("C:\\Program Files\\LightBurn\\LightBurn.exe", "localhost", log, LogLevel.INFO,  1)
+        if not laser.connected:
+            raise Exception("LightBurn connection failed")
 
         # Load LightBurn file
         #if not laser.SelectAndLoadLightBurnFile("C:\\Users\Administrator\\Google Drive\\Musi\\Laserprojekte\\RoArm", "Bierfluenza.lbrn2"):
@@ -69,17 +69,17 @@ if __name__ == "__main__":
             cspin.LiftFromOpticalInspection()
 
             # haven't found a clothespin -> move to waste-basket
-            if frame is None:
-                cspin.MoveToWastePosition()
-                continue
+            #if frame is None:
+            #    cspin.MoveToWastePosition()
+            #    continue
 
             cspin.MoveToBurnPosition()
             air.SetOutput(1, 'on')
 
             # 1st side burn
-            #laser.Start()
-            #if (laser.WaitForBurnFinished(10, 300) == False):
-            #    raise Exception("Burn failed or timed out")
+            laser.Start()
+            if (laser.WaitForBurnFinished(10, 300) == False):
+                raise Exception("Burn failed or timed out")
 
             # 2nd side burn
             #cspin.FlipUpsideDown()

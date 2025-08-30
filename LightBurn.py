@@ -21,10 +21,14 @@ class LightBurn:
         self.log = logging
         self.loglevel = loglevel
 
-        self._start_application(app_path)
-        time.sleep(3)  # Wait for LightBurn to start
-        
         self._open_socket()
+        self.connected = self._check_connection()
+
+        if not self.connected:
+            self._log("Starting LightBurn application...", LogLevel.INFO)
+            self._start_application(app_path)
+            time.sleep(3)  # Wait for LightBurn to start
+        
         self.connected = self._check_connection()
 
 

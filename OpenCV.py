@@ -97,24 +97,32 @@ class OpenCV:
     def _detectSpin(self, c_frame):
         # 1. Graustufenkonvertierung
         grey = cv2.cvtColor(c_frame, cv2.COLOR_BGR2GRAY)
-        #cv2.imshow('grey', grey)
+        if self.loglevel == LogLevel.DEBUG:
+            cv2.imshow('grey', grey)
+            cv2.waitKey(100)
         
         # 2. Rauschunterdrückung (Gaußscher Weichzeichner)
         #blurred = cv2.GaussianBlur(gray, (5, 5), 0)
         blurred = cv2.bilateralFilter(grey, 11, 21, 7)
-        #cv2.imshow('blurred', blurred)
+        if self.loglevel == LogLevel.DEBUG:
+            cv2.imshow('blurred', blurred)
+            cv2.waitKey(100)
 
         # 3. Schwellenwertbildung (Otsu's Binarisierung ist oft gut)
         # Versuchen Sie, einen Schwellenwert zu finden, der die Wäscheklammer gut isoliert.
         _, thresh = cv2.threshold(blurred, 150, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_TRIANGLE)   #THRESH_TRIANGLE,THRESH_OTSU 
-        #cv2.imshow('black-white', thresh)
+        if self.loglevel == LogLevel.DEBUG:
+            cv2.imshow('black-white', thresh)
+            cv2.waitKey(100)
 
         # Optional: Morphologische Operationen, um kleine Löcher zu schließen oder Objekte zu trennen
         kernel = np.ones((3,3),np.uint8)
         erode = cv2.erode(thresh, kernel, iterations = 1)
         #dilate = cv2.dilate(thresh, kernel, iterations = 1)
-        #cv2.imshow('Erosion', cv2.erode(thresh, np.ones((3,3),np.uint8), iterations = 1))
-        #cv2.imshow('Dilation', cv2.dilate(thresh, np.ones((3,3),np.uint8), iterations = 1))
+        if self.loglevel == LogLevel.DEBUG:
+            cv2.imshow('Erosion', cv2.erode(thresh, np.ones((3,3),np.uint8), iterations = 1))
+            cv2.imshow('Dilation', cv2.dilate(thresh, np.ones((3,3),np.uint8), iterations = 1))
+            cv2.waitKey(100)
 
 
         # detect edges with canny-algorithmn
@@ -123,7 +131,9 @@ class OpenCV:
         # close open contours
         kernel = np.ones((3, 3), np.uint8)      # adjust size if needed
         closed = cv2.morphologyEx(canny_output, cv2.MORPH_CLOSE, kernel)
-        #cv2.imshow('closed', closed)
+        if self.loglevel == LogLevel.DEBUG:
+            cv2.imshow('closed', closed)
+            cv2.waitKey(100)
 
         # find contours
         closed_contours, hierarchy = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_KCOS)
@@ -147,18 +157,21 @@ class OpenCV:
 
 
         # draw the hull-courve
-        drawing = np.zeros((canny_output.shape[0], canny_output.shape[1], 3), dtype=np.uint8)
-        for i in range(len(hull_contours)):
-            color = (rng.randint(0,256), rng.randint(0,256), rng.randint(0,256))
-            cv2.drawContours(drawing, hull_contours, i, color, 1, cv2.LINE_8, hierarchy, 0)
-        cv2.imshow('hull', drawing)
-        
-        # draw area-filtered contours
-        #drawing = np.zeros((canny_output.shape[0], canny_output.shape[1], 3), dtype=np.uint8)
-        #for i in range(len(filtered_contours)):
-        #    color = (rng.randint(0,256), rng.randint(0,256), rng.randint(0,256))
-        #    cv2.drawContours(drawing, filtered_contours, i, color, 1, cv2.LINE_8, hierarchy, 0)
-        #cv2.imshow('contours', drawing)
+        if self.loglevel == LogLevel.DEBUG:
+            drawing = np.zeros((canny_output.shape[0], canny_output.shape[1], 3), dtype=np.uint8)
+            for i in range(len(hull_contours)):
+                color = (rng.randint(0,256), rng.randint(0,256), rng.randint(0,256))
+                cv2.drawContours(drawing, hull_contours, i, color, 1, cv2.LINE_8, hierarchy, 0)
+            cv2.imshow('hull', drawing)
+            cv2.waitKey(100)
+            
+            # draw area-filtered contours
+            drawing = np.zeros((canny_output.shape[0], canny_output.shape[1], 3), dtype=np.uint8)
+            for i in range(len(filtered_contours)):
+                color = (rng.randint(0,256), rng.randint(0,256), rng.randint(0,256))
+                cv2.drawContours(drawing, filtered_contours, i, color, 1, cv2.LINE_8, hierarchy, 0)
+            cv2.imshow('contours', drawing)
+            cv2.waitKey(100)
 
 
         #clothespin_contour = None
@@ -259,13 +272,13 @@ class OpenCV:
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
                 #cv2.imshow('cropped', clip_frame)       # show frame with bounding-box
-                if self.loglevel == LogLevel.DEBUG:
+                if self.loglevel >= LogLevel.INFO:
                     cv2.imwrite(f'found{clip_idx}.png', cropped_frame)
                 return res
             else:
                 self._log("No clothespin detected in cropped frame", LogLevel.ERROR)
                 #cv2.imshow('cropped', cropped_frame)    # show cropped frame without detection
-                if self.loglevel == LogLevel.DEBUG:
+                if self.loglevel >= LogLevel.INFO:
                     cv2.imwrite(f'not_found{clip_idx}.png', cropped_frame)
 
         return None
@@ -315,10 +328,11 @@ class LaserCam:
 
 
 if __name__ == "__main__":
-    cam = OpenCV("192.168.1.122", 3)
+    log = Logging(logfile_name='opencv_log.txt')
+    cam = OpenCV("192.168.1.122", log, LogLevel.DEBUG, 3)
 
-    #test_pic = cv2.imread('C:/workspace/SNsolutions/ClotheSpinAutomation/test_pic.png')
-    #cam.DetectClothespin(test_pic)
+    test_pic = cv2.imread("C:\\tmp\\ClotheSpinAutomation\\not_found0.png")
+    cam.DetectClothespin(0, test_pic)
 
     while True:
         cam.DetectClothespin()
