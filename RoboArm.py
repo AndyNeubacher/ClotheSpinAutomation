@@ -41,7 +41,7 @@ class RoArmM2S:
 
     def _log(self, message, msg_level=None, color=None):
         if self.log is not None:
-            self.log.Print("RoArm-M2-S", message, msg_level, self.loglevel, color)
+            self.log.PrintLog("RoArm-M2-S", message, msg_level, self.loglevel, color)
 
 
     @Logging()

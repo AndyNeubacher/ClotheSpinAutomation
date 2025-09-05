@@ -21,7 +21,7 @@ class Tasmota:
 
     def _log(self, message, msg_level=None, color=None):
         if self.log is not None:
-            self.log.Print("Tasmota", message, msg_level, self.loglevel, Color.GREEN.value)
+            self.log.PrintLog("Tasmota", message, msg_level, self.loglevel, Color.GREEN.value)
 
 
     def _get_from_xpath(self, x):

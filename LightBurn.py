@@ -34,7 +34,7 @@ class LightBurn:
 
     def _log(self, message, msg_level=None, color=None):
         if self.log is not None:
-            self.log.Print("LightBurn", message, msg_level, self.loglevel, Color.BLUE.value)
+            self.log.PrintLog("LightBurn", message, msg_level, self.loglevel, Color.BLUE.value)
 
 
     @Logging()

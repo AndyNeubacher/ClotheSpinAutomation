@@ -24,6 +24,7 @@ g_intent = None
 class Logging:
     def __init__(self, logfile_name=None, loglevel=LogLevel.INFO):
         self.loglevel = loglevel
+        self.fd = None
         global g_intent
         if g_intent is None:
             g_intent = 0
@@ -41,7 +42,7 @@ class Logging:
                 result = func(*args, **kwargs)
                 return result
             except Exception as e:
-                self.Print(f"Exception in {func.__name__}: {str(e)}", LogLevel.ERROR, Color.RED.value)
+                self.PrintLog("", f"Exception in {func.__name__}: {str(e)}", LogLevel.ERROR, self.loglevel, Color.RED.value)
                 raise e
             finally:
                 g_intent -= 3
@@ -52,10 +53,14 @@ class Logging:
         return f"\033[{color_code}m{text}\033[0m"
 
 
-    def Print(self, device="", message="", msg_level=None, class_level=None, color=None):
+    def PrintLog(self, device="", message="", msg_level=None, class_level=None, color=None):
         global g_intent
+
         if msg_level is None:
             msg_level = class_level
+
+        if class_level is None:
+            class_level = LogLevel.ERROR
 
         nest = ' ' * g_intent
 

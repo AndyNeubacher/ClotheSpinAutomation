@@ -53,7 +53,7 @@ class ClotheSpin:
 
     def _log(self, message, msg_level=None, color=None):
         if self.log is not None:
-            self.log.Print("ClothSpin", message, msg_level, self.loglevel, Color.CYAN.value)
+            self.log.PrintLog("ClothSpin", message, msg_level, self.loglevel, Color.CYAN.value)
 
 
     @Logging()

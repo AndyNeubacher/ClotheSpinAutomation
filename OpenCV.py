@@ -5,6 +5,7 @@ import random as rng
 import math
 import time
 import threading
+from datetime import datetime
 from enum import Enum
 from Tools import LogLevel
 from Tools import Color
@@ -33,7 +34,7 @@ class OpenCV:
 
     def _log(self, message, msg_level=None, color=None):
         if self.log is not None:
-            self.log.Print("OpenCV", message, msg_level, self.loglevel, Color.MAGENTA.value)
+            self.log.PrintLog("OpenCV", message, msg_level, self.loglevel, Color.MAGENTA.value)
 
 
     @Logging()
@@ -257,6 +258,9 @@ class OpenCV:
             cropped_frame = self._crop_frame_per(frame, w_s, w_e, h_s, h_e)#30, 70, 40, 90)
 
             # detect object
+            dt_now = datetime.now()
+            dt_now_str = dt_now.strftime("%Y-%m-%d_%H:%M:%S").replace(":", "-")
+
             res = self._detectSpin(cropped_frame)
             if res is not None:
                 clip_frame, rect, (cX, cY), angle = res
@@ -273,13 +277,13 @@ class OpenCV:
 
                 #cv2.imshow('cropped', clip_frame)       # show frame with bounding-box
                 if self.loglevel.value >= LogLevel.INFO.value:
-                    cv2.imwrite(f'found{clip_idx}.png', cropped_frame)
+                    cv2.imwrite(f'pic/found/{dt_now_str}_{clip_idx}.png', cropped_frame)
                 return res
             else:
                 self._log("No clothespin detected in cropped frame", LogLevel.ERROR)
                 #cv2.imshow('cropped', cropped_frame)    # show cropped frame without detection
                 if self.loglevel.value >= LogLevel.INFO.value:
-                    cv2.imwrite(f'not_found{clip_idx}.png', cropped_frame)
+                    cv2.imwrite(f'pic/not_found/{dt_now_str}_{clip_idx}.png', cropped_frame)
 
         return None
 
@@ -331,8 +335,8 @@ if __name__ == "__main__":
     log = Logging(logfile_name='opencv_log.txt')
     cam = OpenCV("192.168.1.122", log, LogLevel.DEBUG, 3)
 
-    test_pic = cv2.imread("C:\\tmp\\ClotheSpinAutomation\\not_found0.png")
-    cam.DetectClothespin(0, test_pic)
+    #test_pic = cv2.imread("C:\\tmp\\ClotheSpinAutomation\\not_found0.png")
+    #cam.DetectClothespin(0, test_pic)
 
     while True:
         cam.DetectClothespin()
