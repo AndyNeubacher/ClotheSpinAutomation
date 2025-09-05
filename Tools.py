@@ -41,7 +41,7 @@ class Logging:
                 result = func(*args, **kwargs)
                 return result
             except Exception as e:
-                self_instance.Print(f"Exception in {func.__name__}: {str(e)}", LogLevel.ERROR, Color.RED.value)
+                self.Print(f"Exception in {func.__name__}: {str(e)}", LogLevel.ERROR, Color.RED.value)
                 raise e
             finally:
                 g_intent -= 3

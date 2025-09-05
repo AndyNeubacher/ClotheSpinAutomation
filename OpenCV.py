@@ -272,13 +272,13 @@ class OpenCV:
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
                 #cv2.imshow('cropped', clip_frame)       # show frame with bounding-box
-                if self.loglevel >= LogLevel.INFO:
+                if self.loglevel.value >= LogLevel.INFO.value:
                     cv2.imwrite(f'found{clip_idx}.png', cropped_frame)
                 return res
             else:
                 self._log("No clothespin detected in cropped frame", LogLevel.ERROR)
                 #cv2.imshow('cropped', cropped_frame)    # show cropped frame without detection
-                if self.loglevel >= LogLevel.INFO:
+                if self.loglevel.value >= LogLevel.INFO.value:
                     cv2.imwrite(f'not_found{clip_idx}.png', cropped_frame)
 
         return None

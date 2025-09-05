@@ -29,7 +29,7 @@ class LightBurn:
             self._start_application(app_path)
             time.sleep(3)  # Wait for LightBurn to start
         
-        self.connected = self._check_connection()
+            self.connected = self._check_connection()
 
 
     def _log(self, message, msg_level=None, color=None):
@@ -173,7 +173,7 @@ class LightBurn:
 
     @Logging()
     def Start(self):
-        self._log("Starting burn...", LogLevel.INFO)
+        self._log("Starting burn", LogLevel.INFO)
         self._sendcmd("START")
 
 
