@@ -227,7 +227,14 @@ class ClotheSpin:
         self.RoboArm.SetDynamicForceAdaption(enable=True, base=500, shoulder=500, elbow=500, hand=500)
         self.RoboArm.MoveToXYZT(pos['x'], pos['y'], pos['z'] + 20, self.last_angle_tool, speed=1, tolerance=10, timeout=1)
         self.RoboArm.MoveToXYZT(pos['x'], pos['y'], pos['z'] + 70, self.last_angle_tool, speed=50, tolerance=10, timeout=1)
+
+        if self.RoboArm.GetAngle(Joint.TOOL.value) > 178:
+            self._log("Gripper seems to be closed, pick failed!", LogLevel.INFO)
+            return False
+
         self.RoboArm.MoveToXYZT(140, -140, 0, self.last_angle_tool, speed=200, tolerance=10, timeout=5)
+
+        return True
 
 
     @Logging()
@@ -316,7 +323,8 @@ class ClotheSpin:
         self.RoboArm.MoveSingleJoint(Joint.BASE.value, -85, speed=50, acc=10, tolerance=5, timeout=3)
         self.RoboArm.MoveToXYZT(-35, -360, 0, self.last_angle_tool, 50, 10, 10)
         self.OpenGripper()
-        time.sleep(0.5)
+        time.sleep(1)
+        self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, angle=130, speed=50, acc=5, tolerance=10, timeout=2)
 
 
 

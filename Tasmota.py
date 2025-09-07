@@ -66,10 +66,14 @@ class Tasmota:
         if not self.connected:
             self._log("Tasmota: Device not connected", LogLevel.ERROR)
             return "Tasmota: Device not connected"
-        r = requests.get(self.url + f'cm?cmnd=Power{number}%20{state}', timeout=self.timeout)
-        self._log(f"Tasmota: Set output {number} to {state}, response: {r.content}", LogLevel.INFO)
-        return r.content
-
+        try:
+            r = requests.get(self.url + f'cm?cmnd=Power{number}%20{state}', timeout=self.timeout)
+            self._log(f"Tasmota: Set output {number} to {state}, response: {r.content}", LogLevel.INFO)
+            return r.content
+        except Exception as e:
+            self._log(f"Tasmota: Failed to set output {number} to {state}, error: {str(e)}", LogLevel.ERROR)
+            return None
+        
 
     @Logging()
     def get_stream_url(self):

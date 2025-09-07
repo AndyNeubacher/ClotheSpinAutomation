@@ -294,7 +294,8 @@ class OpenCV:
         self._log("Closing OpenCV", LogLevel.INFO)
         if self.cap is not None:
             self.cap.release()
-        cv2.destroyAllWindows()
+        if self.loglevel == LogLevel.DEBUG:
+            cv2.destroyAllWindows()
         self.cap = None
 
 
