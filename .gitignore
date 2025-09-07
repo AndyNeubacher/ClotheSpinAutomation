@@ -6,4 +6,5 @@ __pycache__/
 *.log
 *.png
 clothspin_log.txt
+opencv_log.txt
 pic/

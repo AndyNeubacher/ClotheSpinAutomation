@@ -39,7 +39,7 @@ if __name__ == "__main__":
         #    raise Exception("Failed to load LightBurn file")
 
         # Initialize RoArmM2S
-        arm = RoArmM2S("192.168.1.121", log, LogLevel.INFO, 5)
+        arm = RoArmM2S("192.168.1.121", log, LogLevel.NONE, 10)
         cspin = ClotheSpin(arm, log, LogLevel.INFO)
         if not cspin.connected:
             raise Exception("ClotheSpin connection failed")
@@ -48,7 +48,7 @@ if __name__ == "__main__":
         cspin.CalibrateReferencePosition()
 
 
-        for i in range(0,51):
+        for i in range(0,48):
             if keyboard.is_pressed('esc'):
                 raise Exception("Process interrupted by user")
 
