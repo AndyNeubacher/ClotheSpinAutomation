@@ -304,7 +304,7 @@ class ClotheSpin:
 
         self.RoboArm.SetDynamicForceAdaption(enable=True, base=500, shoulder=500, elbow=500, hand=500)
 
-        self.RoboArm.MoveSingleJoint(Joint.BASE.value, -42, speed=50, acc=10, tolerance=1, timeout=3) #42.5
+        self.RoboArm.MoveSingleJoint(Joint.BASE.value, -43, speed=50, acc=10, tolerance=1, timeout=3) #42.5
         self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 150, speed=50, acc=10, tolerance=5, timeout=3)
         self.RoboArm.MoveSingleJoint(Joint.SHOULDER.value, -45, speed=50, acc=10, tolerance=3, timeout=3)
         self.RoboArm.MoveSingleJoint(Joint.ELBOW.value, 43, speed=50, acc=10, tolerance=1, timeout=5)   #44

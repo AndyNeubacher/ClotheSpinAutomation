@@ -22,7 +22,7 @@ g_intent = None
 
 
 class Logging:
-    def __init__(self, logfile_name=None, loglevel=LogLevel.INFO):
+    def __init__(self, logfile_name:str=None, loglevel=LogLevel.INFO):
         self.loglevel = loglevel
         self.fd = None
         global g_intent

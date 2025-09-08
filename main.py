@@ -7,7 +7,7 @@ from ClotheSpin import ClotheSpin
 from Tasmota import Tasmota
 from OpenCV import OpenCV
 from Tools import Logging
-
+from GrblStreamer import GrblStreamer
 
 
 
@@ -29,15 +29,17 @@ if __name__ == "__main__":
         air.SetOutput(1, 'off')
 
         # Start LightBurn
-        laser = LightBurn("C:\\Program Files\\LightBurn\\LightBurn.exe", "localhost", log, LogLevel.INFO,  1)
-        if not laser.connected:
-            raise Exception("LightBurn connection failed")
+        #laser = LightBurn("C:\\Program Files\\LightBurn\\LightBurn.exe", "localhost", log, LogLevel.INFO,  1)
+        #if not laser.connected:
+        #    raise Exception("LightBurn connection failed")
 
         # Load LightBurn file
         #if not laser.SelectAndLoadLightBurnFile("C:\\Users\Administrator\\Google Drive\\Musi\\Laserprojekte\\RoArm", "Bierfluenza.lbrn2"):
         #if not laser.SelectAndLoadLightBurnFile("C:\\Users\Administrator\\Google Drive\\Musi\\Laserprojekte\\RoArm"):
         #    raise Exception("Failed to load LightBurn file")
 
+        laser = GrblStreamer(ip_addr="192.168.1.120", ip_port=8080, logging=log, loglevel=LogLevel.INFO)
+        
         # Initialize RoArmM2S
         arm = RoArmM2S("192.168.1.121", log, LogLevel.NONE, 10)
         cspin = ClotheSpin(arm, log, LogLevel.INFO)
@@ -77,8 +79,8 @@ if __name__ == "__main__":
             air.SetOutput(1, 'on')
 
             # 1st side burn
-            laser.Start()
-            if (laser.WaitForBurnFinished(10, 300) == False):
+            laser.Start('wer_will_mich.gc', 180)
+            if (laser.WaitForBurnFinished() == False):
                 raise Exception("Burn failed or timed out")
 
             # 2nd side burn

@@ -1,0 +1,313 @@
+14:08:09:896 OpenCV INFO : OpenCV initialized with IP: 192.168.1.122
+14:08:10:509 Tasmota INFO :    Tasmota: Connected to device 'NOUS A1T'
+14:08:10:728 Tasmota INFO :    Tasmota: Set output 1 to off, response: b'{"POWER":"OFF"}'
+14:08:19:653 ClothSpin INFO : ClothSpin bind to RoArm: True
+14:08:19:655 ClothSpin INFO :    ClothSpin: CALIBRATE-REFERENCE-POSITION
+14:08:28:708 ClothSpin INFO :    CALIBRATED-REFERENCE: X:-299.78, Y:-32.31, Z:-126.03, b:-173.85, s:48.60, e:109.60, t:52.73, torque:0/0/0/0
+14:08:29:401 ClothSpin INFO :       Opening gripper
+14:08:30:129 ClothSpin INFO :    Pick index 0
+14:08:30:131 ClothSpin INFO :       Moving base to prepare-position 0
+14:08:30:969 ClothSpin INFO :       Opening gripper
+14:08:31:050 ClothSpin INFO :       MoveToGripperToClotheSpin, position 0
+14:08:36:185 ClothSpin INFO :       Opening gripper
+14:08:41:073 ClothSpin INFO :    Move to optical inspection position
+14:08:42:425 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+14:08:45:100 OpenCV INFO :       Clothespin found at (288, 287) with angle 28.36 degrees
+14:08:45:101 ClothSpin INFO :    LED blink 1 times with 0.5s interval
+14:08:45:102 ClothSpin INFO :       Set LED: ON
+14:08:45:786 ClothSpin INFO :       Set LED: OFF
+14:08:46:369 ClothSpin INFO :    Lift from optical inspection
+14:08:46:615 ClothSpin INFO :       Opening gripper
+14:08:48:453 ClothSpin INFO :    Move to burn position
+14:08:56:778 Tasmota INFO :    Tasmota: Set output 1 to on, response: b'{"POWER":"ON"}'
+14:08:56:779 GrblStreamer INFO : Connecting to GRBL at 192.168.1.120:8080
+14:08:56:946 GrblStreamer INFO : Initializing GRBL...
+14:08:59:448 GrblStreamer INFO : Sending file: wer_will_mich.gc
+14:09:06:016 GrblStreamer INFO : Progress: 0%
+14:09:06:098 GrblStreamer INFO : Progress: 0%
+14:09:06:189 GrblStreamer INFO : Progress: 1%
+14:09:06:274 GrblStreamer INFO : Progress: 1%
+14:09:06:381 GrblStreamer INFO : Progress: 2%
+14:09:06:476 GrblStreamer INFO : Progress: 2%
+14:09:06:579 GrblStreamer INFO : Progress: 3%
+14:09:08:219 GrblStreamer INFO : Progress: 3%
+14:09:08:563 GrblStreamer INFO : Progress: 4%
+14:09:08:799 GrblStreamer INFO : Progress: 4%
+14:09:09:048 GrblStreamer INFO : Progress: 5%
+14:09:09:597 GrblStreamer INFO : Progress: 5%
+14:09:09:689 GrblStreamer INFO : Progress: 6%
+14:09:09:839 GrblStreamer INFO : Progress: 6%
+14:09:10:065 GrblStreamer INFO : Progress: 6%
+14:09:10:283 GrblStreamer INFO : Progress: 7%
+14:09:10:547 GrblStreamer INFO : Progress: 7%
+14:09:10:785 GrblStreamer INFO : Progress: 8%
+14:09:11:037 GrblStreamer INFO : Progress: 8%
+14:09:11:287 GrblStreamer INFO : Progress: 9%
+14:09:11:623 GrblStreamer INFO : Progress: 9%
+14:09:11:857 GrblStreamer INFO : Progress: 10%
+14:09:12:221 GrblStreamer INFO : Progress: 10%
+14:09:12:535 GrblStreamer INFO : Progress: 11%
+14:09:12:780 GrblStreamer INFO : Progress: 11%
+14:09:13:047 GrblStreamer INFO : Progress: 12%
+14:09:13:643 GrblStreamer INFO : Progress: 12%
+14:09:13:762 GrblStreamer INFO : Progress: 13%
+14:09:13:861 GrblStreamer INFO : Progress: 13%
+14:09:14:262 GrblStreamer INFO : Progress: 13%
+14:09:14:456 GrblStreamer INFO : Progress: 14%
+14:09:14:640 GrblStreamer INFO : Progress: 14%
+14:09:14:821 GrblStreamer INFO : Progress: 15%
+14:09:15:082 GrblStreamer INFO : Progress: 15%
+14:09:15:779 GrblStreamer INFO : Progress: 16%
+14:09:16:375 GrblStreamer INFO : Progress: 16%
+14:09:17:088 GrblStreamer INFO : Progress: 17%
+14:09:17:284 GrblStreamer INFO : Progress: 17%
+14:09:17:557 GrblStreamer INFO : Progress: 18%
+14:09:17:902 GrblStreamer INFO : Progress: 18%
+14:09:18:107 GrblStreamer INFO : Progress: 19%
+14:09:18:310 GrblStreamer INFO : Progress: 19%
+14:09:18:521 GrblStreamer INFO : Progress: 20%
+14:09:18:925 GrblStreamer INFO : Progress: 20%
+14:09:19:128 GrblStreamer INFO : Progress: 20%
+14:09:19:336 GrblStreamer INFO : Progress: 21%
+14:09:19:540 GrblStreamer INFO : Progress: 21%
+14:09:19:736 GrblStreamer INFO : Progress: 22%
+14:09:19:988 GrblStreamer INFO : Progress: 22%
+14:09:20:662 GrblStreamer INFO : Progress: 23%
+14:09:20:750 GrblStreamer INFO : Progress: 23%
+14:09:20:930 GrblStreamer INFO : Progress: 24%
+14:09:21:577 GrblStreamer INFO : Progress: 24%
+14:09:21:701 GrblStreamer INFO : Progress: 25%
+14:09:21:794 GrblStreamer INFO : Progress: 25%
+14:09:22:405 GrblStreamer INFO : Progress: 26%
+14:09:22:513 GrblStreamer INFO : Progress: 26%
+14:09:22:798 GrblStreamer INFO : Progress: 27%
+14:09:23:229 GrblStreamer INFO : Progress: 27%
+14:09:23:706 GrblStreamer INFO : Progress: 27%
+14:09:23:945 GrblStreamer INFO : Progress: 28%
+14:09:24:547 GrblStreamer INFO : Progress: 28%
+14:09:24:667 GrblStreamer INFO : Progress: 29%
+14:09:24:820 GrblStreamer INFO : Progress: 29%
+14:09:25:123 GrblStreamer INFO : Progress: 30%
+14:09:25:360 GrblStreamer INFO : Progress: 30%
+14:09:25:568 GrblStreamer INFO : Progress: 31%
+14:09:25:865 GrblStreamer INFO : Progress: 31%
+14:09:26:297 GrblStreamer INFO : Progress: 32%
+14:09:26:411 GrblStreamer INFO : Progress: 32%
+14:09:26:600 GrblStreamer INFO : Progress: 33%
+14:09:26:782 GrblStreamer INFO : Progress: 33%
+14:09:27:319 GrblStreamer INFO : Progress: 34%
+14:09:27:476 GrblStreamer INFO : Progress: 34%
+14:09:27:743 GrblStreamer INFO : Progress: 34%
+14:09:28:379 GrblStreamer INFO : Progress: 35%
+14:09:28:508 GrblStreamer INFO : Progress: 35%
+14:09:28:597 GrblStreamer INFO : Progress: 36%
+14:09:28:706 GrblStreamer INFO : Progress: 36%
+14:09:29:168 GrblStreamer INFO : Progress: 37%
+14:09:29:280 GrblStreamer INFO : Progress: 37%
+14:09:29:775 GrblStreamer INFO : Progress: 38%
+14:09:30:158 GrblStreamer INFO : Progress: 38%
+14:09:30:839 GrblStreamer INFO : Progress: 39%
+14:09:30:923 GrblStreamer INFO : Progress: 39%
+14:09:31:554 GrblStreamer INFO : Progress: 40%
+14:09:31:904 GrblStreamer INFO : Progress: 40%
+14:09:32:374 GrblStreamer INFO : Progress: 41%
+14:09:32:676 GrblStreamer INFO : Progress: 41%
+14:09:33:189 GrblStreamer INFO : Progress: 41%
+14:09:34:025 GrblStreamer INFO : Progress: 42%
+14:09:34:424 GrblStreamer INFO : Progress: 42%
+14:09:34:832 GrblStreamer INFO : Progress: 43%
+14:09:35:393 GrblStreamer INFO : Progress: 43%
+14:09:35:624 GrblStreamer INFO : Progress: 44%
+14:09:36:078 GrblStreamer INFO : Progress: 44%
+14:09:36:609 GrblStreamer INFO : Progress: 45%
+14:09:36:769 GrblStreamer INFO : Progress: 45%
+14:09:37:224 GrblStreamer INFO : Progress: 46%
+14:09:37:442 GrblStreamer INFO : Progress: 46%
+14:09:37:704 GrblStreamer INFO : Progress: 47%
+14:09:37:982 GrblStreamer INFO : Progress: 47%
+14:09:38:447 GrblStreamer INFO : Progress: 48%
+14:09:38:535 GrblStreamer INFO : Progress: 48%
+14:09:38:806 GrblStreamer INFO : Progress: 48%
+14:09:39:071 GrblStreamer INFO : Progress: 49%
+14:09:39:344 GrblStreamer INFO : Progress: 49%
+14:09:39:658 GrblStreamer INFO : Progress: 50%
+14:09:39:946 GrblStreamer INFO : Progress: 50%
+14:09:40:160 GrblStreamer INFO : Progress: 51%
+14:09:40:405 GrblStreamer INFO : Progress: 51%
+14:09:40:649 GrblStreamer INFO : Progress: 52%
+14:09:40:981 GrblStreamer INFO : Progress: 52%
+14:09:41:210 GrblStreamer INFO : Progress: 53%
+14:09:41:458 GrblStreamer INFO : Progress: 53%
+14:09:41:764 GrblStreamer INFO : Progress: 54%
+14:09:41:955 GrblStreamer INFO : Progress: 54%
+14:09:42:432 GrblStreamer INFO : Progress: 55%
+14:09:42:524 GrblStreamer INFO : Progress: 55%
+14:09:42:628 GrblStreamer INFO : Progress: 55%
+14:09:42:817 GrblStreamer INFO : Progress: 56%
+14:09:42:995 GrblStreamer INFO : Progress: 56%
+14:09:43:192 GrblStreamer INFO : Progress: 57%
+14:09:43:544 GrblStreamer INFO : Progress: 57%
+14:09:43:862 GrblStreamer INFO : Progress: 58%
+14:09:44:241 GrblStreamer INFO : Progress: 58%
+14:09:44:736 GrblStreamer INFO : Progress: 59%
+14:09:45:000 GrblStreamer INFO : Progress: 59%
+14:09:45:169 GrblStreamer INFO : Progress: 60%
+14:09:45:432 GrblStreamer INFO : Progress: 60%
+14:09:45:752 GrblStreamer INFO : Progress: 61%
+14:09:46:035 GrblStreamer INFO : Progress: 61%
+14:09:46:637 GrblStreamer INFO : Progress: 62%
+14:09:46:770 GrblStreamer INFO : Progress: 62%
+14:09:46:957 GrblStreamer INFO : Progress: 62%
+14:09:47:179 GrblStreamer INFO : Progress: 63%
+14:09:47:617 GrblStreamer INFO : Progress: 63%
+14:09:47:724 GrblStreamer INFO : Progress: 64%
+14:09:47:891 GrblStreamer INFO : Progress: 64%
+14:09:48:160 GrblStreamer INFO : Progress: 65%
+14:09:48:392 GrblStreamer INFO : Progress: 65%
+14:09:48:614 GrblStreamer INFO : Progress: 66%
+14:09:48:838 GrblStreamer INFO : Progress: 66%
+14:09:49:141 GrblStreamer INFO : Progress: 67%
+14:09:49:971 GrblStreamer INFO : Progress: 67%
+14:09:50:114 GrblStreamer INFO : Progress: 68%
+14:09:50:242 GrblStreamer INFO : Progress: 68%
+14:09:50:344 GrblStreamer INFO : Progress: 68%
+14:09:50:512 GrblStreamer INFO : Progress: 69%
+14:09:50:837 GrblStreamer INFO : Progress: 69%
+14:09:51:521 GrblStreamer INFO : Progress: 70%
+14:09:51:633 GrblStreamer INFO : Progress: 70%
+14:09:51:725 GrblStreamer INFO : Progress: 71%
+14:09:51:957 GrblStreamer INFO : Progress: 71%
+14:09:52:476 GrblStreamer INFO : Progress: 72%
+14:09:52:615 GrblStreamer INFO : Progress: 72%
+14:09:52:874 GrblStreamer INFO : Progress: 73%
+14:09:53:203 GrblStreamer INFO : Progress: 73%
+14:09:53:472 GrblStreamer INFO : Progress: 74%
+14:09:53:729 GrblStreamer INFO : Progress: 74%
+14:09:53:961 GrblStreamer INFO : Progress: 75%
+14:09:54:155 GrblStreamer INFO : Progress: 75%
+14:09:54:390 GrblStreamer INFO : Progress: 75%
+14:09:54:714 GrblStreamer INFO : Progress: 76%
+14:09:54:993 GrblStreamer INFO : Progress: 76%
+14:09:56:457 GrblStreamer INFO : Progress: 77%
+14:09:56:548 GrblStreamer INFO : Progress: 77%
+14:09:56:623 GrblStreamer INFO : Progress: 78%
+14:09:56:744 GrblStreamer INFO : Progress: 78%
+14:09:56:838 GrblStreamer INFO : Progress: 79%
+14:09:56:916 GrblStreamer INFO : Progress: 79%
+14:09:57:470 GrblStreamer INFO : Progress: 80%
+14:09:57:594 GrblStreamer INFO : Progress: 80%
+14:09:59:090 GrblStreamer INFO : Progress: 81%
+14:09:59:234 GrblStreamer INFO : Progress: 81%
+14:09:59:323 GrblStreamer INFO : Progress: 82%
+14:09:59:411 GrblStreamer INFO : Progress: 82%
+14:09:59:581 GrblStreamer INFO : Progress: 82%
+14:10:00:325 GrblStreamer INFO : Progress: 83%
+14:10:00:872 GrblStreamer INFO : Progress: 83%
+14:10:01:658 GrblStreamer INFO : Progress: 84%
+14:10:02:277 GrblStreamer INFO : Progress: 84%
+14:10:02:857 GrblStreamer INFO : Progress: 85%
+14:10:03:079 GrblStreamer INFO : Progress: 85%
+14:10:03:464 GrblStreamer INFO : Progress: 86%
+14:10:04:078 GrblStreamer INFO : Progress: 86%
+14:10:04:305 GrblStreamer INFO : Progress: 87%
+14:10:04:763 GrblStreamer INFO : Progress: 87%
+14:10:05:153 GrblStreamer INFO : Progress: 88%
+14:10:05:661 GrblStreamer INFO : Progress: 88%
+14:10:06:098 GrblStreamer INFO : Progress: 89%
+14:10:06:599 GrblStreamer INFO : Progress: 89%
+14:10:06:947 GrblStreamer INFO : Progress: 89%
+14:10:07:375 GrblStreamer INFO : Progress: 90%
+14:10:07:707 GrblStreamer INFO : Progress: 90%
+14:10:08:334 GrblStreamer INFO : Progress: 91%
+14:10:08:523 GrblStreamer INFO : Progress: 91%
+14:10:08:947 GrblStreamer INFO : Progress: 92%
+14:10:09:197 GrblStreamer INFO : Progress: 92%
+14:10:09:509 GrblStreamer INFO : Progress: 93%
+14:10:09:692 GrblStreamer INFO : Progress: 93%
+14:10:09:982 GrblStreamer INFO : Progress: 94%
+14:10:10:527 GrblStreamer INFO : Progress: 94%
+14:10:10:655 GrblStreamer INFO : Progress: 95%
+14:10:10:900 GrblStreamer INFO : Progress: 95%
+14:10:11:107 GrblStreamer INFO : Progress: 96%
+14:10:11:356 GrblStreamer INFO : Progress: 96%
+14:10:11:701 GrblStreamer INFO : Progress: 96%
+14:10:11:960 GrblStreamer INFO : Progress: 97%
+14:10:12:345 GrblStreamer INFO : Progress: 97%
+14:10:12:713 GrblStreamer INFO : Progress: 98%
+14:10:12:968 GrblStreamer INFO : Progress: 98%
+14:10:13:358 GrblStreamer INFO : Progress: 99%
+14:10:13:633 GrblStreamer INFO : Progress: 99%
+14:10:31:696 GrblStreamer INFO : Progress: 100%
+14:10:31:955 Tasmota INFO :    Tasmota: Set output 1 to off, response: b'{"POWER":"OFF"}'
+14:10:31:956 ClothSpin INFO :    Move to finished position
+14:10:37:495 ClothSpin INFO :       Opening gripper
+14:10:39:531 ClothSpin INFO :    Pick index 1
+14:10:39:531 ClothSpin INFO :       Moving base to prepare-position 1
+14:10:41:392 ClothSpin INFO :       Opening gripper
+14:10:41:465 ClothSpin INFO :       MoveToGripperToClotheSpin, position 1
+14:10:46:559 ClothSpin INFO :       Opening gripper
+14:10:49:318 ClothSpin INFO :    Gripper seems to be closed, pick failed!
+14:10:49:319 ClothSpin INFO :    Pick index 2
+14:10:49:320 ClothSpin INFO :       Moving base to prepare-position 2
+14:10:50:273 ClothSpin INFO :       Opening gripper
+14:10:50:634 ClothSpin INFO :       MoveToGripperToClotheSpin, position 2
+14:10:58:520 ClothSpin INFO :       Opening gripper
+14:11:00:574 ClothSpin INFO :    Gripper seems to be closed, pick failed!
+14:11:00:577 ClothSpin INFO :    Pick index 3
+14:11:00:577 ClothSpin INFO :       Moving base to prepare-position 3
+14:11:01:410 ClothSpin INFO :       Opening gripper
+14:11:01:726 ClothSpin INFO :       MoveToGripperToClotheSpin, position 3
+14:11:06:812 ClothSpin INFO :       Opening gripper
+14:11:10:222 ClothSpin INFO :    Gripper seems to be closed, pick failed!
+14:11:10:223 ClothSpin INFO :    Pick index 4
+14:11:10:223 ClothSpin INFO :       Moving base to prepare-position 4
+14:11:11:019 ClothSpin INFO :       Opening gripper
+14:11:11:360 ClothSpin INFO :       MoveToGripperToClotheSpin, position 4
+14:11:16:645 ClothSpin INFO :       Opening gripper
+14:11:19:028 ClothSpin INFO :    Gripper seems to be closed, pick failed!
+14:11:19:030 ClothSpin INFO :    Pick index 5
+14:11:19:030 ClothSpin INFO :    skipped index 5
+14:11:19:033 ClothSpin INFO :    Pick index 6
+14:11:19:033 ClothSpin INFO :       Moving base to prepare-position 6
+14:11:19:951 ClothSpin INFO :       Opening gripper
+14:11:20:308 ClothSpin INFO :       MoveToGripperToClotheSpin, position 6
+14:11:26:067 ClothSpin INFO :       Opening gripper
+14:11:30:237 ClothSpin INFO :    Move to optical inspection position
+14:11:31:677 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+14:11:34:122 OpenCV ERROR:       No contours found
+14:11:34:122 OpenCV ERROR:    No clothespin detected in cropped frame
+14:11:34:124 OpenCV INFO :    Opening RTSP stream: rtsp://thingino:thingino@192.168.1.122:554/ch0
+14:11:36:638 OpenCV INFO :       Clothespin found at (253, 236) with angle 35.31 degrees
+14:11:36:640 ClothSpin INFO :    LED blink 1 times with 0.5s interval
+14:11:36:640 ClothSpin INFO :       Set LED: ON
+14:11:37:274 ClothSpin INFO :       Set LED: OFF
+14:11:37:886 ClothSpin INFO :    Lift from optical inspection
+14:11:38:165 ClothSpin INFO :       Opening gripper
+14:11:39:967 ClothSpin INFO :    Move to burn position
+14:11:48:324 Tasmota INFO :    Tasmota: Set output 1 to on, response: b'{"POWER":"ON"}'
+14:11:48:326 GrblStreamer INFO : Connecting to GRBL at 192.168.1.120:8080
+14:11:48:429 GrblStreamer INFO : Initializing GRBL...
+14:11:50:931 GrblStreamer INFO : Sending file: wer_will_mich.gc
+14:11:50:944 GrblStreamer INFO : Progress: 0%
+14:11:57:557 GrblStreamer INFO : Progress: 0%
+14:11:57:656 GrblStreamer INFO : Progress: 1%
+14:11:57:741 GrblStreamer INFO : Progress: 1%
+14:11:57:844 GrblStreamer INFO : Progress: 2%
+14:11:57:930 GrblStreamer INFO : Progress: 2%
+14:11:58:025 GrblStreamer INFO : Progress: 3%
+14:11:59:572 GrblStreamer INFO : Progress: 3%
+14:11:59:934 GrblStreamer INFO : Progress: 4%
+14:12:00:171 GrblStreamer INFO : Progress: 4%
+14:12:00:421 GrblStreamer INFO : Progress: 5%
+14:12:00:699 GrblStreamer INFO : Progress: 5%
+14:12:00:942 GrblStreamer INFO : Progress: 6%
+14:12:01:211 GrblStreamer INFO : Progress: 6%
+14:12:01:454 GrblStreamer INFO : Progress: 6%
+14:12:01:655 GrblStreamer INFO : Progress: 7%
+14:12:01:954 GrblStreamer INFO : Progress: 7%
+14:12:02:158 GrblStreamer INFO : Progress: 8%
+14:12:02:410 GrblStreamer INFO : Progress: 8%
+14:12:02:660 GrblStreamer INFO : Progress: 9%
+14:12:02:995 GrblStreamer INFO : Progress: 9%
+14:12:03:229 GrblStreamer INFO : Progress: 10%
+14:12:03:621 GrblStreamer INFO : Progress: 10%
