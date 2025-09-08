@@ -42,7 +42,7 @@ class GrblStreamer:
             self.log.PrintLog("GrblStreamer", message, msg_level, self.loglevel, Color.CYAN.value)
 
     def progress_callback(self, percent: int, command: str):
-        self._log(f"Progress: {percent}%", LogLevel.INFO)
+        self._log(f"Progress: {percent}%", LogLevel.DEBUG)
     
     def alarm_callback(self, line: str):
         self._log(f"ALARM detected: {line}", LogLevel.ERROR)
@@ -313,14 +313,15 @@ class GrblStreamer:
             response = self.read_line_blocking()
             if response and 'Idle' in response:
                 break
-                
+        
+        self._log('Burn completed!', LogLevel.INFO)
         self.progress_callback(100, 'completed')
         self.running = False
 
 
     #@Logging
     def close(self):
-        self._log("Closing connection...", LogLevel.INFO)
+        self._log("Closing connection", LogLevel.INFO)
         if self.serial:
             self.close_serial()
         

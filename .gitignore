@@ -5,6 +5,6 @@ __pycache__/
 .vscode/
 *.log
 *.png
-clothspin_log.txt
-opencv_log.txt
+*.txt
+*.gc
 pic/
