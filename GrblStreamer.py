@@ -81,7 +81,7 @@ class GrblStreamer:
             return True
         
         except:
-            self._log(f"failed to open a GRBL socket to{self.ip_addr}:{self.ip_port}", LogLevel.ERROR)
+            self._log(f"failed to open a GRBL socket to {self.ip_addr}:{self.ip_port}", LogLevel.ERROR)
             self.socket = None
             self.threads_running = False
             return False
@@ -289,7 +289,8 @@ class GrblStreamer:
         progress_update = time.time()
         for i, cmd in enumerate(commands, 1):
 
-            while grbl_buffer + len(cmd) + 1 > BUFFER_SIZE - 5:
+            #while grbl_buffer + len(cmd) + 1 > BUFFER_SIZE - 5:
+            while grbl_buffer > 0:  # syncronous call -> only 1 grbl-line at a time!
                 if (time.time() - progress_update) > PROGRESS_UPDATE_SEC:
                     progress_update = time.time()
                     self._log(f'Burn progress {percent}%', LogLevel.INFO)
@@ -325,19 +326,25 @@ class GrblStreamer:
                 progress_update = time.time()
                 self._log(f'Burn progress {percent}%', LogLevel.INFO)
 
-
-        while True:
+        isRunning = True
+        while isRunning:
+            time.sleep(0.5)
             if time.time() - job_start_time > timeout:
                 self._log(f'Burn completion-timeout after {timeout}sec!', LogLevel.ERROR)
                 self.job_running = False
                 return False
                 
             self._write_line("?")
-            time.sleep(0.5)
-            response = self._read_line_blocking()
-            if response and 'Idle' in response:
-                break
-        
+            new_msg = True
+            while new_msg:
+                response = self._read_line_blocking()
+                if response and 'Idle' in response:
+                    isRunning = False
+                    new_msg = False
+                if response is None:
+                    new_msg = False
+
+
         min, sec = divmod(time.time() - job_start_time, 60)
         self._log(f'Burn completed in {int(min):02}:{int(sec):02}sec', LogLevel.INFO)
         self._progress_callback(100, 'completed')
@@ -412,3 +419,8 @@ if __name__ == "__main__":
 
     streamer.Start('wer_will_mich.gc', 180)
     streamer.WaitForBurnFinished()
+
+    streamer.Start('wer_will_mich.gc', 180)
+    streamer.WaitForBurnFinished()
+
+    streamer.Close()
