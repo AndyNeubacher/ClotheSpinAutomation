@@ -39,7 +39,7 @@ class GrblStreamer:
 
     def _log(self, message, msg_level=None, color=None):
         if self.log is not None:
-            self.log.PrintLog("GrblStreamer", message, msg_level, self.loglevel, Color.CYAN.value)
+            self.log.PrintLog("GrblStreamer", message, msg_level, self.loglevel, Color.BLUE.value)
 
     def progress_callback(self, percent: int, command: str):
         self._log(f"Progress: {percent}%", LogLevel.DEBUG)
