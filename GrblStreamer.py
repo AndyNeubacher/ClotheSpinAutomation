@@ -13,8 +13,8 @@ from Tools import Logging
 
 class GrblStreamer:
     def __init__(self, serial_port:str=None, serial_baud:int=115200, ip_addr=None, ip_port:int=8080, logging=None, loglevel=LogLevel.NONE):
-        self.running = False
-        self.treads_running = False
+        self.job_running = False
+        self.threads_running = False
         self.read_queue = queue.Queue()
         self.serial: serial.Serial | None = None
         self.socket = None
@@ -35,53 +35,62 @@ class GrblStreamer:
             self.ip_port = ip_port
 
         self.callback_queue = queue.Queue(100)
+        self.connected = self._open()
 
 
     def _log(self, message, msg_level=None, color=None):
         if self.log is not None:
-            self.log.PrintLog("GrblStreamer", message, msg_level, self.loglevel, Color.BLUE.value)
+            self.log.PrintLog("GrblStreamer", message, msg_level, self.loglevel, color)
 
-    def progress_callback(self, percent: int, command: str):
+
+    def _progress_callback(self, percent: int, command: str):
         self._log(f"Progress: {percent}%", LogLevel.DEBUG)
-    
-    def alarm_callback(self, line: str):
+
+
+    def _alarm_callback(self, line: str):
         self._log(f"ALARM detected: {line}", LogLevel.ERROR)
-        
-    def error_callback(self, line: str):
+
+
+    def _error_callback(self, line: str):
         self._log(f"ERROR detected: {line}", LogLevel.ERROR)
 
-    def open(self):
+
+    def _open(self):
         if self.serial is not None:
-            self.open_serial()
+            return self._open_serial()
         elif self.ip_addr is not None:
-            self.open_socket()
+            return self._open_socket()
 
-    #@Logging
-    def open_socket(self):
+
+    def _open_socket(self):
         try:
-            self.close_socket()
-        except:
-            pass
+            self._log(f"Connecting to GRBL at {self.ip_addr}:{self.ip_port}", LogLevel.INFO)
+            self.socket = socket.socket()
+            self.socket.settimeout(1)
+            self.socket.connect((self.ip_addr, self.ip_port))
+            self.threads_running = True
+            self.read_thread = threading.Thread(target=self._read_loop_socket)
+            self.read_thread.daemon = True
+            self.read_thread.start()
+            
+            self.callback_thread = threading.Thread(target=self._callback_loop)
+            self.callback_thread.daemon = True
+            self.callback_thread.start()
 
-        self._log(f"Connecting to GRBL at {self.ip_addr}:{self.ip_port}", LogLevel.INFO)
-        self.socket = socket.socket()
-        self.socket.connect((self.ip_addr, self.ip_port))
-        self.treads_running = True
-        self.read_thread = threading.Thread(target=self._read_loop_socket)
-        self.read_thread.daemon = True
-        self.read_thread.start()
+            self._initialize_grbl()
+            return True
         
-        self.callback_thread = threading.Thread(target=self._callback_loop)
-        self.callback_thread.daemon = True
-        self.callback_thread.start()
+        except:
+            self._log(f"failed to open a GRBL socket to{self.ip_addr}:{self.ip_port}", LogLevel.ERROR)
+            self.socket = None
+            self.threads_running = False
+            return False
 
-        self._initialize_grbl()
 
-
-    def open_serial(self):
+    def _open_serial(self):
 
         try:
-            self.close_serial()
+            self._close_serial()
         except:
             pass
 
@@ -106,7 +115,7 @@ class GrblStreamer:
             self.serial.reset_output_buffer()
             self.serial.reset_input_buffer()
 
-            self.treads_running = True
+            self.threads_running = True
             self.read_thread = threading.Thread(target=self._read_loop_serial)
             self.read_thread.daemon = True
             self.read_thread.start()
@@ -130,29 +139,27 @@ class GrblStreamer:
                 raise e
 
 
-    #@Logging
     def _initialize_grbl(self):
         self._log("Initializing GRBL...", LogLevel.INFO)
         if True:
-            self.write(b'\x18')  # Ctrl-X
+            self._write(b'\x18')  # Ctrl-X
             time.sleep(2)
 
         if self.serial:
             self.serial.reset_input_buffer()
             self.serial.reset_output_buffer()
 
-        self.write_line("$X")
+        self._write_line("$X")
         time.sleep(0.5)
 
 
-    #@Logging
     def _read_loop_socket(self):
         buffer = ""
 
-        while self.treads_running:
+        while self.threads_running:
             try:
                 if self.socket:
-                    char = self.socket.recv(128)
+                    char = self.socket.recv(1024)
                     if not char:
                         continue
                     buffer += char.decode('utf-8', errors='ignore')
@@ -164,14 +171,15 @@ class GrblStreamer:
                         self._process_line(line)
 
             except Exception as e:
-                if self.treads_running:
-                    self._log(f"Error in socket-read loop: {e}", LogLevel.ERROR, Color.RED.value)
+                pass
+                #if self.threads_running:
+                #    self._log(f"Error in socket-read loop: {e}", LogLevel.ERROR)
 
 
     def _read_loop_serial(self):
         buffer = ""
 
-        while self.treads_running:
+        while self.threads_running:
             try:
                 if self.serial and self.serial.is_open:
                     char = self.serial.read(1)
@@ -186,15 +194,14 @@ class GrblStreamer:
                         self._process_line(line)
 
             except Exception as e:
-                if self.treads_running:
-                    print(f"Error in serial-read loop: {e}")
+                if self.threads_running:
+                    self._log(f"Error in serial-read loop: {e}", LogLevel.ERROR)
                     
 
-    #@Logging
     def _process_line(self, line):
         self._log(f"Received: {line}", LogLevel.DEBUG)
         if 'ALARM' in line:
-            self.write_line("$X")
+            self._write_line("$X")
             try:
                 self.callback_queue.put_nowait(('alarm', line))
             except queue.Full:
@@ -209,19 +216,18 @@ class GrblStreamer:
         self.read_queue.put(line)
     
 
-    #@Logging
     def _callback_loop(self):
-        while self.treads_running:
+        while self.threads_running:
             try:
                 event_type, data = self.callback_queue.get(timeout=1)
                 
                 if event_type == 'progress':
                     percent, command = data
-                    self.progress_callback(percent, command)
+                    self._progress_callback(percent, command)
                 elif event_type == 'alarm':
-                    self.alarm_callback(data)
+                    self._alarm_callback(data)
                 elif event_type == 'error':
-                    self.error_callback(data)
+                    self._error_callback(data)
                     
             except queue.Empty:
                 continue
@@ -229,7 +235,7 @@ class GrblStreamer:
                 pass
 
 
-    def write(self, data):
+    def _write(self, data):
         if isinstance(data, str):
             data = data.encode()
 
@@ -239,24 +245,24 @@ class GrblStreamer:
             self.socket.send(data)
 
 
-    #@Logging
-    def write_line(self, text):
+    def _write_line(self, text):
         if not text.endswith('\n'):
             text += '\n'
         self._log(f"Sending: {text.strip()}", LogLevel.DEBUG)
-        self.write(text)
+        self._write(text)
 
 
-    def read_line_blocking(self):
+    def _read_line_blocking(self):
         try:
-            return self.read_queue.get(timeout=5)
+            return self.read_queue.get(timeout=1)
         except queue.Empty:
             return None
 
-    #@Logging
-    def send_file(self, file_path: str, completion_timeout: int = 300):
 
-        self.running = True
+    def _send_file(self, file_path:str, timeout:int = 300):
+
+        self.job_running = True
+        job_start_time = time.time()
 
         self._log(f"Sending file: {file_path}", LogLevel.INFO)
         with open(file_path, 'r') as f:
@@ -274,14 +280,26 @@ class GrblStreamer:
             if line:
                 commands.append(line)        
 
+        percent = 0
         grbl_buffer = 0
-        BUFFER_SIZE = 31#127
+        BUFFER_SIZE = 31
+        PROGRESS_UPDATE_SEC = 10
         sent_commands = []
 
+        progress_update = time.time()
         for i, cmd in enumerate(commands, 1):
 
             while grbl_buffer + len(cmd) + 1 > BUFFER_SIZE - 5:
-                response = self.read_line_blocking()
+                if (time.time() - progress_update) > PROGRESS_UPDATE_SEC:
+                    progress_update = time.time()
+                    self._log(f'Burn progress {percent}%', LogLevel.INFO)
+
+                if time.time() - job_start_time > timeout:
+                    self._log(f'Burn job-timeout after {timeout}sec!', LogLevel.ERROR)
+                    self.job_running = False
+                    return False
+
+                response = self._read_line_blocking()
                 if response == 'ok' and sent_commands:
                     sent_cmd = sent_commands.pop(0)
                     grbl_buffer -= (len(sent_cmd) + 1)
@@ -290,7 +308,7 @@ class GrblStreamer:
                         sent_cmd = sent_commands.pop(0)
                         grbl_buffer -= (len(sent_cmd) + 1)
     
-            self.write_line(cmd)
+            self._write_line(cmd)
             sent_commands.append(cmd)
             grbl_buffer += len(cmd) + 1
 
@@ -303,34 +321,42 @@ class GrblStreamer:
                 except queue.Full:
                     pass
 
-        start_time = time.time()
+            if ((time.time() - progress_update) % PROGRESS_UPDATE_SEC) == 0:
+                progress_update = time.time()
+                self._log(f'Burn progress {percent}%', LogLevel.INFO)
+
+
         while True:
-            if time.time() - start_time > completion_timeout:
-                break
+            if time.time() - job_start_time > timeout:
+                self._log(f'Burn completion-timeout after {timeout}sec!', LogLevel.ERROR)
+                self.job_running = False
+                return False
                 
-            self.write_line("?")
-            time.sleep(2)
-            response = self.read_line_blocking()
+            self._write_line("?")
+            time.sleep(0.5)
+            response = self._read_line_blocking()
             if response and 'Idle' in response:
                 break
         
-        self._log('Burn completed!', LogLevel.INFO)
-        self.progress_callback(100, 'completed')
-        self.running = False
+        min, sec = divmod(time.time() - job_start_time, 60)
+        self._log(f'Burn completed in {int(min):02}:{int(sec):02}sec', LogLevel.INFO)
+        self._progress_callback(100, 'completed')
+        self.job_running = False
+        return True
 
 
-    #@Logging
-    def close(self):
+    def _close(self):
+        self.connected = False
         self._log("Closing connection", LogLevel.INFO)
         if self.serial:
-            self.close_serial()
+            self._close_serial()
         
         elif self.socket:
-            self.close_socket()
+            self._close_socket()
 
 
-    def close_serial(self):
-        self.treads_running = False
+    def _close_serial(self):
+        self.threads_running = False
 
         if self.serial and self.serial.is_open:
             try:
@@ -343,8 +369,8 @@ class GrblStreamer:
         self.serial = None
 
 
-    def close_socket(self):
-        self.treads_running = False
+    def _close_socket(self):
+        self.threads_running = False
 
         if self.socket:
             try:
@@ -356,26 +382,33 @@ class GrblStreamer:
 
 
     def Start(self, grbl_file:str=None, timeout_sec=300):
-        self.open()
+        if not self.connected or grbl_file is None:
+            return False
 
-        if grbl_file is not None:
-            self.send_file(grbl_file, timeout_sec)
+        return self._send_file(grbl_file, timeout_sec)
 
 
     def WaitForBurnFinished(self):
-        while self.running:
+        while self.job_running and self.connected:
             time.sleep(0.5)
 
         return True
 
 
     def Close(self):
-        self.close()
+        self._close()
+
+
+
+
 
 
 if __name__ == "__main__":
     log = Logging(logfile_name='gbrl_streamer_log.txt')
-    streamer = GrblStreamer(ip_addr="192.168.1.120", ip_port=8080, logging=log, loglevel=LogLevel.INFO)
+    streamer = GrblStreamer(ip_addr="192.168.1.120", logging=log, loglevel=LogLevel.INFO)
+
+    streamer.Start('wer_will_mich.gc', 180)
+    streamer.WaitForBurnFinished()
 
     streamer.Start('wer_will_mich.gc', 180)
     streamer.WaitForBurnFinished()

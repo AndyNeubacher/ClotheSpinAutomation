@@ -38,7 +38,7 @@ if __name__ == "__main__":
         #if not laser.SelectAndLoadLightBurnFile("C:\\Users\Administrator\\Google Drive\\Musi\\Laserprojekte\\RoArm"):
         #    raise Exception("Failed to load LightBurn file")
 
-        laser = GrblStreamer(ip_addr="192.168.1.120", ip_port=8080, logging=log, loglevel=LogLevel.INFO)
+        laser = GrblStreamer(ip_addr="192.168.1.120", logging=log, loglevel=LogLevel.INFO)
         
         # Initialize RoArmM2S
         arm = RoArmM2S("192.168.1.121", log, LogLevel.NONE, 10)

@@ -126,7 +126,7 @@ class ClotheSpin:
     def CloseGripper(self, angle=1):
         if self.RoboArm is None:
             return False
-        self._log("Opening gripper", LogLevel.INFO)
+        self._log("Closing gripper", LogLevel.INFO)
         self.last_angle_tool = 180 - angle
         self.RoboArm.SetGripper(self.last_angle_tool, speed=0.2)
 
