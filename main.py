@@ -39,6 +39,8 @@ if __name__ == "__main__":
         #    raise Exception("Failed to load LightBurn file")
 
         laser = GrblStreamer(ip_addr="192.168.1.120", logging=log, loglevel=LogLevel.INFO)
+        if not laser.connected:
+            raise Exception("Communcation to Laser failed")
         
         # Initialize RoArmM2S
         arm = RoArmM2S("192.168.1.121", log, LogLevel.NONE, 10)
