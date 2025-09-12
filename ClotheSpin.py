@@ -228,7 +228,8 @@ class ClotheSpin:
         self.RoboArm.MoveToXYZT(pos['x'], pos['y'], pos['z'] + 20, self.last_angle_tool, speed=1, tolerance=10, timeout=1)
         self.RoboArm.MoveToXYZT(pos['x'], pos['y'], pos['z'] + 70, self.last_angle_tool, speed=50, tolerance=10, timeout=1)
 
-        if self.RoboArm.GetAngle(Joint.TOOL.value) > 178:
+        angle = self.RoboArm.GetAngle(Joint.TOOL.value)
+        if angle is not None and angle > 178: 
             self._log("Gripper seems to be closed, pick failed!", LogLevel.INFO)
             return False
 

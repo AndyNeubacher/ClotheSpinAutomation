@@ -3,6 +3,7 @@ import time
 import threading
 import queue
 import socket
+from ping3 import ping
 from enum import Enum
 from Tools import LogLevel
 from Tools import Color
@@ -12,30 +13,15 @@ from Tools import Logging
 
 
 class GrblStreamer:
-    def __init__(self, serial_port:str=None, serial_baud:int=115200, ip_addr=None, ip_port:int=8080, logging=None, loglevel=LogLevel.NONE):
-        self.job_running = False
-        self.threads_running = False
-        self.read_queue = queue.Queue()
-        self.serial: serial.Serial | None = None
-        self.socket = None
+    def __init__(self, ip_addr=None, ip_port:int=8080, logging=None, loglevel=LogLevel.NONE):
         self.log = logging
         self.loglevel = loglevel
+        self.ip_addr = ip_addr
+        self.ip_port = ip_port
 
-
-        if serial_port is not None:
-            self.port = serial_port
-            self.baudrate = serial_baud
-
-            self.DTR_ENABLE = False
-            self.RTS_ENABLE = False
-            self.WRITE_TIMEOUT = 1.0
-
-        if ip_addr is not None:
-            self.ip_addr = ip_addr
-            self.ip_port = ip_port
-
-        self.callback_queue = queue.Queue(100)
-        self.connected = self._open()
+        self.socket = self._open_socket()
+        self.connected = self.IsLaserConnected()
+        self._init_laser()
 
 
     def _log(self, message, msg_level=None, color=None):
@@ -43,225 +29,95 @@ class GrblStreamer:
             self.log.PrintLog("GrblStreamer", message, msg_level, self.loglevel, color)
 
 
-    def _progress_callback(self, percent: int, command: str):
-        self._log(f"Progress: {percent}%", LogLevel.DEBUG)
-
-
-    def _alarm_callback(self, line: str):
-        self._log(f"ALARM detected: {line}", LogLevel.ERROR)
-
-
-    def _error_callback(self, line: str):
-        self._log(f"ERROR detected: {line}", LogLevel.ERROR)
-
-
-    def _open(self):
-        if self.serial is not None:
-            return self._open_serial()
-        elif self.ip_addr is not None:
-            return self._open_socket()
-
-
     def _open_socket(self):
         try:
-            self._log(f"Connecting to GRBL at {self.ip_addr}:{self.ip_port}", LogLevel.INFO)
-            self.socket = socket.socket()
-            self.socket.settimeout(1)
-            self.socket.connect((self.ip_addr, self.ip_port))
-            self.threads_running = True
-            self.read_thread = threading.Thread(target=self._read_loop_socket)
-            self.read_thread.daemon = True
-            self.read_thread.start()
-            
-            self.callback_thread = threading.Thread(target=self._callback_loop)
-            self.callback_thread.daemon = True
-            self.callback_thread.start()
-
-            self._initialize_grbl()
-            return True
+            self._log(f"opening tcp-socket to {self.ip_addr}:{self.ip_port}", LogLevel.DEBUG)
+            sock = socket.socket()
+            sock.settimeout(1)
+            sock.connect((self.ip_addr, self.ip_port))
+            return sock
         
         except:
             self._log(f"failed to open a GRBL socket to {self.ip_addr}:{self.ip_port}", LogLevel.ERROR)
-            self.socket = None
-            self.threads_running = False
-            return False
+            return None
 
 
-    def _open_serial(self):
+    def _query_line_retry(self, data, timeout=10, num_retries=3):
+        if self.socket is None:
+            return None, None
 
-        try:
-            self._close_serial()
-        except:
-            pass
-
-        try:
-            self.serial = serial.Serial()
-            self.serial.port = self.port
-            self.serial.baudrate = self.baudrate
-            self.serial.bytesize = serial.EIGHTBITS
-            self.serial.parity = serial.PARITY_NONE
-            self.serial.stopbits = serial.STOPBITS_ONE
-            self.serial.timeout = None
-            self.serial.write_timeout = self.WRITE_TIMEOUT
-            self.serial.xonxoff = False
-            self.serial.rtscts = False
-            self.serial.dsrdtr = False
-
-            self.serial.dtr = self.DTR_ENABLE
-            self.serial.rts = self.RTS_ENABLE
-
-            self.serial.open()
-
-            self.serial.reset_output_buffer()
-            self.serial.reset_input_buffer()
-
-            self.threads_running = True
-            self.read_thread = threading.Thread(target=self._read_loop_serial)
-            self.read_thread.daemon = True
-            self.read_thread.start()
-            
-            self.callback_thread = threading.Thread(target=self._callback_loop)
-            self.callback_thread.daemon = True
-            self.callback_thread.start()
-
-            self._initialize_grbl()
-
-        except serial.SerialException as e:
-            if len(self.port) > 4 and self.port[-2:].isdigit():
-                try:
-                    self.serial.port = self.port[:-1]
-                    self.serial.open()
-                    self.serial.reset_output_buffer()
-                    self.serial.reset_input_buffer()
-                except:
-                    raise e
+        for attempt in range(num_retries):
+            status, lines = self._query_line(data, timeout)
+            if status == 'ok' or status == 'alarm':
+                return status, lines
             else:
-                raise e
+                self._log(f"Error on attempt {attempt + 1} of {num_retries} for command: {data.strip()}, answer {lines}", LogLevel.ERROR)
+                self.socket.close()
+                self.socket = self._open_socket()
+
+            time.sleep(0.1)  # Wait before retrying
+
+        self._log(f"Failed to get 'ok' after {num_retries} retries for command: {data.strip()}", LogLevel.ERROR)
+        return None, None
 
 
-    def _initialize_grbl(self):
-        self._log("Initializing GRBL...", LogLevel.INFO)
-        if True:
-            self._write(b'\x18')  # Ctrl-X
-            time.sleep(2)
+    def _query_line(self, data, timeout=10):
+            if self.socket is None:
+                return None, None
 
-        if self.serial:
-            self.serial.reset_input_buffer()
-            self.serial.reset_output_buffer()
+            if not data.endswith('\n'):
+                data += '\n'
+            self._log(f"Sending : {data.strip()}", LogLevel.DEBUG)
 
-        self._write_line("$X")
-        time.sleep(0.5)
+            if isinstance(data, str):
+                data = data.encode()
 
-
-    def _read_loop_socket(self):
-        buffer = ""
-
-        while self.threads_running:
+            buffer = ""
+            lines = []
+            self.socket.settimeout(timeout)
             try:
-                if self.socket:
+                self.socket.sendall(data)
+                while True:
                     char = self.socket.recv(1024)
                     if not char:
                         continue
                     buffer += char.decode('utf-8', errors='ignore')
                     if not buffer.endswith('\n'):
                         continue
-                    lines = buffer.strip().split('\n')
-                    buffer = ""
+
+                    lines = buffer.splitlines()
                     for line in lines:
-                        self._process_line(line)
+                        if lines and 'ok' in lines[-1]:
+                            self._log(f'Received: {lines}', LogLevel.DEBUG)
+                            return 'ok', lines
+                        elif 'alarm' in line.lower():
+                            self._log(f'Received ALARM: {buffer.strip()}', LogLevel.ERROR)
+                            return 'alarm', lines
+                        elif 'error' in line.lower():
+                            self._log(f'Received ERROR: {buffer.strip()}', LogLevel.ERROR)
+                            return 'error', lines
 
+
+            except socket.timeout:
+                self._log("Server timed out waiting for data from the client. Connection closing.", LogLevel.ERROR)
+                return 'timeout', None
             except Exception as e:
-                pass
-                #if self.threads_running:
-                #    self._log(f"Error in socket-read loop: {e}", LogLevel.ERROR)
+                self._log(f"An error occurred: {e}", LogLevel.ERROR)
+                return 'exception', e
 
 
-    def _read_loop_serial(self):
-        buffer = ""
+    def _init_laser(self):
+        if self.socket is None:
+            return
 
-        while self.threads_running:
-            try:
-                if self.serial and self.serial.is_open:
-                    char = self.serial.read(1)
-                    if not char:
-                        continue
-                    buffer += char.decode('utf-8', errors='ignore')
-                    if not buffer.endswith('\n'):
-                        continue
-                    line = buffer.strip()
-                    buffer = ""
-                    if line:
-                        self._process_line(line)
-
-            except Exception as e:
-                if self.threads_running:
-                    self._log(f"Error in serial-read loop: {e}", LogLevel.ERROR)
-                    
-
-    def _process_line(self, line):
-        self._log(f"Received: {line}", LogLevel.DEBUG)
-        if 'ALARM' in line:
-            self._write_line("$X")
-            try:
-                self.callback_queue.put_nowait(('alarm', line))
-            except queue.Full:
-                pass
-
-        elif 'error' in line.lower():
-            try:
-                self.callback_queue.put_nowait(('error', line))
-            except queue.Full:
-                pass
-
-        self.read_queue.put(line)
-    
-
-    def _callback_loop(self):
-        while self.threads_running:
-            try:
-                event_type, data = self.callback_queue.get(timeout=1)
-                
-                if event_type == 'progress':
-                    percent, command = data
-                    self._progress_callback(percent, command)
-                elif event_type == 'alarm':
-                    self._alarm_callback(data)
-                elif event_type == 'error':
-                    self._error_callback(data)
-                    
-            except queue.Empty:
-                continue
-            except:
-                pass
-
-
-    def _write(self, data):
-        if isinstance(data, str):
-            data = data.encode()
-
-        if self.serial and self.serial.is_open:
-            self.serial.write(data)
-        elif self.socket:
-            self.socket.send(data)
-
-
-    def _write_line(self, text):
-        if not text.endswith('\n'):
-            text += '\n'
-        self._log(f"Sending: {text.strip()}", LogLevel.DEBUG)
-        self._write(text)
-
-
-    def _read_line_blocking(self):
-        try:
-            return self.read_queue.get(timeout=1)
-        except queue.Empty:
-            return None
+        self._log("Init Laser", LogLevel.INFO)
+        self.socket.send(bytes([0x18]))             # softreset
+        version = self._query_line_retry('$I', 1)   # get grbl-version
+        offsets = self._query_line_retry('$#', 1)   # get grbl-offsets
+        self._query_line_retry('$H', 15)            # bring laser in home position
 
 
     def _send_file(self, file_path:str, timeout:int = 300):
-
-        self.job_running = True
         job_start_time = time.time()
 
         self._log(f"Sending file: {file_path}", LogLevel.INFO)
@@ -281,104 +137,61 @@ class GrblStreamer:
                 commands.append(line)        
 
         percent = 0
-        grbl_buffer = 0
-        BUFFER_SIZE = 31
-        PROGRESS_UPDATE_SEC = 10
         sent_commands = []
+        PROGRESS_UPDATE_SEC = 10
 
         progress_update = time.time()
         for i, cmd in enumerate(commands, 1):
 
-            #while grbl_buffer + len(cmd) + 1 > BUFFER_SIZE - 5:
-            while grbl_buffer > 0:  # syncronous call -> only 1 grbl-line at a time!
-                if (time.time() - progress_update) > PROGRESS_UPDATE_SEC:
-                    progress_update = time.time()
-                    self._log(f'Burn progress {percent}%', LogLevel.INFO)
+            if (time.time() - progress_update) > PROGRESS_UPDATE_SEC:
+                progress_update = time.time()
+                self._log(f'Burn progress {percent}%', LogLevel.INFO)
 
-                if time.time() - job_start_time > timeout:
-                    self._log(f'Burn job-timeout after {timeout}sec!', LogLevel.ERROR)
-                    self.job_running = False
-                    return False
+            if time.time() - job_start_time > timeout:
+                self._log(f'Burn job-timeout after {timeout}sec!', LogLevel.ERROR)
+                return False
 
-                response = self._read_line_blocking()
-                if response == 'ok' and sent_commands:
-                    sent_cmd = sent_commands.pop(0)
-                    grbl_buffer -= (len(sent_cmd) + 1)
-                elif response and 'error' in response.lower():
-                    if sent_commands:
-                        sent_cmd = sent_commands.pop(0)
-                        grbl_buffer -= (len(sent_cmd) + 1)
-    
-            self._write_line(cmd)
             sent_commands.append(cmd)
-            grbl_buffer += len(cmd) + 1
+            status, rx_lines = self._query_line_retry(cmd, 20)
+            if status is None:
+                return False        # timeout or exception occoured!
+            elif 'error' in status or 'alarm' in status or 'timeout' in status or 'exception' in status:
+                return False
 
             if i % 10 == 0:
                 percent = int((i / len(commands)) * 100)
                 if percent == 100:
                     continue
-                try:
-                    self.callback_queue.put_nowait(('progress', (percent, cmd)))
-                except queue.Full:
-                    pass
 
             if ((time.time() - progress_update) % PROGRESS_UPDATE_SEC) == 0:
                 progress_update = time.time()
                 self._log(f'Burn progress {percent}%', LogLevel.INFO)
 
+
+        # now wait to finish the job
         isRunning = True
         while isRunning:
             time.sleep(0.5)
             if time.time() - job_start_time > timeout:
                 self._log(f'Burn completion-timeout after {timeout}sec!', LogLevel.ERROR)
-                self.job_running = False
                 return False
                 
-            self._write_line("?")
-            new_msg = True
-            while new_msg:
-                response = self._read_line_blocking()
-                if response and 'Idle' in response:
-                    isRunning = False
-                    new_msg = False
-                if response is None:
-                    new_msg = False
+            status, rx_lines = self._query_line_retry("?")
+            if status is None:
+                self._log(f'Burn completion-error after {timeout}sec!', LogLevel.ERROR)
+                return False
+            elif 'ok' in status and 'Idle' in rx_lines[0]:
+                isRunning = False
 
 
         min, sec = divmod(time.time() - job_start_time, 60)
         self._log(f'Burn completed in {int(min):02}:{int(sec):02}sec', LogLevel.INFO)
-        self._progress_callback(100, 'completed')
-        self.job_running = False
         return True
 
 
-    def _close(self):
+    def Close(self):
         self.connected = False
         self._log("Closing connection", LogLevel.INFO)
-        if self.serial:
-            self._close_serial()
-        
-        elif self.socket:
-            self._close_socket()
-
-
-    def _close_serial(self):
-        self.threads_running = False
-
-        if self.serial and self.serial.is_open:
-            try:
-                self.serial.reset_output_buffer()
-                self.serial.reset_input_buffer()
-                self.serial.close()
-            except:
-                pass
-
-        self.serial = None
-
-
-    def _close_socket(self):
-        self.threads_running = False
-
         if self.socket:
             try:
                 self.socket.close()
@@ -392,18 +205,30 @@ class GrblStreamer:
         if not self.connected or grbl_file is None:
             return False
 
-        return self._send_file(grbl_file, timeout_sec)
+        res = self._send_file(grbl_file, timeout_sec)
+        if res is False:
+            self.Stop()
+
+        return res
 
 
-    def WaitForBurnFinished(self):
-        while self.job_running and self.connected:
-            time.sleep(0.5)
+    def Stop(self):
+        self._log("Stopping Laser", LogLevel.INFO)
+        self._query_line_retry('$X')  # reset laser
+        self._query_line_retry('$H')  # re-home
 
-        return True
 
+    def IsLaserConnected(self):
+        if self.socket is None:
+            return False
 
-    def Close(self):
-        self._close()
+        response_time = ping(self.ip_addr, unit='s', timeout=1)
+        if response_time is not None and response_time is not False:
+            res = self._query_line_retry('G0')
+            if res is not None and 'ok' in res:
+                return True
+
+        return False
 
 
 
@@ -414,13 +239,7 @@ if __name__ == "__main__":
     log = Logging(logfile_name='gbrl_streamer_log.txt')
     streamer = GrblStreamer(ip_addr="192.168.1.120", logging=log, loglevel=LogLevel.INFO)
 
-    streamer.Start('wer_will_mich.gc', 180)
-    streamer.WaitForBurnFinished()
-
-    streamer.Start('wer_will_mich.gc', 180)
-    streamer.WaitForBurnFinished()
-
-    streamer.Start('wer_will_mich.gc', 180)
-    streamer.WaitForBurnFinished()
-
+    streamer.Start('low_light_test_fast.gc', 180)
+    #streamer.Start('lightburn_gcode.txt', 180)
+    #streamer.Start('low_light_test.gc', 180)
     streamer.Close()

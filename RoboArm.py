@@ -141,6 +141,7 @@ class RoArmM2S:
 
         position_data = self.GetPosition()
         if position_data is None:
+            self._log("got no valid angle", LogLevel.ERROR)
             return None
 
         if joint_id == Joint.BASE.value:

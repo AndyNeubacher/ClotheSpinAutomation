@@ -7,6 +7,7 @@ from ClotheSpin import ClotheSpin
 from Tasmota import Tasmota
 from OpenCV import OpenCV
 from Tools import Logging
+from Tools import SelectFile
 from GrblStreamer import GrblStreamer
 
 
@@ -15,8 +16,13 @@ from GrblStreamer import GrblStreamer
 
 if __name__ == "__main__":
     cam = air = laser = arm = cspin = log = None
+    grbl_file = None
 
     try:
+        grbl_file = SelectFile(filename=grbl_file)
+        if grbl_file is None:
+            raise Exception("select GRBL file first!")
+
         log = Logging(logfile_name='clothspin_log.txt')
 
         # Initialize devices
@@ -41,7 +47,7 @@ if __name__ == "__main__":
         laser = GrblStreamer(ip_addr="192.168.1.120", logging=log, loglevel=LogLevel.INFO)
         if not laser.connected:
             raise Exception("Communcation to Laser failed")
-        
+
         # Initialize RoArmM2S
         arm = RoArmM2S("192.168.1.121", log, LogLevel.NONE, 10)
         cspin = ClotheSpin(arm, log, LogLevel.INFO)
@@ -81,8 +87,9 @@ if __name__ == "__main__":
             air.SetOutput(1, 'on')
 
             # 1st side burn
-            laser.Start('wer_will_mich.gc', 180)
-            if (laser.WaitForBurnFinished() == False):
+            #if laser.Start(f'{i:02d}.gc', 180) == False:
+            #laser.Start('wer_will_mich.gc', 180)
+            if not laser.Start(grbl_file, 180):
                 raise Exception("Burn failed or timed out")
 
             # 2nd side burn

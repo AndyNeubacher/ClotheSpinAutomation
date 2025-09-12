@@ -1,5 +1,7 @@
 from enum import Enum
 from datetime import datetime
+import tkinter as tk
+from tkinter import filedialog
 
 
 class LogLevel(Enum):
@@ -92,3 +94,26 @@ class Logging:
     def Close(self):
         if self.fd is not None:
             self.fd.close()
+
+
+
+
+def SelectFile(dir=".", filename=None):
+    try:
+        root = tk.Tk()
+        root.withdraw()
+
+        if filename is None:
+            file_path = filedialog.askopenfilename(
+                initialdir=dir,
+                title="Select a File",
+                filetypes=[("GRBL files", "*.gc")]
+            )
+            root.destroy()
+            if not file_path:
+                return None
+            
+        return file_path
+    
+    except Exception as e:
+        return None
